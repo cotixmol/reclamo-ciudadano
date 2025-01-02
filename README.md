@@ -1,93 +1,124 @@
-# reclamo ciudadano
+# Reclamo Ciudadano 📢
 
+**Reclamo Ciudadano** is a citizen report application designed to simplify the process of reporting and managing local community issues. This application aims to empower citizens to easily register reports via their mobile devices 📱 while providing authorities with an efficient tool for managing and addressing these reports. The main objective is to optimize municipal responses, improve transparency, and communication with citizens.
 
+---
 
-## Getting started
+## Index 📑
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- [Running the Application (In progress)](#running-the-application-in-progress) 🏃‍♂️
+- [Repository Main Components](#repository-main-components-)
+- [Functionality](#functionality-)
+- [Types of reports](#types-of-reports-)
+- [Planned Features](#planned-features-)
+- [Expected Benefits](#expected-benefits-)
+- [Conclusion](#conclusion-)
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+---
 
-## Add your files
+## Running the Application (In progress) 🏃‍♂️
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+This section will provide detailed instructions on how to set up and run the "Reclamo Ciudadano" application. It will include information on:
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/rd_saas/reclamo-ciudadano.git
-git branch -M main
-git push -uf origin main
-```
+- **Prerequisites:** TODO
+- **Installation:** TODO
+- **Backend:** TODO
+- **Frontend:** TODO
 
-## Integrate with your tools
+**Stay tuned for updates!** 🚀
 
-- [ ] [Set up project integrations](https://gitlab.com/rd_saas/reclamo-ciudadano/-/settings/integrations)
+---
 
-## Collaborate with your team
+## Repository Main Components 📂
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+- **Backend**: A RESTful API with a PostGIS database securely stores geographical information and related data, while also implementing measures to prevent user abuse. An S3 bucket is utilized for storing multimedia files 📷 associated with reports.
+- **Mobile Application**: Designed as a free and open access PWA, it enables quick report registration with geolocation 🗺️ and multimedia support.
+- **Web Interface for Administrators**: Facilitates the management and analysis of reports, including reporting 📊 and geographical visualization.
 
-## Test and Deploy
+---
 
-Use the built-in continuous integration in GitLab.
+## Functionality ⚙️
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### RESTful API Capabilities
 
-***
+- **Report Management**: Enables users to register and update reports, while allowing managers to consult and export data.
+- **Multimedia and Geospatial Integration**: Supports associating reports with multimedia files and geolocation data.
+- **Security**: Implements comprehensive security measures, including data encryption, spam validation, and attack prevention. 🛡️
 
-# Editing this README
+### Database 🗄️
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+- The system utilizes a PostGIS database to efficiently store and manage geospatial data associated with reports.
 
-## Suggestions for a good README
+### Multimedia Management 🖼️
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- Multimedia files associated with reports are securely stored and maintained using AWS S3 buckets, ensuring data integrity and availability.
 
-## Name
-Choose a self-explaining name for your project.
+### Progressive Web Application (PWA) ✨
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- The application provides a user-friendly interface for citizens to register reports with the following details:
+  - **Geolocation**: Automatically captures the user's current location.
+  - **Postal Code**: Allows manual entry of the postal code if needed.
+  - **Multimedia**: Enables attaching photos or videos as evidence.
+  - **Category**: Provides predefined categories for efficient classification.
+- In addition, the application offers these functionalities:
+  - **Notifications**: Keeps citizens informed about the status of their reports. 🔔
+  - **Report History**: Allows citizens to view a history of their previously submitted reports. 📜
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### Web Interface for Administrators 👨‍💻
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- **Interactive Map Visualization**: View reports on an interactive map.
+- **Report Filtering**: Filter reports based on status, type, or geographical location.
+- **Report Management**: Change the type and validate reports.
+- **Automated Reporting**: Generate automatic reports and export them to CSV/PDF formats.
+- **Real-time Analytics**: Analyze data in real-time for data-driven decision-making.
+- **Multimedia Map**: Access a multimedia map to check reports with a pop-up interface displaying details and multimedia files.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+---
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Types of reports 📑
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+"Reclamo Ciudadano" is designed to handle a wide range of reports commonly encountered in Latin American municipalities. These are categorized by the following areas:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- **Lighting**: 💡 Burned-out streetlights, insufficient lighting, damaged light poles.
+- **Signage**: 🪧 Damaged or missing street signs.
+- **Sewage**: 🚰 Broken pipes, unpleasant odors, flooding.
+- **Streets**: 🛣️ Potholes, damaged or missing speed bumps, inadequate signage at intersections.
+- **Sanitation**: 🗑️ Debris, garbage, fallen trees, illegal dumping.
+- **Public Safety**: 👮‍♂️ Theft, damage to public property, vandalism.
+- **Public Health**: 🦟 Presence of disease vectors, pests, stray animals, standing water that could promote mosquito breeding.
+- **Public Spaces**: 🏞️ Lack of maintenance of plazas, green areas, playgrounds and public fountains.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+---
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Planned Features 🗓️
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+- **AI Integration**: 🤖 Automate report classification based on text or image analysis. Detects patterns and generates alerts for emerging issues.
+- **Multichannel Support**: Expand report registration options to include WhatsApp, social media, and phone calls.
+- **Citizen Panel**: Increase transparency through a public portal with aggregated data and interactive maps.
+- **Enhanced Communication**: Provide automated messages to keep citizens informed about report progress.
+- **Traceability**: Enable complete tracking of reports from registration to resolution.
+- **Automated User Training**: Develop virtual training modules for new users. 👨‍🏫
+- **Priority System**: Assign priorities to reports based on urgency or impact.
+- **Integration with External Systems**: Ensure compatibility with existing urban monitoring platforms and emergency systems.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+---
 
-## License
-For open source projects, say how it is licensed.
+## Expected Benefits 👍
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- Reduced response times. ⏱️
+- Optimization of municipal resource utilization.
+- Improved transparency and citizen satisfaction. 😊
+- Generation of statistics for planning improvements.
+- Automation that reduces human error.
+- Increased citizen participation through accessible tools.
+- Greater capacity to react to local emergencies through a unified platform.
+
+---
+
+## Conclusion 🎯
+
+The implementation of "Reclamo Ciudadano" will enable municipalities to modernize their management, adapting to current citizen needs through efficient and accessible technology. This contributes to a more agile, transparent, and participatory governance model. Furthermore, the system provides tools for sustainable management, reducing the use of physical resources such as paper and promoting the efficient use of technology to enhance the quality of life for citizens.
+
+---
+
+## [Go to top](#reclamo-ciudadano-) ⬆️
