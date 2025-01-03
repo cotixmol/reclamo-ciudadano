@@ -1,11 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from service import ReportsService
+from dependencies import get_reports_service
+from models import Report
+from typing import List
 
 router = APIRouter()
 
 
-@router.get("/reports/")
-async def read_reports():
-    return [
-        {"report_id": 1, "report_name": "Report 1"},
-        {"report_id": 2, "report_name": "Report 2"},
-    ]
+@router.get("/reports/", response_model=List[Report])
+async def read_all_reports(
+    service: ReportsService = Depends(get_reports_service),
+):
+    reports = service.read_reports()
+    return reports
