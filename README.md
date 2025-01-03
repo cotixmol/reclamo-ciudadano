@@ -6,26 +6,67 @@
 
 ## Index 📑
 
-- [Running the Application (In progress)](#running-the-application-in-progress) 🏃‍♂️
-- [Repository Main Components](#repository-main-components-)
-- [Functionality](#functionality-)
-- [Types of reports](#types-of-reports-)
-- [Planned Features](#planned-features-)
-- [Expected Benefits](#expected-benefits-)
-- [Conclusion](#conclusion-)
+- [Setting up App](#setting-up-app-) 🏃‍♂️
+- [Environment Variables](#environment-variables-)
+- [Repository Main Components](#repository-main-components-) 📂
+- [Functionality](#functionality-) ⚙️
+- [Types of reports](#types-of-reports-) 📑
+- [Planned Features](#planned-features-) 🗓️
+- [Expected Benefits](#expected-benefits-) 👍
+- [Conclusion](#conclusion-) 🎯
+- [Go to top](#reclamo-ciudadano-) ⬆️ 
 
 ---
 
-## Running the Application (In progress) 🏃‍♂️
+## Setting up App 🏃‍♂️
 
-This section will provide detailed instructions on how to set up and run the "Reclamo Ciudadano" application. It will include information on:
+### Prerequisites:
 
-- **Prerequisites:** TODO
-- **Installation:** TODO
-- **Backend:** TODO
-- **Frontend:** TODO
+**Python:** Install Python 3.13.1
+**Create .venv:**
+  ```bash
+  python3 -m venv .venv
+  source .venv/bin/activate
+  ```
+**Dependencies:**
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+### Alembic Migrations: 🚀
+
+**Generate:**
+
+  ```bash
+  alembic revision --autogenerate -m "<message>"
+  ```
+Replace `<message>` with a description of your changes and review/edit the generated migration script.
+
+  **Apply:**
+
+  ```bash
+  alembic upgrade head
+  ```
+
+  **GeoAlchemy 2:**  For PostGIS issues in location types please refer to: [https://geoalchemy-2.readthedocs.io/en/latest/alembic.html](https://geoalchemy-2.readthedocs.io/en/latest/alembic.html)
+
+
+### Backend:
+ _TODO_
+
+### Frontend: 
+ _TODO_
+
+<br>
 
 **Stay tuned for updates!** 🚀
+
+---
+
+
+## Environment Variables
+
+- **DATABASE_URL:** You'll need to set the `DATABASE_URL` environment variable to point to your database connection string.
 
 ---
 
