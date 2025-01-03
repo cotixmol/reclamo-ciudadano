@@ -1,0 +1,1 @@
+from .reports_dependencies import get_reports_service
