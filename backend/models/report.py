@@ -1,4 +1,3 @@
-from .multimedia import Multimedia
 from datetime import datetime
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
@@ -8,9 +7,10 @@ from geoalchemy2 import Geometry
 
 class Report(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    location: str = Field(
+    report_location: str = Field(
         sa_column=Column(
-            Geometry(geometry_type="POINT", srid=4326), nullable=False, index=True
+            Geometry(geometry_type="POINT", srid=4326, spatial_index=True),
+            nullable=False,
         )
     )
     title: str = Field(sa_column=Column(String(255), nullable=False))
@@ -27,5 +27,3 @@ class Report(SQLModel, table=True):
             nullable=False,
         )
     )
-
-    multimedia: List["Multimedia"] = Relationship(back_populates="report")

@@ -16,5 +16,3 @@ class Multimedia(SQLModel, table=True):
     uploaded_at: datetime = Field(
         sa_column=Column(DateTime(timezone=True), default=func.now(), nullable=False)
     )
-
-    report: Optional["Report"] = Relationship(back_populates="multimedia")
