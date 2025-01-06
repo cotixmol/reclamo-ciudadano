@@ -1,4 +1,4 @@
-from errors.claim_errors import ClaimsNotFound, ClaimNotFound
+from errors.claim_errors import ClaimsNotFound, ClaimNotFound, ClaimNotFoundToDelete
 
 
 class ClaimService:
@@ -15,4 +15,10 @@ class ClaimService:
         try:
             return self.repository.read_claim_by_id(claim_id)
         except ClaimNotFound:
+            raise
+
+    def delete_claim_by_id(self, claim_id):
+        try:
+            return self.repository.delete_claim_by_id(claim_id)
+        except ClaimNotFoundToDelete:
             raise

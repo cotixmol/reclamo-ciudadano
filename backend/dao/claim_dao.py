@@ -3,7 +3,7 @@ from typing import List
 from sqlmodel import Session, select
 from models.claim import Claim
 from utils import wkb_element_to_geometry_point
-from errors.claim_errors import ClaimNotFound, ClaimsNotFound
+from errors.claim_errors import ClaimNotFound, ClaimsNotFound, ClaimNotFoundToDelete
 
 
 class ClaimDAO(ABC):
@@ -34,3 +34,14 @@ class ClaimSQLAlchemy(ClaimDAO):
             return result
         else:
             raise ClaimNotFound(claim_id)
+
+    def delete_claim_by_id(self, db: Session, claim_id: int) -> Claim:
+        statement = select(Claim).where(Claim.id == claim_id)
+        result = db.exec(statement).first()
+
+        if result:
+            db.delete(result)
+            db.commit()
+            return result
+        else:
+            raise ClaimNotFoundToDelete(claim_id)
