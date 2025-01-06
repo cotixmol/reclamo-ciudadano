@@ -3,7 +3,12 @@ from sqlmodel import Session
 from typing import List
 from dao.claim_dao import ClaimDAO, ClaimSQLAlchemy
 from sqlalchemy.exc import NoResultFound
-from errors.claim_errors import ClaimsNotFound, ClaimNotFound, ClaimNotFoundToDelete
+from errors.claim_errors import (
+    ClaimsNotFoundError,
+    ClaimNotFoundError,
+    ClaimNotFoundToDeleteError,
+    ClaimNotCreatedError,
+)
 
 
 class ClaimRepository:
@@ -15,7 +20,7 @@ class ClaimRepository:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.read_all_claims(db)
-        except ClaimsNotFound:
+        except ClaimsNotFoundError:
             raise
         except Exception as e:
             raise e
@@ -24,7 +29,7 @@ class ClaimRepository:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.read_claim_by_id(db, claim_id)
-        except ClaimNotFound:
+        except ClaimNotFoundError:
             raise
         except Exception as e:
             raise e
@@ -33,7 +38,16 @@ class ClaimRepository:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.delete_claim_by_id(db, claim_id)
-        except ClaimNotFoundToDelete:
+        except ClaimNotFoundToDeleteError:
+            raise
+        except Exception as e:
+            raise e
+
+    def create_claim(self, claim: Claim):
+        try:
+            for db in self.db_reporte_ciudadano.get_session_generator():
+                return self.claim_dao.create_claim(db, claim)
+        except ClaimNotCreatedError:
             raise
         except Exception as e:
             raise e
