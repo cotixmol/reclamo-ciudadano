@@ -18,3 +18,9 @@ class ClaimSQLAlchemy(ClaimDAO):
         for claim in results:
             claim.claim_location = wkb_element_to_geometry_point(claim.claim_location)
         return results
+
+    def read_claim_by_id(self, db: Session, claim_id: int) -> Claim:
+        statement = select(Claim).where(Claim.id == claim_id)
+        result = db.exec(statement).first()
+        result.claim_location = wkb_element_to_geometry_point(result.claim_location)
+        return result

@@ -13,3 +13,11 @@ async def read_all_claims(
 ):
     all_claims = service.read_all_claims()
     return all_claims
+
+
+@router.get("/claims/{claim_id}", response_model=Claim)
+async def read_claim_by_id(
+    claim_id: int, service: ClaimService = Depends(get_claim_service)
+):
+    claim = service.read_claim_by_id(claim_id)
+    return claim

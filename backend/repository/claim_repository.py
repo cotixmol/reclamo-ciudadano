@@ -16,3 +16,10 @@ class ClaimRepository:
                 return self.claim_dao.read_all_claims(db)
         except NoResultFound as err:
             return err
+
+    def read_claim_by_id(self, claim_id) -> Claim:
+        try:
+            for db in self.db_reporte_ciudadano.get_session_generator():
+                return self.claim_dao.read_claim_by_id(db, claim_id)
+        except NoResultFound as err:
+            return err
