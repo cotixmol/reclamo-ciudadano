@@ -1,1 +1,1 @@
-from .reports_repository import ReportsRepository
+from .claim_repository import ClaimRepository

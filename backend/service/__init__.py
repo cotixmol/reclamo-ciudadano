@@ -1,1 +1,1 @@
-from .reports_service import ReportsService
+from .claim_service import ClaimService

@@ -1,1 +1,1 @@
-from .reports_dao import ReportsDAO, ReportsSQLAlchemy
+from .claim_dao import ClaimDAO, ClaimSQLAlchemy

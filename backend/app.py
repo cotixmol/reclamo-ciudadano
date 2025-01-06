@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers.reports import router
+from routers.claim import router
 import uvicorn
 
 app = FastAPI(root_path="/api/v1")

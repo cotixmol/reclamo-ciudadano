@@ -1,1 +1,1 @@
-from .reports_dependencies import get_reports_service
+from .claim_dependency import get_claim_service
