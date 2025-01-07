@@ -137,10 +137,6 @@ class ClaimSQLAlchemy(ClaimDAO):
         try:
             claim_to_update = db.exec(statement).first()
             if claim_to_update:
-                claim_to_update.claim_location = wkb_element_to_geometry_point(
-                    claim_to_update.claim_location
-                )
-
                 updated_data = claim.model_dump(
                     exclude_unset=True, exclude={"id", "created_at", "updated_at"}
                 )
