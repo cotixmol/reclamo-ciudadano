@@ -34,7 +34,7 @@ def wkb_element_to_geometry_point(wkb_element) -> GeometryPoint:
 def geometry_point_to_wkb_element(geometry_point: GeometryPoint):
     """Converts a GeometryPoint to a WKBElement."""
     try:
-        coords = geometry_point.get("coordinates")
+        coords = geometry_point.coordinates
 
         if len(coords) != 2:
             raise ClaimNotConvertedError(

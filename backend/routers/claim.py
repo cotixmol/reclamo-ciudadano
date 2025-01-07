@@ -46,7 +46,7 @@ async def read_claim_by_id(
         )
 
 
-@router.delete("/claims/{claim_id}", response_model=Claim)
+@router.delete("/claim/{claim_id}", response_model=Claim)
 async def delete_claim_by_id(
     claim_id: int, service: ClaimService = Depends(get_claim_service)
 ):

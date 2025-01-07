@@ -135,11 +135,7 @@ class ClaimSQLAlchemy(ClaimDAO):
         statement = select(Claim).where(Claim.id == claim_id)
         claim_to_update = None
         try:
-            claim.claim_location = update_claim_request_element_to_geometry_point(
-                claim.claim_location.get("coordinates")
-            )
             claim_to_update = db.exec(statement).first()
-
             if claim_to_update:
                 claim_to_update.claim_location = wkb_element_to_geometry_point(
                     claim_to_update.claim_location
@@ -148,14 +144,20 @@ class ClaimSQLAlchemy(ClaimDAO):
                 updated_data = claim.model_dump(
                     exclude_unset=True, exclude={"id", "created_at", "updated_at"}
                 )
-
-                if "claim_location" in updated_data:
-                    updated_data["claim_location"] = geometry_point_to_wkb_element(
-                        updated_data.get("claim_location")
+                if updated_data.get("claim_location").get("coordinates"):
+                    updated_data["claim_location"] = (
+                        update_claim_request_element_to_geometry_point(
+                            updated_data.get("claim_location").get("coordinates")
+                        )
                     )
 
                 for key, value in updated_data.items():
                     setattr(claim_to_update, key, value)
+
+                if claim_to_update.claim_location:
+                    claim_to_update.claim_location = geometry_point_to_wkb_element(
+                        claim_to_update.claim_location
+                    )
 
                 db.add(claim_to_update)
                 db.commit()
