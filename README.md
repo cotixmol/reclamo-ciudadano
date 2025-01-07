@@ -56,7 +56,12 @@ Replace `<message>` with a description of your changes and review/edit the gener
 
 
 ### Backend:
- _TODO_
+![RC Backend Architecture](backend/diagram/RC-backend-architecture.png)
+
+#### Checking Swagger UI for FastAPI Endpoints:
+**Once your FastAPI application is running**, you can easily check the API documentation through Swagger UI. By default, FastAPI provides this feature for you.
+
+[Swagger Documentation](http://127.0.0.1:8000/docs)
 
 ### Frontend: 
  _TODO_
