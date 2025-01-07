@@ -5,4 +5,4 @@ from pydantic import BaseModel
 
 class GeometryPoint(BaseModel):
     type: str = "Point"
-    coordinates: List[float]
+    coordinates: List[float | int]

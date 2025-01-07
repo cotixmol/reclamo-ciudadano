@@ -51,3 +51,10 @@ class ClaimRepository:
             raise e
         except Exception as e:
             raise e
+
+    def update_claim_by_id(self, claim: Claim, claim_id):
+        try:
+            for db in self.db_reporte_ciudadano.get_session_generator():
+                return self.claim_dao.update_claim_by_id(db, claim, claim_id)
+        except Exception as e:
+            raise e

@@ -8,6 +8,7 @@ from errors.claim_errors import (
     ClaimsNotFoundError,
     ClaimNotFoundToDeleteError,
     ClaimNotCreatedError,
+    ClaimNotUpdatedError,
 )
 
 router = APIRouter()
@@ -69,6 +70,22 @@ async def create_claim(
         new_claim = service.create_claim(claim)
         return new_claim
     except ClaimNotCreatedError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred: {e}",
+        )
+
+
+@router.put("/claim/{claim_id}", response_model=Claim)
+async def update_claim_by_id(
+    claim: Claim, claim_id: int, service: ClaimService = Depends(get_claim_service)
+):
+    try:
+        updated_claim = service.update_claim_by_id(claim, claim_id)
+        return updated_claim
+    except ClaimNotUpdatedError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except Exception as e:
         raise HTTPException(

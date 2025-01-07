@@ -55,3 +55,14 @@ class ClaimNotConvertedError(Exception):
         if message is None:
             message = f"Could not convert a claim. Please verify the claim object and try again: {errors}"
         super().__init__(message)
+
+
+class ClaimNotUpdatedError(Exception):
+    """
+    Raised when a claim is not updated.
+    """
+
+    def __init__(self, message=None, errors=None):
+        if message is None:
+            message = f"Could not update a claim. Please verify the claim object and try again: {errors}"
+        super().__init__(message)
