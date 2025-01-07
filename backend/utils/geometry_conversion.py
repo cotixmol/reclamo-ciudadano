@@ -1,5 +1,3 @@
-# utils.py
-
 from geoalchemy2.shape import to_shape, from_shape
 from shapely.geometry import Point
 from custom_types import GeometryPoint
