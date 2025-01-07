@@ -85,11 +85,16 @@ class ClaimSQLAlchemy(ClaimDAO):
     def delete_claim_by_id(self, db: Session, claim_id: int) -> Claim:
         statement = select(Claim).where(Claim.id == claim_id)
         try:
-            result = db.exec(statement).first()
-            if result:
-                db.delete(result)
+            claim = db.exec(statement).first()
+            if claim:
+                db.delete(claim)
                 db.commit()
-                return result
+
+                claim.claim_location = wkb_element_to_geometry_point(
+                    claim.claim_location
+                )
+
+                return claim
             else:
                 raise ClaimNotFoundToDeleteError(claim_id=claim_id)
         except SQLAlchemyError as e:
