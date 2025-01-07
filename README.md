@@ -8,6 +8,7 @@
 
 - [Setting up App](#setting-up-app-) 🏃‍♂️
 - [Environment Variables](#environment-variables-)
+- [Branch Strategy](#branch-strategy-)
 - [Repository Main Components](#repository-main-components-) 📂
 - [Functionality](#functionality-) ⚙️
 - [Types of reports](#types-of-reports-) 📑
@@ -80,6 +81,46 @@ Replace `<message>` with a description of your changes and review/edit the gener
 - **DATABASE_URL:** You'll need to set the `DATABASE_URL` environment variable to point to your database connection string.
 
 ---
+
+
+## Branch Strategy
+
+![RC Branch Strategy](backend/diagram/branch-strategy.png)
+
+This branching strategy outlines how we manage code changes to ensure a smooth and efficient development process.
+
+**Key Branches:**
+
+* **`main`:** Represents the production-ready code. It should always be stable and reflect the live environment.
+* **`develop`:**  The integration branch for ongoing development and new features. Serves as a staging area before release.
+* **`release-vx.x.x-description`:** Created from `develop` to prepare for a specific release. Used for final testing and bug fixing.
+* **`RC-xxxx-description`:** Feature branches created from either `develop` or a `release` branch. Allows developers to work on features in isolation.
+* **`hotfix/RC-xxxx-description`:**  Created from `main` to address urgent production issues.
+
+
+**Ownership & Responsibilities:**
+
+* **Whole Team:** Responsible for the stability and integrity of the `main` branch. Any production errors should be reported and addressed promptly.
+* **Developers:**  Responsible for maintaining the `release` branches and their individual feature branches (`RC-xxxx-description`). This includes:
+    * Ensuring the `release` branch remains functional and minimizes errors.
+    * Adhering to the branching strategy and naming conventions.
+    * Creating feature branches for each new feature or bug fix.
+
+
+**Branching Workflow:**
+
+1. **Feature Development:**  Developers create feature branches (`RC-xxxx-description`) from either `develop` or a `release` branch.
+2. **Feature Integration:** Once a feature is complete and tested, it is merged into the appropriate `release` branch.
+3. **Release Preparation:**  When a set of features is ready for release, a  `release-vx.x.x-description` branch is created from `develop`. 
+4. **Testing & Release:** Thorough testing is performed on the `release` branch. Once stable, it is merged into `development` for deployment.
+5. **Hotfixes:** Urgent production issues are addressed in a `hotfix/RC-xxxx-description` branch created from `main`. After fixing and testing, the hotfix is merged back into `main`.
+
+
+**Important Notes:**
+
+* **Release Branch Stability:** Ensure the `release` branch is fully functional throughout the integration of feature branches.
+* **Feature Branch Scope:**  A `release` branch can encompass multiple tickets if necessary.
+* **Hotfix Merging:** Hotfixes should be merged back into `main` to resolve the production issue quickly. Consider merging into `develop` as well to prevent the issue from reappearing in future releases.
 
 ## Repository Main Components 📂
 
