@@ -56,6 +56,8 @@ Replace `<message>` with a description of your changes and review/edit the gener
 
 
 ### Backend:
+#### Architecture:
+
 ![RC Backend Architecture](backend/diagram/RC-backend-architecture.png)
 
 #### Checking Swagger UI for FastAPI Endpoints:
