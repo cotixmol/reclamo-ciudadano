@@ -6,9 +6,10 @@ class ClaimsNotFoundError(Exception):
     def __init__(
         self,
         message=None,
+        errors=None,
     ):
         if message is None:
-            message = "No claims found in the database. Please check your search criteria or ensure that claims have been submitted."
+            message = f"No claims found in the database. Please check your search criteria or ensure that claims have been submitted: {errors}"
         super().__init__(message)
 
 
@@ -28,9 +29,9 @@ class ClaimNotFoundToDeleteError(Exception):
     Raised when a specific claim is not found to delete.
     """
 
-    def __init__(self, claim_id, message=None):
+    def __init__(self, claim_id, message=None, errors=None):
         if message is None:
-            message = f"Could not delete claim with id {claim_id} because it is not found in the database. Please verify the claim ID and try again."
+            message = f"Could not delete claim with id {claim_id} because it is not found in the database. Please verify the claim ID and try again: {errors}"
         super().__init__(message)
 
 
@@ -39,7 +40,18 @@ class ClaimNotCreatedError(Exception):
     Raised when a claim is not created.
     """
 
-    def __init__(self, message=None):
+    def __init__(self, message=None, errors=None):
         if message is None:
-            message = "Could not create the claim. Please verify the claim details and try again."
+            message = f"Could not create a claim. Please verify the claim object and try again: {errors}"
+        super().__init__(message)
+
+
+class ClaimNotConvertedError(Exception):
+    """
+    Raised when a claim is not converted.
+    """
+
+    def __init__(self, message=None, errors=None):
+        if message is None:
+            message = f"Could not convert a claim. Please verify the claim object and try again: {errors}"
         super().__init__(message)

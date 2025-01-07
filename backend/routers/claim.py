@@ -7,6 +7,7 @@ from errors.claim_errors import (
     ClaimNotFoundError,
     ClaimsNotFoundError,
     ClaimNotFoundToDeleteError,
+    ClaimNotCreatedError,
 )
 
 router = APIRouter()
@@ -60,14 +61,14 @@ async def delete_claim_by_id(
         )
 
 
-@router.post("/claim/")
+@router.post("/claim/", response_model=Claim)
 async def create_claim(
     claim: Claim, service: ClaimService = Depends(get_claim_service)
 ):
     try:
         new_claim = service.create_claim(claim)
         return new_claim
-    except ClaimNotFoundToDeleteError as e:
+    except ClaimNotCreatedError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except Exception as e:
         raise HTTPException(

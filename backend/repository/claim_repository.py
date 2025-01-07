@@ -20,8 +20,8 @@ class ClaimRepository:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.read_all_claims(db)
-        except ClaimsNotFoundError:
-            raise
+        except ClaimsNotFoundError as e:
+            raise e
         except Exception as e:
             raise e
 
@@ -29,8 +29,8 @@ class ClaimRepository:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.read_claim_by_id(db, claim_id)
-        except ClaimNotFoundError:
-            raise
+        except ClaimNotFoundError as e:
+            raise e
         except Exception as e:
             raise e
 
@@ -38,8 +38,8 @@ class ClaimRepository:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.delete_claim_by_id(db, claim_id)
-        except ClaimNotFoundToDeleteError:
-            raise
+        except ClaimNotFoundToDeleteError as e:
+            raise e
         except Exception as e:
             raise e
 
@@ -47,7 +47,7 @@ class ClaimRepository:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.create_claim(db, claim)
-        except ClaimNotCreatedError:
-            raise
+        except ClaimNotCreatedError as e:
+            raise e
         except Exception as e:
             raise e

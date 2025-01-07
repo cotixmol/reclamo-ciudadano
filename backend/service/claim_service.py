@@ -2,6 +2,7 @@ from errors.claim_errors import (
     ClaimsNotFoundError,
     ClaimNotFoundError,
     ClaimNotFoundToDeleteError,
+    ClaimNotCreatedError,
 )
 
 
@@ -28,4 +29,7 @@ class ClaimService:
             raise
 
     def create_claim(self, claim):
-        return self.repository.create_claim(claim)
+        try:
+            return self.repository.create_claim(claim)
+        except ClaimNotCreatedError:
+            raise

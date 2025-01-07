@@ -8,6 +8,7 @@ from errors.claim_errors import (
     ClaimsNotFoundError,
     ClaimNotFoundToDeleteError,
     ClaimNotCreatedError,
+    ClaimNotConvertedError,
 )
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -36,14 +37,17 @@ class ClaimSQLAlchemy(ClaimDAO):
         try:
             results = db.exec(statement).all()
         except SQLAlchemyError as e:
-            raise Exception(f"Database error: {e}")
+            raise Exception(f"Database error listing claims: {e}")
 
         if results:
-            for claim in results:
-                claim.claim_location = wkb_element_to_geometry_point(
-                    claim.claim_location
-                )
-            return results
+            try:
+                for claim in results:
+                    claim.claim_location = wkb_element_to_geometry_point(
+                        claim.claim_location
+                    )
+                return results
+            except Exception as e:
+                raise ClaimNotConvertedError(errors=e)
         else:
             raise ClaimsNotFoundError()
 
@@ -52,43 +56,56 @@ class ClaimSQLAlchemy(ClaimDAO):
         try:
             result = db.exec(statement).first()
         except SQLAlchemyError as e:
-            raise Exception(f"Database error: {e}")
+            raise Exception(f"Database error listing claim with id {claim_id}: {e}")
 
         if result:
-            result.claim_location = wkb_element_to_geometry_point(result.claim_location)
-            return result
+            try:
+                result.claim_location = wkb_element_to_geometry_point(
+                    result.claim_location
+                )
+                return result
+            except Exception as e:
+                raise ClaimNotConvertedError(errors=e)
         else:
-            raise ClaimNotFoundError(claim_id)
+            raise ClaimNotFoundError(claim_id=claim_id)
 
     def delete_claim_by_id(self, db: Session, claim_id: int) -> Claim:
         statement = select(Claim).where(Claim.id == claim_id)
         try:
             result = db.exec(statement).first()
-        except SQLAlchemyError as e:
-            raise Exception(f"Database error: {e}")
-
-        if result:
-            try:
+            if result:
                 db.delete(result)
                 db.commit()
-            except SQLAlchemyError as e:
-                db.rollback()
-                raise Exception(f"Database error: {e}")
-            return result
-        else:
-            raise ClaimNotFoundToDeleteError(claim_id)
+                return result
+            else:
+                raise ClaimNotFoundToDeleteError(claim_id=claim_id)
+        except SQLAlchemyError as e:
+            db.rollback()
+            raise Exception(f"Database error deleting claim with id {claim_id}: {e}")
 
     def create_claim(self, db: Session, claim: Claim) -> Claim:
         try:
-            claim.claim_location = geometry_point_to_wkb_element(claim.claim_location)
+            try:
+                claim.claim_location = geometry_point_to_wkb_element(
+                    claim.claim_location
+                )
+            except Exception as e:
+                raise ClaimNotConvertedError(errors=e)
             db.add(claim)
             db.commit()
             db.refresh(claim)
-            return claim
+            try:
+                claim.claim_location = wkb_element_to_geometry_point(
+                    claim.claim_location
+                )
+                return claim
+            except Exception as e:
+                raise ClaimNotConvertedError(errors=e)
         except SQLAlchemyError as e:
             db.rollback()
-            print(f"Error creating claim: {e}")
-            raise ClaimNotCreatedError()
+            raise Exception(f"Database error creating claim: {e}")
         except Exception as e:
             db.rollback()
-            raise Exception(f"An unexpected error occurred while creating a claim: {e}")
+            raise ClaimNotCreatedError(
+                f"An unexpected error occurred creating claim: {e}"
+            )
