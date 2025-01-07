@@ -11,7 +11,7 @@ from geoalchemy2 import alembic_helpers
 from alembic import context
 from sqlmodel import SQLModel
 
-from models import Multimedia, Claim
+from models import Multimedia, Claim, ClaimTypes
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
