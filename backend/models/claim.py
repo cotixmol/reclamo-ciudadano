@@ -1,13 +1,16 @@
 from datetime import datetime
 from typing import Optional, Union
-from sqlmodel import SQLModel, Field, Relationship
-from sqlalchemy import Column, String, DateTime, func
+from sqlmodel import SQLModel, Field
+from sqlalchemy import Column, String, DateTime, func, Integer, ForeignKey
 from geoalchemy2 import Geometry
 from custom_types import GeometryPoint
 
 
 class Claim(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    type_category_id: Optional[int] = Field(
+        sa_column=Column(Integer, ForeignKey("claimtypes.id"))
+    )
     claim_location: Union[GeometryPoint, dict] = Field(
         sa_column=Column(
             Geometry(geometry_type="POINT", srid=4326, spatial_index=True),
