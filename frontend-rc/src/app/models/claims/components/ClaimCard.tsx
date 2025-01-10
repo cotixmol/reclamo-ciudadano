@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Claim, ClaimStatus } from "../utils/types";
 
 interface ClaimCardProps {
@@ -7,8 +8,7 @@ interface ClaimCardProps {
 }
 
 const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
-  const { title, description, status, createdAt, isEdited } = claim;
-
+  const { id, title, description, status, createdAt, isEdited } = claim;
   const formattedDate =
     createdAt && !isNaN(new Date(createdAt).getTime())
       ? new Date(createdAt).toLocaleDateString("en-GB", {
@@ -81,6 +81,14 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
         <p className="mt-2 text-xs text-gray-400 leading-relaxed line-clamp-3">
           {description}
         </p>
+        {/* See More Information */}
+        <div className="mt-4">
+          <Link href={`/models/claims/pages/${id}`}>
+            <button className="relative z-10 text-sm font-semibold text-[#e40c74] hover:underline hover:text-[#ff4da6] transition duration-200">
+              See more information
+            </button>
+          </Link>
+        </div>
       </div>
 
       {/* Overlay */}
