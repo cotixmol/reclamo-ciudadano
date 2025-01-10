@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Claim } from "../utils/types";
 import ClaimCard from "../components/ClaimCard";
+import LoadingScreen from "@/app/components/LoadingScreen";
 
 export default function ClaimsPage() {
   const [claims, setClaims] = useState<Claim[]>([]);
@@ -14,10 +15,8 @@ export default function ClaimsPage() {
       setIsLoading(true);
       try {
         const response = await axios.get<Claim[]>("/api/claims");
-        console.log("Fetched claims:", response.data);
         setClaims(response.data);
       } catch (error) {
-        console.error("Error fetching claims:", error);
         setError(error as Error);
       } finally {
         setIsLoading(false);
@@ -28,26 +27,24 @@ export default function ClaimsPage() {
   }, []);
 
   if (isLoading) {
-    return (
-      <div>
-        <p>Loading claims...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (error) {
     return (
-      <div className="text-red-500">
+      <div className="text-red-500 min-h-screen flex items-center justify-center">
         <p>Error: {error.message}</p>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-6 p-6 pt-32">
-      {claims.map((claim) => (
-        <ClaimCard key={claim.id} claim={claim} />
-      ))}
+    <div className="min-h-screen bg-gray-800 p-4 flex justify-center">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {claims.map((claim) => (
+          <ClaimCard key={claim.id} claim={claim} />
+        ))}
+      </div>
     </div>
   );
 }
