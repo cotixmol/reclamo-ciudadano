@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
-import { Claim } from "@/app/utils/types";
+import { Claim  } from "@/app/models/claims/utils/types";
 
 export async function GET(
   request: Request,
