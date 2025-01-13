@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import BottomNavBar from "./models/claims/components/BottomNavBar";
+import BottomNavBar from "./components/BottomNavBar";
 
 export const metadata: Metadata = {
-  title: "Reclamo Ciudadano - Reporta problemas en tu ciudad",
+  title: "Reclamo Ciudadano",
   description:
     "Reporta problemas en tu ciudad y sigue el estado de los reclamos.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
@@ -15,8 +18,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="relative min-h-screen">
-        {children}
+      <body className="relative min-h-screen bg-gray-900 text-gray-200">
+        <div className="pb-28">{children}</div> {/* Add padding for nav bar */}
         <BottomNavBar />
       </body>
     </html>
