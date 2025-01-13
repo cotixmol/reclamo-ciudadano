@@ -1,24 +1,30 @@
+version: '3.9'
+
 services:
   backend:
     build:
       context: ./backend
-    container_name: backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app
     ports:
-      - "8000:8000" 
+      - "8000:8000"
     env_file:
       - ./backend/.env
-    volumes:
-      - ./backend:/app 
     command: ["python3", "app.py"]
 
   frontend:
     build:
       context: ./frontend-rc
-    container_name: frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend-rc:/app
+      - /app/node_modules
     ports:
       - "3000:3000"
     env_file:
       - ./frontend-rc/.env
-    volumes:
-      - ./frontend-rc:/app
     command: ["npm", "run", "dev"]
+
+volumes:
+  node_modules:

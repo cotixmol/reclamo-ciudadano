@@ -1,16 +1,20 @@
-# Use the official Node.js image
-FROM node:18
+# Use Node.js LTS as the base image
+FROM node:18-alpine
 
-# Install dependencies 
+# Set working directory
 WORKDIR /app
-COPY package.json package-lock.json ./
+
+# Copy package.json and package-lock.json (or yarn.lock)
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the entire application
 COPY . .
 
-# Expose the Next.js development server port
+# Expose Next.js default development port
 EXPOSE 3000
 
-# Command to start the app
+# Command to start the development server
 CMD ["npm", "run", "dev"]
