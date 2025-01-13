@@ -57,7 +57,7 @@ export default function ClaimDetailsPage() {
       <div className="mb-6">
         <button
           onClick={() => router.back()}
-          className="flex items-center space-x-2 text-[#e40c74] hover:text-[#ff4da6] transition duration-200"
+          className="flex items-center space-x-2 text-[#e4047d] hover:text-[#ff4da6] transition duration-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

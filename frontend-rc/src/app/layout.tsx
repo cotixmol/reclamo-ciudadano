@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import BottomNavBar from "./models/claims/components/BottomNavBar";
 
 export const metadata: Metadata = {
   title: "Reclamo Ciudadano - Reporta problemas en tu ciudad",
@@ -14,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="relative min-h-screen">
+        {children}
+        <BottomNavBar />
+      </body>
     </html>
   );
 }

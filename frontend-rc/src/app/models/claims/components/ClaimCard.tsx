@@ -84,7 +84,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
         {/* See More Information */}
         <div className="mt-4">
           <Link href={`/models/claims/pages/${id}`}>
-            <button className="relative z-10 text-sm font-semibold text-[#e40c74] hover:underline hover:text-[#ff4da6] transition duration-200">
+            <button className="relative z-10 text-sm font-semibold text-[#e4047d] hover:underline hover:text-[#ff4da6] transition duration-200">
               See more information
             </button>
           </Link>
