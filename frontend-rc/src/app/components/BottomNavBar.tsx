@@ -13,9 +13,9 @@ const BottomNavBar = () => {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="fixed z-10 bottom-0 left-0 w-full bg-gray-900 text-gray-200 shadow-lg shadow-black/30 border-t border-[#e4047d]">
-      <div className="flex items-center justify-between px-10 py-6">
-        {/* Home Button */}
+    <nav className="fixed z-10 bottom-0 left-0 w-full bg-gray-900 text-gray-200 shadow-lg shadow-black/30 border-t border-pink-500">
+      <div className="grid grid-cols-3 items-center py-6">
+        {/* Left: Home */}
         <Link
           href="/"
           className={`flex flex-col items-center space-y-1 ${
@@ -23,24 +23,24 @@ const BottomNavBar = () => {
           } transition-transform duration-200`}
         >
           <FiHome
-            className={`w-8 h-8 ${
-              isActive("/") ? "text-[#e4047d] shadow-pink-500" : "text-gray-400"
+            className={`w-6 h-6 ${
+              isActive("/") ? "text-pink-500" : "text-gray-400"
             }`}
           />
-          <span className={`text-sm ${isActive("/") ? "text-[#e4047d]" : ""}`}>
+          <span className={`text-sm ${isActive("/") ? "text-pink-500" : ""}`}>
             {t("homeButtom")}
           </span>
         </Link>
 
-        {/* Create New Claim Button */}
+        {/* Center: Plus */}
         <Link
           href="/create"
-          className="relative z-10 bg-[#e4047d] text-white rounded-full p-5"
+          className="flex items-center mx-auto bg-pink-500 text-white rounded-full p-4"
         >
-          <FiPlus className="w-8 h-8" />
+          <FiPlus className="w-6 h-6" />
         </Link>
 
-        {/* My Claims Button */}
+        {/* Right: My Claims */}
         <Link
           href="/models/claims/pages"
           className={`flex flex-col items-center space-y-1 ${
@@ -48,15 +48,15 @@ const BottomNavBar = () => {
           } transition-transform duration-200`}
         >
           <FiList
-            className={`w-8 h-8 ${
+            className={`w-6 h-6 ${
               isActive("/models/claims/pages")
-                ? "text-[#e4047d] shadow-pink-500"
+                ? "text-pink-500"
                 : "text-gray-400"
             }`}
           />
           <span
             className={`text-sm ${
-              isActive("/models/claims/pages") ? "text-[#e4047d]" : ""
+              isActive("/models/claims/pages") ? "text-pink-500" : ""
             }`}
           >
             {t("myClaimsButtom")}
