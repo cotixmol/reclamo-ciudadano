@@ -6,6 +6,8 @@ import axios from "axios";
 import Image from "next/image";
 import { Claim } from "../../utils/types";
 import LoadingScreen from "@/app/components/LoadingScreen";
+import ErrorPage from "@/app/components/ErrorPage";
+import ClaimNotFoundPage from "../../components/ClaimNotFound";
 
 export default function ClaimDetailsPage() {
   const params = useParams() as { id: string }; // Explicitly cast useParams to include id
@@ -36,19 +38,11 @@ export default function ClaimDetailsPage() {
   }
 
   if (error) {
-    return (
-      <div className="text-red-500 min-h-screen flex items-center justify-center">
-        <p>Error: {error.message}</p>
-      </div>
-    );
+    return <ErrorPage message={error.message} />;
   }
 
   if (!claim) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Claim not found</p>
-      </div>
-    );
+    return <ClaimNotFoundPage />;
   }
 
   return (

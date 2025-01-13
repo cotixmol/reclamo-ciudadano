@@ -4,6 +4,8 @@ import axios from "axios";
 import { Claim } from "../utils/types";
 import ClaimCard from "../components/ClaimCard";
 import LoadingScreen from "@/app/components/LoadingScreen";
+import ErrorPage from "@/app/components/ErrorPage";
+import ClaimNotFoundPage from "../components/ClaimNotFound";
 
 export default function ClaimsPage() {
   const [claims, setClaims] = useState<Claim[]>([]);
@@ -31,11 +33,11 @@ export default function ClaimsPage() {
   }
 
   if (error) {
-    return (
-      <div className="text-red-500 min-h-screen flex items-center justify-center">
-        <p>Error: {error.message}</p>
-      </div>
-    );
+    return <ErrorPage message={error.message} />;
+  }
+
+  if (!claims || claims.length === 0) {
+    return <ClaimNotFoundPage />;
   }
 
   return (
