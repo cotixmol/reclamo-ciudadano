@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiHome, FiPlus, FiList } from "react-icons/fi";
+import "../i18n";
+import { useTranslation } from "react-i18next";
 
 const BottomNavBar = () => {
+  const { t } = useTranslation("bottomnavbar");
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
@@ -25,7 +28,7 @@ const BottomNavBar = () => {
             }`}
           />
           <span className={`text-sm ${isActive("/") ? "text-[#e4047d]" : ""}`}>
-            Home
+            {t("homeButtom")}
           </span>
         </Link>
 
@@ -56,7 +59,7 @@ const BottomNavBar = () => {
               isActive("/models/claims/pages") ? "text-[#e4047d]" : ""
             }`}
           >
-            My Claims
+            {t("myClaimsButtom")}
           </span>
         </Link>
       </div>

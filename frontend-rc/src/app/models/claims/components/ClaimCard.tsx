@@ -1,6 +1,10 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import "../../../i18n";
+import { useTranslation } from "react-i18next";
 import { Claim, ClaimStatus } from "../utils/types";
 
 interface ClaimCardProps {
@@ -8,7 +12,10 @@ interface ClaimCardProps {
 }
 
 const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
+  const { t } = useTranslation("claim");
+
   const { id, title, description, status, createdAt, isEdited } = claim;
+
   const formattedDate =
     createdAt && !isNaN(new Date(createdAt).getTime())
       ? new Date(createdAt).toLocaleDateString("en-GB", {
@@ -16,7 +23,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
           month: "2-digit",
           year: "numeric",
         })
-      : "Unknown Date";
+      : t("unknownDate");
 
   const formattedTime =
     createdAt && !isNaN(new Date(createdAt).getTime())
@@ -24,20 +31,16 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
           hour: "2-digit",
           minute: "2-digit",
         })
-      : "Unknown Time";
+      : t("unknownTime");
 
   const getStatusColor = (status: ClaimStatus) => {
     switch (status) {
-      case ClaimStatus.Pending:
-        return "bg-yellow-400";
-      case ClaimStatus.InProgress:
+      case ClaimStatus.Open:
         return "bg-blue-400";
-      case ClaimStatus.Resolved:
-        return "bg-green-400";
-      case ClaimStatus.Rejected:
+      case ClaimStatus.Close:
         return "bg-red-400";
       default:
-        return "bg-red-400";
+        return "bg-green-400";
     }
   };
 
@@ -56,7 +59,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
             status
           )} text-white capitalize`}
         >
-          {status}
+          {t(`status.${status}`)}
         </span>
       </div>
 
@@ -73,7 +76,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
             </span>
             {isEdited && (
               <span className="text-xs font-medium text-yellow-400">
-                (Edited)
+                {t("edited")}
               </span>
             )}
           </div>
@@ -85,7 +88,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
         <div className="mt-4">
           <Link href={`/models/claims/pages/${id}`}>
             <button className="relative z-10 text-sm font-semibold text-[#e4047d] hover:underline hover:text-[#ff4da6] transition duration-200">
-              See more information
+              {t("seeMore")}
             </button>
           </Link>
         </div>
