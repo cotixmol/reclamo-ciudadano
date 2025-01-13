@@ -10,7 +10,7 @@ const BottomNavBar = () => {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-gray-900 text-gray-200 shadow-lg shadow-black/30 border-t border-[#e4047d]">
+    <nav className="fixed z-10 bottom-0 left-0 w-full bg-gray-900 text-gray-200 shadow-lg shadow-black/30 border-t border-[#e4047d]">
       <div className="flex items-center justify-between px-10 py-6">
         {/* Home Button */}
         <Link
