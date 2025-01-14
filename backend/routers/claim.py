@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from service import ClaimService
+from typing import Optional
 from dependencies import get_claim_service
 from models import Claim
+from uuid import UUID
 from typing import List
+from custom_types import AllClaimsRequest
 from errors.claim_errors import (
     ClaimNotFoundError,
     ClaimsNotFoundError,
@@ -14,12 +17,13 @@ from errors.claim_errors import (
 router = APIRouter()
 
 
-@router.get("/claims/", response_model=List[Claim])
-async def read_all_claims(
+@router.post("/claims/", response_model=List[Claim])
+async def read_all_claims_by_public_ids(
+    request: AllClaimsRequest,
     service: ClaimService = Depends(get_claim_service),
 ):
     try:
-        all_claims = service.read_all_claims()
+        all_claims = service.read_all_claims_by_public_ids(request.public_ids)
         return all_claims
     except ClaimsNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
@@ -30,12 +34,12 @@ async def read_all_claims(
         )
 
 
-@router.get("/claim/{claim_id}", response_model=Claim)
-async def read_claim_by_id(
-    claim_id: int, service: ClaimService = Depends(get_claim_service)
+@router.get("/claim/{public_id}", response_model=Claim)
+async def read_claim_by_public_id(
+    public_id: UUID, service: ClaimService = Depends(get_claim_service)
 ):
     try:
-        claim = service.read_claim_by_id(claim_id)
+        claim = service.read_claim_by_public_id(public_id)
         return claim
     except ClaimNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
@@ -46,12 +50,12 @@ async def read_claim_by_id(
         )
 
 
-@router.delete("/claim/{claim_id}", response_model=Claim)
-async def delete_claim_by_id(
-    claim_id: int, service: ClaimService = Depends(get_claim_service)
+@router.delete("/claim/{public_id}", response_model=Claim)
+async def delete_claim_by_public_id(
+    public_id: UUID, service: ClaimService = Depends(get_claim_service)
 ):
     try:
-        claim = service.delete_claim_by_id(claim_id)
+        claim = service.delete_claim_by_public_id(public_id)
         return claim
     except ClaimNotFoundToDeleteError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
@@ -78,12 +82,12 @@ async def create_claim(
         )
 
 
-@router.put("/claim/{claim_id}", response_model=Claim)
-async def update_claim_by_id(
-    claim: Claim, claim_id: int, service: ClaimService = Depends(get_claim_service)
+@router.put("/claim/{public_id}", response_model=Claim)
+async def update_claim_by_public_id(
+    claim: Claim, public_id: UUID, service: ClaimService = Depends(get_claim_service)
 ):
     try:
-        updated_claim = service.update_claim_by_id(claim, claim_id)
+        updated_claim = service.update_claim_by_public_id(claim, public_id)
         return updated_claim
     except ClaimNotUpdatedError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
