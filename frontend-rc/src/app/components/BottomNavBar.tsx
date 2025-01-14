@@ -13,7 +13,7 @@ const BottomNavBar = () => {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="fixed z-10 bottom-0 left-0 w-full bg-gray-900 text-gray-200 shadow-lg shadow-black/30 border-t border-pink-500">
+    <nav className="fixed z-10 bottom-0 left-0 w-full bg-gray-900 text-gray-200 shadow-lg shadow-black/30 border-t border-primary">
       <div className="grid grid-cols-3 items-center py-6">
         {/* Left: Home */}
         <Link
@@ -24,10 +24,10 @@ const BottomNavBar = () => {
         >
           <FiHome
             className={`w-6 h-6 ${
-              isActive("/") ? "text-pink-500" : "text-gray-400"
+              isActive("/") ? "text-primary" : "text-gray-400"
             }`}
           />
-          <span className={`text-sm ${isActive("/") ? "text-pink-500" : ""}`}>
+          <span className={`text-sm ${isActive("/") ? "text-primary" : ""}`}>
             {t("homeButtom")}
           </span>
         </Link>
@@ -35,7 +35,7 @@ const BottomNavBar = () => {
         {/* Center: Plus */}
         <Link
           href="/create"
-          className="flex items-center mx-auto bg-pink-500 text-white rounded-full p-4"
+          className="flex items-center mx-auto bg-primary text-white rounded-full p-4 hover:bg-primary-hover transition-colors duration-200"
         >
           <FiPlus className="w-6 h-6" />
         </Link>
@@ -50,13 +50,13 @@ const BottomNavBar = () => {
           <FiList
             className={`w-6 h-6 ${
               isActive("/models/claims/pages")
-                ? "text-pink-500"
+                ? "text-primary"
                 : "text-gray-400"
             }`}
           />
           <span
             className={`text-sm ${
-              isActive("/models/claims/pages") ? "text-pink-500" : ""
+              isActive("/models/claims/pages") ? "text-primary" : ""
             }`}
           >
             {t("myClaimsButtom")}
