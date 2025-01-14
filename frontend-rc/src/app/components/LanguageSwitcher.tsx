@@ -49,11 +49,11 @@ export default function LanguageSwitcher() {
       {/* Dropdown */}
       {isOpen && (
         <div className="absolute right-0 mt-2 font-medium rounded-md bg-gray-800 z-10">
-          <ul className="py-1">
+          <ul>
             <li
               onClick={() => handleLanguageChange("en")}
-              className={`block px-4 py-2 text-xs cursor-pointer hover:bg-gray-700 ${
-                currentLang === "en" ? "bg-gray-700" : ""
+              className={`block px-4 py-2 text-xs rounded-t-md cursor-pointer hover:bg-gray-700 ${
+                currentLang === "en" ? "bg-primary" : ""
               }`}
             >
               <div className="flex items-center gap-2">
@@ -63,8 +63,8 @@ export default function LanguageSwitcher() {
             </li>
             <li
               onClick={() => handleLanguageChange("es")}
-              className={`block px-4 py-2 text-xs cursor-pointer hover:bg-gray-700 ${
-                currentLang === "es" ? "bg-gray-700" : ""
+              className={`block px-4 py-2 text-xs rounded-b-md cursor-pointer hover:bg-gray-700 ${
+                currentLang === "es" ? "bg-primary" : ""
               }`}
             >
               <div className="flex items-center gap-2">
