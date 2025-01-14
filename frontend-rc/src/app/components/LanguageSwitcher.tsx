@@ -37,7 +37,7 @@ export default function LanguageSwitcher() {
       {/* Toggle Button */}
       <button
         onClick={toggleDropdown}
-        className="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-hover text-xs font-medium rounded-md"
+        className="inline-flex items-center px-4 py-2 hover:bg-gray-700 text-xs font-medium rounded-md"
       >
         <div className="flex items-center gap-2">
           <span className="">{getFlag(currentLang)}</span>
