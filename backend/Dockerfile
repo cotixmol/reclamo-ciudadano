@@ -1,20 +1,18 @@
-# Use the official Python 3.13 slim image
-FROM python:3.13-slim
+# Use Python 3.10 as the base image
+FROM python:3.10-slim
 
-# Install dependencies 
+# Set working directory
 WORKDIR /app
-RUN apt-get update && apt-get install -y gcc libpq-dev
+
+# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire app code into the container
+# Copy the entire backend application
 COPY . .
 
-# Expose the port your app runs on (FastAPI default is 8000)
+# Expose FastAPI's default port
 EXPOSE 8000
-
-# Ensure the app reads the .env file
-ENV PYTHONUNBUFFERED=1
 
 # Command to run the FastAPI app
 CMD ["python3", "app.py"]

@@ -1,0 +1,10 @@
+{
+    "status": {
+        "Open": "Open",
+        "Close": "Close"
+    },
+    "unknownDate": "Unknown Date",
+    "unknownTime": "Unknown Time",
+    "edited": "Edited",
+    "seeMore": "See more"
+}
