@@ -2,12 +2,18 @@
 import "./i18n";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
+import LanguageSwitcher from "./components/LanguageSwitcher";
 
 export default function HomePage() {
   const { t } = useTranslation("homepage"); // Use 'homepage' namespace
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
+      {/* Language Switcher at the top */}
+      <div className="flex justify-end mb-4">
+        <LanguageSwitcher />
+      </div>
+
       {/* Hero Section */}
       <div className="max-w-4xl mx-auto text-center py-16">
         <h1 className="text-4xl md:text-5xl font-bold text-[#e4047d] mb-6">
