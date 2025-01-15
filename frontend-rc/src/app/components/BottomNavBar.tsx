@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FiHome, FiPlus, FiList } from "react-icons/fi";
-import "../i18n";
-import { useTranslation } from "react-i18next";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { FiHome, FiPlus, FiList } from 'react-icons/fi';
+import '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const BottomNavBar = () => {
-  const { t } = useTranslation("bottomnavbar");
+  const { t } = useTranslation('bottomnavbar');
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
@@ -19,16 +19,16 @@ const BottomNavBar = () => {
         <Link
           href="/"
           className={`flex flex-col items-center space-y-1 ${
-            isActive("/") ? "scale-125" : "scale-100"
+            isActive('/') ? 'scale-125' : 'scale-100'
           } transition-transform duration-200`}
         >
           <FiHome
             className={`w-6 h-6 ${
-              isActive("/") ? "text-primary" : "text-gray-400"
+              isActive('/') ? 'text-primary' : 'text-gray-400'
             }`}
           />
-          <span className={`text-sm ${isActive("/") ? "text-primary" : ""}`}>
-            {t("homeButtom")}
+          <span className={`text-sm ${isActive('/') ? 'text-primary' : ''}`}>
+            {t('homeButtom')}
           </span>
         </Link>
 
@@ -44,22 +44,22 @@ const BottomNavBar = () => {
         <Link
           href="/models/claims/pages"
           className={`flex flex-col items-center space-y-1 ${
-            isActive("/models/claims/pages") ? "scale-125" : "scale-100"
+            isActive('/models/claims/pages') ? 'scale-125' : 'scale-100'
           } transition-transform duration-200`}
         >
           <FiList
             className={`w-6 h-6 ${
-              isActive("/models/claims/pages")
-                ? "text-primary"
-                : "text-gray-400"
+              isActive('/models/claims/pages')
+                ? 'text-primary'
+                : 'text-gray-400'
             }`}
           />
           <span
             className={`text-sm ${
-              isActive("/models/claims/pages") ? "text-primary" : ""
+              isActive('/models/claims/pages') ? 'text-primary' : ''
             }`}
           >
-            {t("myClaimsButtom")}
+            {t('myClaimsButtom')}
           </span>
         </Link>
       </div>

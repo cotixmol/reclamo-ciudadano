@@ -1,16 +1,16 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "upload.wikimedia.org",
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
       },
     ],
   },
   env: {
-    API_URL: process.env.API_URL || "http://localhost:8000/api/v1",
+    API_URL: process.env.API_URL || 'http://localhost:8000/api/v1',
   },
 };
 

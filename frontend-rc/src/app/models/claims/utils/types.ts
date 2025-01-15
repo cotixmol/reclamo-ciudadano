@@ -1,4 +1,4 @@
-import { UUID } from "crypto";
+import { UUID } from 'crypto';
 
 /** Enums **/
 export enum ClaimStatus {
@@ -8,7 +8,7 @@ export enum ClaimStatus {
 
 /** Fundamental Interfaces **/
 export interface ClaimLocation {
-  type: "Point";
+  type: 'Point';
   coordinates: [number, number];
 }
 
@@ -21,7 +21,7 @@ export interface ClaimCreateRequest {
   title: string;
   description: string;
   type_category_id: number;
-  status?: "Open" | "Close" | string;
+  status?: 'Open' | 'Close' | string;
   claim_location: ClaimLocation;
 }
 
@@ -29,7 +29,7 @@ export interface ClaimUpdateRequest {
   title: string;
   type_category_id: number;
   description: string;
-  status?: "Open" | "Close" | string;
+  status?: 'Open' | 'Close' | string;
   claim_location: ClaimLocation;
 }
 

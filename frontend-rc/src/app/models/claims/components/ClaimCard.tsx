@@ -1,46 +1,46 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import "../../../i18n";
-import { useTranslation } from "react-i18next";
-import { ClaimResponse, ClaimStatus } from "../utils/types";
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import '../../../i18n';
+import { useTranslation } from 'react-i18next';
+import { ClaimResponse, ClaimStatus } from '../utils/types';
 
 interface ClaimCardProps {
   claim: ClaimResponse;
 }
 
 const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
-  const { t } = useTranslation("claim");
+  const { t } = useTranslation('claim');
 
   const { publicId, title, description, status, createdAt, isEdited } = claim;
 
   const formattedDate =
     createdAt && !isNaN(new Date(createdAt).getTime())
-      ? new Date(createdAt).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
+      ? new Date(createdAt).toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
         })
-      : t("unknownDate");
+      : t('unknownDate');
 
   const formattedTime =
     createdAt && !isNaN(new Date(createdAt).getTime())
       ? new Date(createdAt).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
+          hour: '2-digit',
+          minute: '2-digit',
         })
-      : t("unknownTime");
+      : t('unknownTime');
 
   const getStatusColor = (status: ClaimStatus) => {
     switch (status) {
       case ClaimStatus.Open:
-        return "bg-blue-400";
+        return 'bg-blue-400';
       case ClaimStatus.Close:
-        return "bg-red-400";
+        return 'bg-red-400';
       default:
-        return "bg-green-400";
+        return 'bg-green-400';
     }
   };
 
@@ -71,12 +71,12 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-1">
             <span className="text-xs text-gray-400">
-              {formattedDate}{" "}
+              {formattedDate}{' '}
               <span className="text-gray-500">{formattedTime}</span>
             </span>
             {isEdited && (
               <span className="text-xs font-medium text-yellow-400">
-                {t("edited")}
+                {t('edited')}
               </span>
             )}
           </div>
@@ -88,7 +88,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
         <div className="mt-4">
           <Link href={`/models/claims/pages/${publicId}`}>
             <button className="relative z-10 text-sm font-semibold text-primary hover:underline hover:text-primary-hover transition duration-200">
-              {t("seeMore")}
+              {t('seeMore')}
             </button>
           </Link>
         </div>

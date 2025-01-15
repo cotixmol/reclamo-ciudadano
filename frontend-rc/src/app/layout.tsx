@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import BottomNavBar from "./components/BottomNavBar";
+import type { Metadata } from 'next';
+import './globals.css';
+import BottomNavBar from './components/BottomNavBar';
 
 export const metadata: Metadata = {
-  title: "Reclamo Ciudadano",
+  title: 'Reclamo Ciudadano',
   description:
-    "Reporta problemas en tu ciudad y sigue el estado de los reclamos.",
+    'Reporta problemas en tu ciudad y sigue el estado de los reclamos.',
   icons: {
-    icon: "/favicon.png",
+    icon: '/favicon.png',
   },
 };
 

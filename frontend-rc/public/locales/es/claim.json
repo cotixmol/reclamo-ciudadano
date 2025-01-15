@@ -1,10 +1,10 @@
 {
-    "status": {
-        "Open": "Abierto",
-        "Close": "Cerrado"
-    },
-    "unknownDate": "Fecha desconocida",
-    "unknownTime": "Hora desconocida",
-    "edited": "Editado",
-    "seeMore": "Ver más"
+  "status": {
+    "Open": "Abierto",
+    "Close": "Cerrado"
+  },
+  "unknownDate": "Fecha desconocida",
+  "unknownTime": "Hora desconocida",
+  "edited": "Editado",
+  "seeMore": "Ver más"
 }

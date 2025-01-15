@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState, FormEvent } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import LoadingScreen from "@/app/components/LoadingScreen";
+import { useState, FormEvent } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import LoadingScreen from '@/app/components/LoadingScreen';
 
 export default function ClaimForm() {
   const router = useRouter();
 
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [latitude, setLatitude] = useState<string>("");
-  const [longitude, setLongitude] = useState<string>("");
-  const [status] = useState<string>("Open");
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [latitude, setLatitude] = useState<string>('');
+  const [longitude, setLongitude] = useState<string>('');
+  const [status] = useState<string>('Open');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -24,14 +24,14 @@ export default function ClaimForm() {
       description,
       status,
       claim_location: {
-        type: "Point",
+        type: 'Point',
         coordinates: [parseFloat(latitude), parseFloat(longitude)],
       },
     };
 
     try {
-      await axios.post("/api/claims", body);
-      router.push("/models/claims");
+      await axios.post('/api/claims', body);
+      router.push('/models/claims');
     } catch (err) {
       console.error(err);
     } finally {
@@ -114,11 +114,11 @@ export default function ClaimForm() {
           disabled={isSubmitting}
           className={`w-full py-2 px-4 rounded text-white transition ${
             isSubmitting
-              ? "bg-gray-600 cursor-not-allowed"
-              : "bg-primary hover:bg-primary-hover"
+              ? 'bg-gray-600 cursor-not-allowed'
+              : 'bg-primary hover:bg-primary-hover'
           }`}
         >
-          {isSubmitting ? "Submitting..." : "Submit"}
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
       </form>
     </div>

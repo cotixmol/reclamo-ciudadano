@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import axios from "axios";
-import { ClaimResponse } from "@/app/models/claims/utils/types";
-import { toCamelCase } from "@/app/utils/toCamelCase";
+import { NextResponse } from 'next/server';
+import axios from 'axios';
+import { ClaimResponse } from '@/app/models/claims/utils/types';
+import { toCamelCase } from '@/app/utils/toCamelCase';
 
 export async function GET(
   request: Request,
@@ -10,10 +10,7 @@ export async function GET(
   try {
     const { publicId } = await context.params;
     if (!publicId) {
-      return NextResponse.json(
-        { error: "ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
     const response = await axios.get<ClaimResponse>(
       `${process.env.API_URL}/claim/${publicId}`
@@ -22,14 +19,11 @@ export async function GET(
 
     return NextResponse.json(transformedData, { status: 200 });
   } catch (error: unknown) {
-    console.error("Error fetching claim:", error);
-    let errorMessage = "Failed to fetch claim";
+    console.error('Error fetching claim:', error);
+    let errorMessage = 'Failed to fetch claim';
     if (error instanceof Error) {
       errorMessage = error.message;
     }
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
