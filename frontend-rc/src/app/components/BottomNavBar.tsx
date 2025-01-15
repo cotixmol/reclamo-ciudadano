@@ -34,7 +34,7 @@ const BottomNavBar = () => {
 
         {/* Center: Plus */}
         <Link
-          href="/create"
+          href="/models/claims/pages/create"
           className="flex items-center mx-auto bg-primary text-white rounded-full p-4 hover:bg-primary-hover transition-colors duration-200"
         >
           <FiPlus className="w-6 h-6" />

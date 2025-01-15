@@ -5,16 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import "../../../i18n";
 import { useTranslation } from "react-i18next";
-import { Claim, ClaimStatus } from "../utils/types";
+import { ClaimResponse, ClaimStatus } from "../utils/types";
 
 interface ClaimCardProps {
-  claim: Claim;
+  claim: ClaimResponse;
 }
 
 const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
   const { t } = useTranslation("claim");
 
-  const { id, title, description, status, createdAt, isEdited } = claim;
+  const { publicId, title, description, status, createdAt, isEdited } = claim;
 
   const formattedDate =
     createdAt && !isNaN(new Date(createdAt).getTime())
@@ -86,7 +86,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
         </p>
         {/* See More Information */}
         <div className="mt-4">
-          <Link href={`/models/claims/pages/${id}`}>
+          <Link href={`/models/claims/pages/${publicId}`}>
             <button className="relative z-10 text-sm font-semibold text-primary hover:underline hover:text-primary-hover transition duration-200">
               {t("seeMore")}
             </button>

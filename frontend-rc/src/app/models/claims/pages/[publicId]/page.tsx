@@ -4,22 +4,25 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
-import { Claim } from "../../utils/types";
+import { ClaimResponse } from "../../utils/types";
 import LoadingScreen from "@/app/components/LoadingScreen";
 import ErrorPage from "@/app/components/ErrorPage";
 import ClaimNotFoundPage from "../../components/ClaimNotFound";
+import { UUID } from "crypto";
 
 export default function ClaimDetailsPage() {
-  const params = useParams() as { id: string }; // Explicitly cast useParams to include id
+  const params = useParams() as { publicId: UUID };
   const router = useRouter();
-  const [claim, setClaim] = useState<Claim | null>(null);
+  const [claim, setClaim] = useState<ClaimResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchClaim = async () => {
       try {
-        const response = await axios.get<Claim>(`/api/claims/${params.id}`);
+        const response = await axios.get<ClaimResponse>(
+          `/api/claims/${params.publicId}`
+        );
         setClaim(response.data);
       } catch (err) {
         setError(err as Error);
@@ -28,10 +31,10 @@ export default function ClaimDetailsPage() {
       }
     };
 
-    if (params.id) {
+    if (params.publicId) {
       fetchClaim();
     }
-  }, [params.id]);
+  }, [params.publicId]);
 
   if (isLoading) {
     return <LoadingScreen />;
