@@ -1,11 +1,12 @@
 'use client';
+import React from 'react';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { ClaimResponse } from '../utils/types';
 import ClaimCard from '../components/ClaimCard';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
 import ClaimNotFoundPage from '../components/ClaimNotFound';
+import { fetchClaims } from '@/app/services/claims/fetch';
 
 export default function ClaimsPage() {
   const [claims, setClaims] = useState<ClaimResponse[]>([]);
@@ -13,16 +14,12 @@ export default function ClaimsPage() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchClaims = async () => {
+    const loadClaims = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.post<ClaimResponse[]>('/api/claims', {
-          public_ids: [
-            '5dbd3aa7-2d69-419d-8f0e-7234bada27f6',
-            '42197a29-66ec-45e0-a33d-1df2afba2f61',
-          ],
-        });
-        setClaims(response.data);
+        const claimsData = await fetchClaims();
+        setClaims(claimsData);
+        setClaims(claimsData.reverse());
       } catch (err) {
         setError(err as Error);
       } finally {
@@ -30,7 +27,7 @@ export default function ClaimsPage() {
       }
     };
 
-    fetchClaims();
+    loadClaims();
   }, []);
 
   if (isLoading) {
