@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import axios from 'axios';
-import { toCamelCase } from '@/app/utils/toCamelCase';
+import { toCamelCase } from '@/utils/toCamelCase';
 import {
   ClaimCreateRequest,
   ClaimResponse,
