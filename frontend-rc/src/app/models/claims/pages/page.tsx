@@ -6,7 +6,7 @@ import ClaimCard from '../components/ClaimCard';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
 import ClaimNotFoundPage from '../components/ClaimNotFound';
-import { fetchClaims } from '@/app/services/claims/fetch';
+import { fetchAllClaimsByPublicIds } from '@/app/services/claims/fetch';
 
 export default function ClaimsPage() {
   const [claims, setClaims] = useState<ClaimResponse[]>([]);
@@ -17,7 +17,7 @@ export default function ClaimsPage() {
     const loadClaims = async () => {
       setIsLoading(true);
       try {
-        const claimsData = await fetchClaims();
+        const claimsData = await fetchAllClaimsByPublicIds();
         setClaims(claimsData);
         setClaims(claimsData.reverse());
       } catch (err) {

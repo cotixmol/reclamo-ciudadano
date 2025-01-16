@@ -6,7 +6,7 @@ function getStoredPublicIds(): string[] {
   return existing ? JSON.parse(existing) : [];
 }
 
-export async function fetchClaims(): Promise<ClaimResponse[]> {
+export async function fetchAllClaimsByPublicIds(): Promise<ClaimResponse[]> {
   const publicIds = getStoredPublicIds();
   try {
     const response = await axios.post<ClaimResponse[]>('/api/claims', {
@@ -18,3 +18,14 @@ export async function fetchClaims(): Promise<ClaimResponse[]> {
     throw error;
   }
 }
+
+export async function fetchClaimByPublicId(publicId: string): Promise<ClaimResponse> {
+  try {
+    const response = await axios.get<ClaimResponse>(`/api/claims/${publicId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching claim by public ID:', error);
+    throw error;
+  }
+}
+

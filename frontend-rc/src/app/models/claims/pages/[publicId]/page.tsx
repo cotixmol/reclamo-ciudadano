@@ -1,9 +1,9 @@
 'use client';
-
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import axios from 'axios';
 import Image from 'next/image';
+import { fetchClaimByPublicId } from '@/app/services/claims/fetch';
 import { ClaimResponse } from '../../types/types';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
@@ -13,17 +13,17 @@ import { UUID } from 'crypto';
 export default function ClaimDetailsPage() {
   const params = useParams() as { publicId: UUID };
   const router = useRouter();
+
   const [claim, setClaim] = useState<ClaimResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchClaim = async () => {
+    const loadClaim = async () => {
+      if (!params.publicId) return;
       try {
-        const response = await axios.get<ClaimResponse>(
-          `/api/claims/${params.publicId}`
-        );
-        setClaim(response.data);
+        const data = await fetchClaimByPublicId(params.publicId);
+        setClaim(data);
       } catch (err) {
         setError(err as Error);
       } finally {
@@ -31,9 +31,7 @@ export default function ClaimDetailsPage() {
       }
     };
 
-    if (params.publicId) {
-      fetchClaim();
-    }
+    loadClaim();
   }, [params.publicId]);
 
   if (isLoading) {
