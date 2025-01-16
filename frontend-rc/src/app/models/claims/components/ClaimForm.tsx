@@ -1,9 +1,10 @@
 'use client';
 import React from 'react';
 import { useState, FormEvent } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import LoadingScreen from '@/app/components/LoadingScreen';
+import { ClaimCreateRequest } from '../utils/types';
+import { createClaim } from '@/app/services/claims/create';
 
 export default function ClaimForm() {
   const router = useRouter();
@@ -13,16 +14,18 @@ export default function ClaimForm() {
   const [latitude, setLatitude] = useState<string>('');
   const [longitude, setLongitude] = useState<string>('');
   const [status] = useState<string>('Open');
+  const [type_category_id] = useState<number>(1);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const body = {
+    const claimData: ClaimCreateRequest = {
       title,
       description,
       status,
+      type_category_id,
       claim_location: {
         type: 'Point',
         coordinates: [parseFloat(latitude), parseFloat(longitude)],
@@ -30,11 +33,10 @@ export default function ClaimForm() {
     };
 
     try {
-      await axios.post('/api/claims/create', body);
+      await createClaim(claimData);
       router.push('/models/claims/pages');
     } catch (err) {
       console.error(err);
-    } finally {
       setIsSubmitting(false);
     }
   };

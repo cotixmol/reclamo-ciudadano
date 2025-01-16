@@ -21,16 +21,16 @@ export interface ClaimCreateRequest {
   title: string;
   description: string;
   type_category_id: number;
-  status?: 'Open' | 'Close' | string;
+  status: 'Open' | 'Close' | string;
   claim_location: ClaimLocation;
 }
 
 export interface ClaimUpdateRequest {
-  title: string;
-  type_category_id: number;
-  description: string;
+  title?: string;
+  type_category_id?: number;
+  description?: string;
   status?: 'Open' | 'Close' | string;
-  claim_location: ClaimLocation;
+  claim_location?: ClaimLocation;
 }
 
 /** API Response Interfaces **/

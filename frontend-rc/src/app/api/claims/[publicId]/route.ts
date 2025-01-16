@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { ClaimResponse } from '@/app/models/claims/utils/types';
-import { toCamelCase } from '@/utils/toCamelCase';
+import { toCamelCase } from '@/app/utils/toCamelCase';
 
 export async function GET(
   request: Request,
