@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react';
 import { useState, FormEvent } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -30,8 +30,8 @@ export default function ClaimForm() {
     };
 
     try {
-      await axios.post('/api/claims', body);
-      router.push('/models/claims');
+      await axios.post('/api/claims/create', body);
+      router.push('/models/claims/pages');
     } catch (err) {
       console.error(err);
     } finally {
