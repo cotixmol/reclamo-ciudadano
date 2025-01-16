@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import { ClaimResponse } from '@/app/models/claims/utils/types';
+import { ClaimResponse } from '@/app/models/claims/types/types';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 
 export async function GET(

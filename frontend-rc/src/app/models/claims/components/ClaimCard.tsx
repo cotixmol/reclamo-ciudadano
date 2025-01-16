@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
-import { ClaimResponse, ClaimStatus } from '../utils/types';
+import { ClaimResponse, ClaimStatus } from '../types/types';
 
 interface ClaimCardProps {
   claim: ClaimResponse;

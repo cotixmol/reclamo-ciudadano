@@ -4,7 +4,7 @@ import { toCamelCase } from '@/app/utils/toCamelCase';
 import {
   ApiPublicIdsRequest,
   ClaimListResponse,
-} from '@/app/models/claims/utils/types';
+} from '@/app/models/claims/types/types';
 export async function POST(request: NextRequest) {
   try {
     const body: ApiPublicIdsRequest = await request.json();

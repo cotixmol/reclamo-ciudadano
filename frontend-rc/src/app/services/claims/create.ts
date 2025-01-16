@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ClaimCreateRequest, ClaimResponse } from '@/app/models/claims/utils/types';
+import { ClaimCreateRequest, ClaimResponse } from '@/app/models/claims/types/types';
 
 function savePublicId(newId: string) {
   const existing = localStorage.getItem('publicIds');

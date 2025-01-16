@@ -3,7 +3,7 @@ import React from 'react';
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingScreen from '@/app/components/LoadingScreen';
-import { ClaimCreateRequest } from '../utils/types';
+import { ClaimCreateRequest } from '../types/types';
 import { createClaim } from '@/app/services/claims/create';
 
 export default function ClaimForm() {

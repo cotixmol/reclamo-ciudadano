@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import Image from 'next/image';
-import { ClaimResponse } from '../../utils/types';
+import { ClaimResponse } from '../../types/types';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
 import ClaimNotFoundPage from '../../components/ClaimNotFound';

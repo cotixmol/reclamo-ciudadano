@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ClaimResponse } from '@/app/models/claims/utils/types';
+import { ClaimResponse } from '@/app/models/claims/types/types';
 
 function getStoredPublicIds(): string[] {
   const existing = localStorage.getItem('publicIds');

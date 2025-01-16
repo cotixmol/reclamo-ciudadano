@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { ClaimResponse } from '../utils/types';
+import { ClaimResponse } from '../types/types';
 import ClaimCard from '../components/ClaimCard';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
