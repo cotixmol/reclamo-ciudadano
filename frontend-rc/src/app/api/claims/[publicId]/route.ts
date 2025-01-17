@@ -33,7 +33,7 @@ export async function DELETE(
   context: { params: { publicId: string } }
 ): Promise<NextResponse> {
   try {
-    const { publicId } = context.params;
+    const { publicId } = await context.params;
     if (!publicId) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
@@ -57,7 +57,7 @@ export async function PUT(
   context: { params: { publicId: string } }
 ): Promise<NextResponse> {
   try {
-    const { publicId } = context.params;
+    const { publicId } = await context.params;
     if (!publicId) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
