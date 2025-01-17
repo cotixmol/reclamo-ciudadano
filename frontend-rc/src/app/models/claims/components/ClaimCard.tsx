@@ -7,7 +7,7 @@ import '../../../i18n';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ClaimResponse, ClaimStatus } from '../types/types';
-import { TiDeleteOutline } from 'react-icons/ti';
+import { TiDelete } from 'react-icons/ti';
 import { deleteClaimByPublicId } from '@/app/services/claims/delete';
 import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
 
@@ -66,7 +66,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
   };
 
   return (
-    <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out max-h-96 md:max-h-[500px]">
+    <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out md:max-h-[500px]">
       {/* Confirmation Popup */}
       <DeleteClaimConfirmationPopUp
         isOpen={isPopupOpen}
@@ -77,14 +77,14 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
       <div className="relative w-full">
         {/* Container for Quarter Circle and Delete Button */}
         <div className="absolute top-2 right-2">
-          <div className="absolute inset-0 w-8 h-8 bg-gray-800 rounded-full"></div>
+          <div className="absolute inset-0 w-7 h-7 bg-gray-800 rounded-full"></div>
           {/* Delete Button opens the confirmation pop-up */}
           <button
             onClick={openPopup}
             aria-label="Delete Claim"
-            className="relative p-1 z-10"
+            className="relative p-0.5 z-10"
           >
-            <TiDeleteOutline className="w-6 h-6 text-primary hover:text-primary-hover transition-colors duration-200" />
+            <TiDelete className="w-6 h-6 text-primary hover:text-primary-hover transition-colors duration-200" />
           </button>
         </div>
 
@@ -123,7 +123,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
           {description}
         </p>
         {/* See More Information */}
-        <div className="mt-4">
+        <div className="my-2">
           <Link href={`/models/claims/pages/${publicId}`}>
             <button className="relative z-10 text-sm font-semibold text-primary hover:underline hover:text-primary-hover transition duration-200">
               {t('seeMore')}

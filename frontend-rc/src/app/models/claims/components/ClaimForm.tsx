@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import { ClaimCreateRequest } from '../types/types';
 import { createClaim } from '@/app/services/claims/create';
+import { TiDelete } from 'react-icons/ti';
 
 export default function ClaimForm() {
   const router = useRouter();
@@ -57,30 +58,60 @@ export default function ClaimForm() {
             <label className="block mb-1" htmlFor="title">
               {t('claimTitle')}
             </label>
-            <input
-              id="title"
-              type="text"
-              placeholder={t('placeholder.enterTitle')}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-            />
+            <div className="flex items-start bg-gray-700 rounded focus-within:ring-2 focus-within:ring-primary">
+              <input
+                id="title"
+                type="text"
+                placeholder={t('placeholder.enterTitle')}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                maxLength={200}
+                className="flex-grow p-2 bg-transparent text-white focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setTitle('')}
+                className="px-2 py-2 text-sm hover:text-white"
+              >
+                <TiDelete className="w-6 h-6" />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mt-1">
+              {title.length}
+              {t('200characters')}
+            </p>
           </div>
 
           <div>
             <label className="block mb-1" htmlFor="description">
               {t('claimDescription')}
             </label>
-            <textarea
-              id="description"
-              placeholder={t('placeholder.enterDescription')}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-              className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-              rows={4}
-            />
+            <div className="flex items-start bg-gray-700 rounded focus-within:ring-2 focus-within:ring-primary">
+              <textarea
+                id="description"
+                placeholder={t('placeholder.enterDescription')}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+                maxLength={1000}
+                className="flex-grow p-2 bg-transparent text-white focus:outline-none resize-none"
+                rows={7}
+              />
+              <button
+                type="button"
+                onClick={() => setDescription('')}
+                className="px-2 py-2 self-start text-sm hover:text-white"
+                aria-label={t('Clear')}
+              >
+                <TiDelete className="w-6 h-6" />
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              {description.length}
+              {t('1000characters')}
+            </p>
           </div>
 
           <div>

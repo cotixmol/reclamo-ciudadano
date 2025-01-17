@@ -10,5 +10,7 @@
         "enterDescription": "Ingrese la descripción",
         "enterLatitude": "Ingrese la latitud",
         "enterLongitude": "Ingrese la longitud"
-    }
+    },
+    "200characters": "/200 caracteres",
+    "1000characters": "/1000 caracteres"
 }
