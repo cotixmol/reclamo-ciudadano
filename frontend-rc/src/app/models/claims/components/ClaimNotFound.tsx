@@ -21,7 +21,7 @@ const ClaimNotFoundPage: React.FC = () => {
       </p>
       <button
         onClick={() => router.back()}
-        className="bg-primary text-white px-6 py-3 rounded-full shadow-md hover:bg-primary-hover transition duration-200"
+        className="bg-primary px-6 py-3 rounded-full shadow-md hover:bg-primary-hover transition duration-200"
       >
         {t('goBack')}
       </button>

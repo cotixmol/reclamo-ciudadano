@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import './i18n';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
@@ -23,7 +24,7 @@ export default function HomePage() {
           {t('hero.subtitle')}
         </p>
         <Link href="/models/claims/pages">
-          <button className="px-6 py-3 bg-[#e4047d] text-white text-lg font-semibold rounded-lg shadow-lg hover:bg-[#ff4da6] transition-all duration-300">
+          <button className="px-6 py-3 bg-[#e4047d] text-lg font-semibold rounded-lg shadow-lg hover:bg-[#ff4da6] transition-all duration-300">
             {t('hero.button')}
           </button>
         </Link>

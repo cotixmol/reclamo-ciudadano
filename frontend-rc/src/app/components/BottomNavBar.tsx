@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FiHome, FiPlus, FiList } from 'react-icons/fi';
@@ -35,7 +35,7 @@ const BottomNavBar = () => {
         {/* Center: Plus */}
         <Link
           href="/models/claims/pages/create"
-          className="flex items-center mx-auto bg-primary text-white rounded-full p-4 hover:bg-primary-hover transition-colors duration-200"
+          className="flex items-center mx-auto bg-primary rounded-full p-4 hover:bg-primary-hover transition-colors duration-200"
         >
           <FiPlus className="w-6 h-6" />
         </Link>

@@ -43,7 +43,7 @@ export default function ClaimsPage() {
   }
 
   return (
-    <div className="bg-gray-800 p-4 flex justify-center items-start">
+    <div className="p-4 flex justify-center items-start">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {claims.map((claim) => (
           <ClaimCard key={claim.publicId} claim={claim} />

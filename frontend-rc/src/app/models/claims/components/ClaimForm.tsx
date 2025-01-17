@@ -115,7 +115,7 @@ export default function ClaimForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-2 px-4 rounded text-white transition ${
+            className={`w-full py-2 px-4 rounded transition ${
               isSubmitting
                 ? 'bg-gray-600 cursor-not-allowed'
                 : 'bg-primary hover:bg-primary-hover'
