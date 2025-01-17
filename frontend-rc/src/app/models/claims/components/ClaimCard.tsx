@@ -6,6 +6,8 @@ import Link from 'next/link';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
 import { ClaimResponse, ClaimStatus } from '../types/types';
+import { TiDeleteOutline } from 'react-icons/ti';
+import { deleteClaimByPublicId } from '@/app/services/claims/delete';
 
 interface ClaimCardProps {
   claim: ClaimResponse;
@@ -13,8 +15,16 @@ interface ClaimCardProps {
 
 const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
   const { t } = useTranslation('claim');
+  const { publicId, title, description, status, createdAt } = claim;
 
-  const { publicId, title, description, status, createdAt, isEdited } = claim;
+  const handleDelete = async () => {
+    try {
+      await deleteClaimByPublicId(publicId);
+    } catch (error) {
+      console.error('Deletion failed', error);
+      alert('Failed to delete claim');
+    }
+  };
 
   const formattedDate =
     createdAt && !isNaN(new Date(createdAt).getTime())
@@ -47,6 +57,19 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
   return (
     <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out max-h-96 md:max-h-[500px]">
       <div className="relative w-full">
+        {/* Container for Quarter Circle and Delete Button */}
+        <div className="absolute top-2 right-2">
+          <div className="absolute inset-0 w-8 h-8 bg-gray-800 rounded-full"></div>
+          {/* Delete Button */}
+          <button
+            onClick={handleDelete}
+            aria-label="Delete Claim"
+            className="relative p-1 z-10"
+          >
+            <TiDeleteOutline className="w-6 h-6 text-primary hover:text-primary-hover transition-colors duration-200" />
+          </button>
+        </div>
+
         <Image
           src="https://upload.wikimedia.org/wikipedia/commons/0/05/Burnout_ops_on_Mangum_Fire_McCall_Smokejumpers.jpg"
           alt={title}
@@ -54,17 +77,19 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
           height={300}
           className="w-full h-full max-h-64 min-h-32 md:max-h-64 object-cover"
         />
+
+        {/* Status Tag */}
         <span
-          className={`absolute top-2 right-2 z-10 text-xs font-semibold px-3 py-1 rounded-full ${getStatusColor(
+          className={`absolute top-2 left-2 z-10 text-xs font-semibold px-3 py-1 mt-1 rounded-full ${getStatusColor(
             status
-          )} text-white capitalize`}
+          )} capitalize`}
         >
           {t(`status.${status}`)}
         </span>
       </div>
 
       {/* Card Content Section */}
-      <div className="p-4 bg-gray-900 text-gray-200">
+      <div className="p-4 bg-gray-800 text-gray-200">
         <h3 className="text-base font-semibold text-gray-100 truncate">
           {title}
         </h3>
@@ -74,11 +99,6 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
               {formattedDate}{' '}
               <span className="text-gray-500">{formattedTime}</span>
             </span>
-            {isEdited && (
-              <span className="text-xs font-medium text-yellow-400">
-                {t('edited')}
-              </span>
-            )}
           </div>
         </div>
         <p className="mt-2 text-xs text-gray-400 leading-relaxed line-clamp-3">
