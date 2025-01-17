@@ -10,6 +10,7 @@ import { fetchAllClaimsByPublicIds } from '@/app/services/claims/fetch';
 
 export default function ClaimsPage() {
   const [claims, setClaims] = useState<ClaimResponse[]>([]);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -30,7 +31,7 @@ export default function ClaimsPage() {
     loadClaims();
   }, []);
 
-  if (isLoading) {
+  if (isLoading || isDeleting) {
     return <LoadingScreen />;
   }
 
@@ -46,7 +47,11 @@ export default function ClaimsPage() {
     <div className="p-4 flex justify-center items-start">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {claims.map((claim) => (
-          <ClaimCard key={claim.publicId} claim={claim} />
+          <ClaimCard
+            key={claim.publicId}
+            claim={claim}
+            setIsDeleting={setIsDeleting}
+          />
         ))}
       </div>
     </div>

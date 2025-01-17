@@ -9,19 +9,17 @@ import { useTranslation } from 'react-i18next';
 import { ClaimResponse, ClaimStatus } from '../types/types';
 import { TiDeleteOutline } from 'react-icons/ti';
 import { deleteClaimByPublicId } from '@/app/services/claims/delete';
-import LoadingScreen from '@/app/components/LoadingScreen';
 import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
 
 interface ClaimCardProps {
   claim: ClaimResponse;
+  setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
+const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
   const { t } = useTranslation('claim');
   const { publicId, title, description, status, createdAt } = claim;
-
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
@@ -31,9 +29,11 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
     closePopup();
     try {
       await deleteClaimByPublicId(publicId);
+      // Instead of window.location.reload(), consider updating parent's state or re-fetching data
       window.location.reload();
     } catch (error) {
       console.error('Deletion failed', error);
+      setIsDeleting(false);
     }
   };
 
@@ -64,10 +64,6 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
         return 'bg-green-400';
     }
   };
-
-  if (isDeleting) {
-    return <LoadingScreen />;
-  }
 
   return (
     <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out max-h-96 md:max-h-[500px]">
