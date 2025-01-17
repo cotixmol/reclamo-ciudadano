@@ -20,7 +20,7 @@ const ClaimNotFoundPage: React.FC = () => {
         {t('noClaimsDescription')}
       </p>
       <button
-        onClick={() => router.back()}
+        onClick={() => router.push('/models/claims/pages/create')}
         className="bg-primary px-6 py-3 rounded-full shadow-md hover:bg-primary-hover transition duration-200"
       >
         {t('createNewClaim')}
