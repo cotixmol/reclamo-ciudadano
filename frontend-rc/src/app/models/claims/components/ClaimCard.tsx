@@ -108,7 +108,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
 
       {/* Card Content Section */}
       <div className="p-4 bg-gray-800 text-gray-200">
-        <h3 className="text-base font-semibold text-gray-100 truncate">
+        <h3 className="text-base font-semibold text-gray-100 whitespace-normal">
           {title}
         </h3>
         <div className="flex items-center justify-between">
