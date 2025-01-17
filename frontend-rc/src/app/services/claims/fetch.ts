@@ -12,10 +12,10 @@ export async function fetchAllClaimsByPublicIds(): Promise<ClaimResponse[]> {
     const response = await axios.post<ClaimResponse[]>('/api/claims', {
       public_ids: publicIds,
     });
-    if (response){
-      return response.data
+    if (response) {
+      return response.data;
     }
-    return []
+    return [];
   } catch (error) {
     console.error('Error fetching claims:', error);
     throw error;
