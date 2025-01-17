@@ -4,10 +4,13 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import '../../../i18n';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ClaimResponse, ClaimStatus } from '../types/types';
 import { TiDeleteOutline } from 'react-icons/ti';
 import { deleteClaimByPublicId } from '@/app/services/claims/delete';
+import LoadingScreen from '@/app/components/LoadingScreen';
+import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
 
 interface ClaimCardProps {
   claim: ClaimResponse;
@@ -17,12 +20,20 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
   const { t } = useTranslation('claim');
   const { publicId, title, description, status, createdAt } = claim;
 
-  const handleDelete = async () => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const openPopup = () => setIsPopupOpen(true);
+  const closePopup = () => setIsPopupOpen(false);
+
+  const handleDeleteConfirmed = async () => {
+    setIsDeleting(true);
+    closePopup();
     try {
       await deleteClaimByPublicId(publicId);
+      window.location.reload();
     } catch (error) {
       console.error('Deletion failed', error);
-      alert('Failed to delete claim');
     }
   };
 
@@ -54,15 +65,26 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim }) => {
     }
   };
 
+  if (isDeleting) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out max-h-96 md:max-h-[500px]">
+      {/* Confirmation Popup */}
+      <DeleteClaimConfirmationPopUp
+        isOpen={isPopupOpen}
+        onClose={closePopup}
+        onConfirm={handleDeleteConfirmed}
+      />
+
       <div className="relative w-full">
         {/* Container for Quarter Circle and Delete Button */}
         <div className="absolute top-2 right-2">
           <div className="absolute inset-0 w-8 h-8 bg-gray-800 rounded-full"></div>
-          {/* Delete Button */}
+          {/* Delete Button opens the confirmation pop-up */}
           <button
-            onClick={handleDelete}
+            onClick={openPopup}
             aria-label="Delete Claim"
             className="relative p-1 z-10"
           >

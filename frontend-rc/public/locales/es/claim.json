@@ -6,5 +6,10 @@
   "unknownDate": "Fecha desconocida",
   "unknownTime": "Hora desconocida",
   "edited": "Editado",
-  "seeMore": "Ver más"
+  "seeMore": "Ver más",
+  "confirmDeletionTitle": "Confirmar Eliminación",
+  "confirmDeletionMessage": "¿Estás seguro de que deseas eliminar este reclamo?",
+  "cancel": "Cancelar",
+  "confirm": "Sí, Eliminar",
+  "deletionFailed": "Error al eliminar el reclamo."
 }
