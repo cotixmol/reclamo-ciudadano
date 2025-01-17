@@ -14,6 +14,9 @@ import enClaim from '../../public/locales/en/claim.json';
 import esClaim from '../../public/locales/es/claim.json';
 import enClaimNotFound from '../../public/locales/en/claimnotfound.json';
 import esClaimNotFound from '../../public/locales/es/claimnotfound.json';
+import enClaimCreationForm from '../../public/locales/en/claimcreationform.json';
+import esClaimCreationForm from '../../public/locales/es/claimcreationform.json';
+
 
 void i18n.use(initReactI18next).init({
   resources: {
@@ -23,6 +26,7 @@ void i18n.use(initReactI18next).init({
       errorpage: enErrorPage,
       claim: enClaim,
       claimnotfound: enClaimNotFound,
+      claimcreationform: enClaimCreationForm
     },
     es: {
       homepage: esHomepage,
@@ -30,6 +34,7 @@ void i18n.use(initReactI18next).init({
       errorpage: esErrorPage,
       claim: esClaim,
       claimnotfound: esClaimNotFound,
+      claimcreationform: esClaimCreationForm
     },
   },
   lng: 'es',

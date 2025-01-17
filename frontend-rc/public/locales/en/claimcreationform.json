@@ -1,0 +1,14 @@
+{
+    "formTitle": "Create a Claim",
+    "claimTitle": "Title",
+    "claimDescription": "Description",
+    "claimLatitude": "Latitude",
+    "claimLongitude": "Longitude",
+    "claimSubmitButton": "Submit",
+    "placeholder": {
+        "enterTitle": "Enter title",
+        "enterDescription": "Enter description",
+        "enterLatitude": "Enter latitude",
+        "enterLongitude": "Enter longitude"
+    }
+}

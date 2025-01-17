@@ -23,7 +23,7 @@ const ClaimNotFoundPage: React.FC = () => {
         onClick={() => router.back()}
         className="bg-primary px-6 py-3 rounded-full shadow-md hover:bg-primary-hover transition duration-200"
       >
-        {t('goBack')}
+        {t('createNewClaim')}
       </button>
     </div>
   );

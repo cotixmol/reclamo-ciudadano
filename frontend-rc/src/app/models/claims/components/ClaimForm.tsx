@@ -1,5 +1,7 @@
 'use client';
 import React from 'react';
+import '../../../i18n';
+import { useTranslation } from 'react-i18next';
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingScreen from '@/app/components/LoadingScreen';
@@ -8,6 +10,7 @@ import { createClaim } from '@/app/services/claims/create';
 
 export default function ClaimForm() {
   const router = useRouter();
+  const { t } = useTranslation('claimcreationform');
 
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -48,16 +51,16 @@ export default function ClaimForm() {
   return (
     <div className="flex items-center justify-center">
       <div className="w-full max-w-3xl bg-gray-900 p-8 rounded-lg">
-        <h2 className="text-2xl font-semibold mb-6">Create a Claim</h2>
+        <h2 className="text-2xl font-semibold mb-6">{t('formTitle')}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block mb-1" htmlFor="title">
-              Title
+              {t('claimTitle')}
             </label>
             <input
               id="title"
               type="text"
-              placeholder="Enter title"
+              placeholder={t('placeholder.enterTitle')}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
@@ -67,11 +70,11 @@ export default function ClaimForm() {
 
           <div>
             <label className="block mb-1" htmlFor="description">
-              Description
+              {t('claimDescription')}
             </label>
             <textarea
               id="description"
-              placeholder="Enter description"
+              placeholder={t('placeholder.enterDescription')}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
@@ -82,13 +85,13 @@ export default function ClaimForm() {
 
           <div>
             <label className="block mb-1" htmlFor="latitude">
-              Latitude
+              {t('claimLatitude')}
             </label>
             <input
               id="latitude"
               type="number"
               step="any"
-              placeholder="Enter latitude"
+              placeholder={t('placeholder.enterLatitude')}
               value={latitude}
               onChange={(e) => setLatitude(e.target.value)}
               required
@@ -98,13 +101,13 @@ export default function ClaimForm() {
 
           <div>
             <label className="block mb-1" htmlFor="longitude">
-              Longitude
+              {t('claimLongitude')}
             </label>
             <input
               id="longitude"
               type="number"
               step="any"
-              placeholder="Enter longitude"
+              placeholder={t('placeholder.enterLongitude')}
               value={longitude}
               onChange={(e) => setLongitude(e.target.value)}
               required
@@ -121,7 +124,7 @@ export default function ClaimForm() {
                 : 'bg-primary hover:bg-primary-hover'
             }`}
           >
-            {isSubmitting ? 'Submitting...' : 'Submit'}
+            {t('claimSubmitButton')}
           </button>
         </form>
       </div>
