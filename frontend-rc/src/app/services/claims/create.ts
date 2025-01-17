@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { ClaimCreateRequest, ClaimResponse } from '@/app/models/claims/types/types';
+import {
+  ClaimCreateRequest,
+  ClaimResponse,
+} from '@/app/models/claims/types/types';
 
 function savePublicId(newId: string) {
   const existing = localStorage.getItem('publicIds');
@@ -8,9 +11,14 @@ function savePublicId(newId: string) {
   localStorage.setItem('publicIds', JSON.stringify(publicIds));
 }
 
-export async function createClaim(data: ClaimCreateRequest): Promise<ClaimResponse> {
+export async function createClaim(
+  data: ClaimCreateRequest
+): Promise<ClaimResponse> {
   try {
-    const response = await axios.post<ClaimResponse>('/api/claims/create', data);
+    const response = await axios.post<ClaimResponse>(
+      '/api/claims/create',
+      data
+    );
     const { publicId } = response.data;
     savePublicId(publicId);
     return response.data;

@@ -19,7 +19,9 @@ export async function fetchAllClaimsByPublicIds(): Promise<ClaimResponse[]> {
   }
 }
 
-export async function fetchClaimByPublicId(publicId: string): Promise<ClaimResponse> {
+export async function fetchClaimByPublicId(
+  publicId: string
+): Promise<ClaimResponse> {
   try {
     const response = await axios.get<ClaimResponse>(`/api/claims/${publicId}`);
     return response.data;
@@ -28,4 +30,3 @@ export async function fetchClaimByPublicId(publicId: string): Promise<ClaimRespo
     throw error;
   }
 }
-
