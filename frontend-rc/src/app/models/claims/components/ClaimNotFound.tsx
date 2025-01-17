@@ -1,14 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { FiSearch } from 'react-icons/fi';
 import '../../../i18n';
 import { useTranslation } from 'react-i18next';
-
+import Link from 'next/link';
 const ClaimNotFoundPage: React.FC = () => {
   const { t } = useTranslation('claimnotfound');
-  const router = useRouter();
 
   return (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-112px)] bg-gray-900 text-gray-200 px-4">
@@ -19,12 +17,14 @@ const ClaimNotFoundPage: React.FC = () => {
       <p className="text-gray-400 mb-6 text-center">
         {t('noClaimsDescription')}
       </p>
-      <button
-        onClick={() => router.push('/models/claims/pages/create')}
-        className="bg-primary px-6 py-3 rounded-full shadow-md hover:bg-primary-hover transition duration-200"
-      >
-        {t('createNewClaim')}
-      </button>
+      <Link href="/models/claims/pages/create" passHref>
+        <button
+          type="button"
+          className="px-6 py-3 bg-primary text-lg font-semibold rounded-lg shadow-lg hover:bg-primary-hover transition-all duration-300"
+        >
+          {t('createNewClaim')}
+        </button>
+      </Link>
     </div>
   );
 };

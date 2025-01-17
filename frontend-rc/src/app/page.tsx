@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
 import './i18n';
-import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './components/LanguageSwitcher';
 
 export default function HomePage() {
@@ -23,8 +23,11 @@ export default function HomePage() {
         <p className="text-lg md:text-xl text-gray-300 mb-8">
           {t('hero.subtitle')}
         </p>
-        <Link href="/models/claims/pages">
-          <button className="px-6 py-3 bg-[#e4047d] text-lg font-semibold rounded-lg shadow-lg hover:bg-[#ff4da6] transition-all duration-300">
+        <Link href="/models/claims/pages" passHref>
+          <button
+            type="button"
+            className="px-6 py-3 bg-primary text-lg font-semibold rounded-lg shadow-lg hover:bg-primary-hover transition-all duration-300"
+          >
             {t('hero.button')}
           </button>
         </Link>
