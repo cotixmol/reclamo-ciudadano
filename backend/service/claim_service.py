@@ -1,5 +1,4 @@
 from errors.claim_errors import (
-    ClaimsNotFoundError,
     ClaimNotFoundError,
     ClaimNotFoundToDeleteError,
     ClaimNotCreatedError,
@@ -14,7 +13,7 @@ class ClaimService:
     def read_all_claims_by_public_ids(self, public_ids):
         try:
             return self.repository.read_all_claims_by_public_ids(public_ids)
-        except ClaimsNotFoundError:
+        except Exception:
             raise
 
     def read_claim_by_public_id(self, public_id):

@@ -10,7 +10,6 @@ from utils import (
 )
 from errors.claim_errors import (
     ClaimNotFoundError,
-    ClaimsNotFoundError,
     ClaimNotFoundToDeleteError,
     ClaimNotCreatedError,
     ClaimNotConvertedError,
@@ -53,24 +52,20 @@ class ClaimSQLAlchemy(ClaimDAO):
         statement = select(Claim).where(Claim.public_id.in_(public_ids))
         try:
             results = db.exec(statement).all()
-            if results:
-                for claim in results:
-                    claim.claim_location = wkb_element_to_geometry_point(
-                        claim.claim_location
-                    )
-            else:
-                raise ClaimsNotFoundError(
-                    "No claims found for the provided public_ids."
+            if not results:
+                return []
+            for claim in results:
+                claim.claim_location = wkb_element_to_geometry_point(
+                    claim.claim_location
                 )
+
             return results
         except SQLAlchemyError as e:
             raise Exception(f"Database error listing claims: {e}")
         except ClaimNotConvertedError as e:
             raise e
         except Exception as e:
-            raise ClaimsNotFoundError(
-                f"An unexpected error occurred listing claims: {e}"
-            )
+            raise Exception(f"An unexpected error occurred listing claims: {e}")
 
     def read_claim_by_public_id(self, db: Session, public_id: UUID) -> Claim:
         statement = select(Claim).where(Claim.public_id == public_id)

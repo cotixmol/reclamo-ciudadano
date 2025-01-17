@@ -4,7 +4,6 @@ from typing import List
 from dao.claim_dao import ClaimDAO, ClaimSQLAlchemy
 from sqlalchemy.exc import NoResultFound
 from errors.claim_errors import (
-    ClaimsNotFoundError,
     ClaimNotFoundError,
     ClaimNotFoundToDeleteError,
     ClaimNotCreatedError,
@@ -20,8 +19,6 @@ class ClaimRepository:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.read_all_claims_by_public_ids(db, public_ids)
-        except ClaimsNotFoundError as e:
-            raise e
         except Exception as e:
             raise e
 

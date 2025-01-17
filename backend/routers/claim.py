@@ -8,7 +8,6 @@ from typing import List
 from custom_types import AllClaimsRequest
 from errors.claim_errors import (
     ClaimNotFoundError,
-    ClaimsNotFoundError,
     ClaimNotFoundToDeleteError,
     ClaimNotCreatedError,
     ClaimNotUpdatedError,
@@ -25,8 +24,6 @@ async def read_all_claims_by_public_ids(
     try:
         all_claims = service.read_all_claims_by_public_ids(request.public_ids)
         return all_claims
-    except ClaimsNotFoundError as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
