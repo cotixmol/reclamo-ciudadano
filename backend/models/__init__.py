@@ -1,3 +1,3 @@
 from .multimedia import Multimedia
 from .claim import Claim
-from .claim_type import ClaimTypes
+from .claim_types import ClaimTypes

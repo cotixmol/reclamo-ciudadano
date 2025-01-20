@@ -1,1 +1,2 @@
 from .claim_repository import ClaimRepository
+from .claim_type_repository import ClaimTypesRepository

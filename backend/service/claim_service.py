@@ -1,4 +1,4 @@
-from errors.claim_errors import (
+from errors import (
     ClaimNotFoundError,
     ClaimNotFoundToDeleteError,
     ClaimNotCreatedError,

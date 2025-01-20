@@ -1,7 +1,7 @@
 from models import Claim
 from sqlmodel import Session
 from typing import List
-from dao.claim_dao import ClaimDAO, ClaimSQLAlchemy
+from dao import ClaimDAO, ClaimSQLAlchemy
 from sqlalchemy.exc import NoResultFound
 from errors.claim_errors import (
     ClaimNotFoundError,

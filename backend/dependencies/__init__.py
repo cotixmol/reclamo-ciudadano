@@ -1,1 +1,2 @@
 from .claim_dependency import get_claim_service
+from .claim_types_dependency import get_claim_types_service

@@ -13,10 +13,10 @@ from errors.claim_errors import (
     ClaimNotUpdatedError,
 )
 
-router = APIRouter()
+claim_router = APIRouter()
 
 
-@router.post("/claims/", response_model=List[Claim])
+@claim_router.post("/claims/", response_model=List[Claim])
 async def read_all_claims_by_public_ids(
     request: AllClaimsRequest,
     service: ClaimService = Depends(get_claim_service),
@@ -31,7 +31,7 @@ async def read_all_claims_by_public_ids(
         )
 
 
-@router.get("/claim/{public_id}", response_model=Claim)
+@claim_router.get("/claim/{public_id}", response_model=Claim)
 async def read_claim_by_public_id(
     public_id: UUID, service: ClaimService = Depends(get_claim_service)
 ):
@@ -47,7 +47,7 @@ async def read_claim_by_public_id(
         )
 
 
-@router.delete("/claim/{public_id}", response_model=Claim)
+@claim_router.delete("/claim/{public_id}", response_model=Claim)
 async def delete_claim_by_public_id(
     public_id: UUID, service: ClaimService = Depends(get_claim_service)
 ):
@@ -63,7 +63,7 @@ async def delete_claim_by_public_id(
         )
 
 
-@router.post("/claim/", response_model=Claim)
+@claim_router.post("/claim/", response_model=Claim)
 async def create_claim(
     claim: Claim, service: ClaimService = Depends(get_claim_service)
 ):
@@ -79,7 +79,7 @@ async def create_claim(
         )
 
 
-@router.put("/claim/{public_id}", response_model=Claim)
+@claim_router.put("/claim/{public_id}", response_model=Claim)
 async def update_claim_by_public_id(
     claim: Claim, public_id: UUID, service: ClaimService = Depends(get_claim_service)
 ):
