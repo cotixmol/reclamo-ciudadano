@@ -13,5 +13,6 @@
   },
   "200characters": "/200 characters",
   "1000characters": "/1000 characters",
-  "chosenAddress": "Chosen Address"
+  "chosenAddress": "Chosen Address",
+  "claimLocation": "Place a Location"
 }

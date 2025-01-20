@@ -66,10 +66,10 @@ export default function MapSelector({
 
   return (
     <MapContainer
+      className="w-full h-64 border-2 border-gray-700 rounded-lg shadow-lg"
       center={center}
       zoom={16}
       scrollWheelZoom
-      style={{ width: '100%', height: '100%' }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <GeocoderAndEvents />

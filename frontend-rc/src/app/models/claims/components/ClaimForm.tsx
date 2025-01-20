@@ -125,7 +125,10 @@ export default function ClaimForm() {
           </div>
 
           {/* Map */}
-          <div className="w-full h-64 rounded overflow-hidden">
+          <div className="w-full rounded overflow-hidden ">
+            <label htmlFor="description" className="block">
+              {t('claimLocation')}{' '}
+            </label>
             <MapSelector
               latitude={latitude}
               longitude={longitude}
