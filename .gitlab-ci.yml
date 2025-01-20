@@ -1,0 +1,96 @@
+stages:
+  - build
+  - deploy
+
+build_front:
+  stage: build
+  image: docker:latest
+  tags:
+    - saas
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - |
+      source VERSION
+      if [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+        tag="$VERSION"
+        target_server="prod"
+      else
+        tag="$CI_COMMIT_REF_SLUG$VERSION"
+        target_server="dev"
+      fi
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
+    - cd frontend-rc
+    - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
+    - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
+  # Run this job in the development branch  (must have a dockerfile there)
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "devops"
+
+build_back:
+  image: docker:latest
+  stage: build
+  tags:
+    - saas
+  services:
+    - docker:dind
+  before_script:
+    - unset DOCKER_HOST
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - |
+      source VERSION
+      if [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+        tag="$VERSION"
+        target_server="prod"
+      else
+        tag="$CI_COMMIT_REF_SLUG$VERSION"
+        target_server="dev"
+      fi
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
+    - cd backend
+    - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
+    - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
+  # Run this job in the development branch  (must have a dockerfile there)
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "devops"
+
+deploy:
+  stage: deploy
+  image: "ieferrari/ansible:11.0.0"
+  tags:
+    - saas  
+  script:
+    - source VERSION
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+        echo "<<<< PRODUCTION DEPLOY >>>>"
+        tag="$VERSION"
+        target_server="prod"
+        folder_name="reclamo_ciudadano"
+        cat $ansible_credentials_yml >> .infra/.ansible/cred.yml
+        mv .infra/.env_prod .env
+      else
+        echo "<<<< DEVELOPMENT DEPLOY >>>>"
+        tag="$CI_COMMIT_REF_SLUG$VERSION"
+        target_server="dev"
+        folder_name="reclamo_ciudadano_dev"
+        cat $ansible_credentials_yml_dev >> .infra/.ansible/cred.yml
+        mv .infra/.env_dev .env
+      fi
+    - chmod +x  .infra/.ansible/inject_secrets.sh 
+    - .infra/.ansible/inject_secrets.sh
+    - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
+    - export  ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
+    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH == "devops"
+
