@@ -1,25 +1,35 @@
 'use client';
-import React from 'react';
-import '../../../i18n';
-import { useTranslation } from 'react-i18next';
-import { useState, FormEvent } from 'react';
+
+import React, { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
+import '../../../i18n';
+
 import LoadingScreen from '@/app/components/LoadingScreen';
-import { ClaimCreateRequest } from '../types/types';
 import { createClaim } from '@/app/services/claims/create';
+import { ClaimCreateRequest } from '../types/types';
 import { TiDelete } from 'react-icons/ti';
+import dynamic from 'next/dynamic';
+
+const MapSelector = dynamic(() => import('./MapSelector'), {
+  ssr: false,
+});
 
 export default function ClaimForm() {
   const router = useRouter();
   const { t } = useTranslation('claimcreationform');
 
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [latitude, setLatitude] = useState<string>('');
-  const [longitude, setLongitude] = useState<string>('');
-  const [status] = useState<string>('Open');
-  const [type_category_id] = useState<number>(1);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+  const [locationName, setLocationName] = useState('');
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // For enabling the submit if lat/long are set
+  const hasLocation = !!latitude && !!longitude;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -28,8 +38,8 @@ export default function ClaimForm() {
     const claimData: ClaimCreateRequest = {
       title,
       description,
-      status,
-      type_category_id,
+      status: 'Open',
+      type_category_id: 1,
       claim_location: {
         type: 'Point',
         coordinates: [parseFloat(latitude), parseFloat(longitude)],
@@ -53,16 +63,17 @@ export default function ClaimForm() {
     <div className="flex items-center justify-center">
       <div className="w-full max-w-3xl bg-gray-900 p-8 rounded-lg">
         <h2 className="text-2xl font-semibold mb-6">{t('formTitle')}</h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Title */}
           <div>
-            <label className="block mb-1" htmlFor="title">
+            <label htmlFor="title" className="block mb-1">
               {t('claimTitle')}
             </label>
             <div className="flex items-start bg-gray-700 rounded focus-within:ring-2 focus-within:ring-primary">
               <input
                 id="title"
                 type="text"
-                placeholder={t('placeholder.enterTitle')}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
@@ -77,21 +88,20 @@ export default function ClaimForm() {
                 <TiDelete className="w-6 h-6" />
               </button>
             </div>
-
             <p className="text-xs text-gray-500 mt-1">
               {title.length}
               {t('200characters')}
             </p>
           </div>
 
+          {/* Description */}
           <div>
-            <label className="block mb-1" htmlFor="description">
+            <label htmlFor="description" className="block mb-1">
               {t('claimDescription')}
             </label>
             <div className="flex items-start bg-gray-700 rounded focus-within:ring-2 focus-within:ring-primary">
               <textarea
                 id="description"
-                placeholder={t('placeholder.enterDescription')}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
@@ -103,7 +113,7 @@ export default function ClaimForm() {
                 type="button"
                 onClick={() => setDescription('')}
                 className="px-2 py-2 self-start text-sm hover:text-white"
-                aria-label={t('Clear')}
+                aria-label="Clear"
               >
                 <TiDelete className="w-6 h-6" />
               </button>
@@ -114,43 +124,33 @@ export default function ClaimForm() {
             </p>
           </div>
 
-          <div>
-            <label className="block mb-1" htmlFor="latitude">
-              {t('claimLatitude')}
-            </label>
-            <input
-              id="latitude"
-              type="number"
-              step="any"
-              placeholder={t('placeholder.enterLatitude')}
-              value={latitude}
-              onChange={(e) => setLatitude(e.target.value)}
-              required
-              className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary"
+          {/* Map */}
+          <div className="w-full h-64 rounded overflow-hidden">
+            <MapSelector
+              latitude={latitude}
+              longitude={longitude}
+              onLocationChangeAction={(lat, lng, address) => {
+                setLatitude(lat);
+                setLongitude(lng);
+                if (address) setLocationName(address);
+              }}
             />
           </div>
 
-          <div>
-            <label className="block mb-1" htmlFor="longitude">
-              {t('claimLongitude')}
-            </label>
-            <input
-              id="longitude"
-              type="number"
-              step="any"
-              placeholder={t('placeholder.enterLongitude')}
-              value={longitude}
-              onChange={(e) => setLongitude(e.target.value)}
-              required
-              className="w-full p-2 bg-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
+          {/* Show chosen address if you like */}
+          {hasLocation && locationName && (
+            <p className="text-sm mt-2">
+              <span className="font-semibold">{t('chosenAddress')}:</span>{' '}
+              <span className="text-gray-400">{locationName}</span>
+            </p>
+          )}
 
+          {/* Submit */}
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={!hasLocation || isSubmitting}
             className={`w-full py-2 px-4 rounded transition ${
-              isSubmitting
+              !hasLocation || isSubmitting
                 ? 'bg-gray-600 cursor-not-allowed'
                 : 'bg-primary hover:bg-primary-hover'
             }`}

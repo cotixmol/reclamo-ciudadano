@@ -12,5 +12,6 @@
     "enterLongitude": "Enter longitude"
   },
   "200characters": "/200 characters",
-  "1000characters": "/1000 characters"
+  "1000characters": "/1000 characters",
+  "chosenAddress": "Chosen Address"
 }
