@@ -27,3 +27,9 @@ body {
   padding: 0;
   overflow-x: hidden;
 }
+
+/* Map input text */
+
+.leaflet-control-geocoder-form input {
+  color: #e4047d;
+}
