@@ -14,5 +14,7 @@
   "200characters": "/200 characters",
   "1000characters": "/1000 characters",
   "chosenAddress": "Chosen Address",
-  "claimLocation": "Place a Location"
+  "claimLocation": "Click the magnifying glass and enter where the claim is",
+  "selectLocationTitle": "Select the location",
+  "selectLocationSubtitle": "Click the magnifying glass, type the address, search, and select the correct location."
 }
