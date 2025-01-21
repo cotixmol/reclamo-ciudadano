@@ -3,11 +3,14 @@ services:
     image: registry.reputacion.digital/reclamo_ciudadano_back:${IMAGE_VERSION}
     volumes:
       - ./.env:/app/.env
-    # ports:
-    #   - "8000:8000"
+    ports:
+      - "8007:8000"
     # env_file:
     #   - ./backend/.env
     command: ["python3", "app.py"]
+    networks:
+      - traefik-public
+
 
   frontend:
     image: registry.reputacion.digital/reclamo_ciudadano_front:${IMAGE_VERSION}
@@ -38,3 +41,9 @@ services:
       # Middleware to redirect HTTP to HTTPS
       - traefik.http.routers.reclamo_ciudadano-http.middlewares=https-redirect
 #      - traefik.http.routers.manager-https.middlewares=admin-auth
+    networks:
+      - traefik-public
+
+networks:
+  traefik-public:
+    external: true
