@@ -2,7 +2,7 @@ import axios from 'axios';
 import {
   ClaimCreateRequest,
   ClaimResponse,
-} from '@/app/models/claims/types/types';
+} from '@/app/models/claims/types/claim';
 
 function savePublicId(newId: string) {
   const existing = localStorage.getItem('publicIds');

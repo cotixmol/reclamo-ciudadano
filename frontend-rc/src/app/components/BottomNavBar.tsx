@@ -2,7 +2,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiAlertCircle, FiHome, FiList } from 'react-icons/fi';
+import { FiHome, FiList } from 'react-icons/fi';
+import { IoAdd } from 'react-icons/io5';
 import '../i18n';
 import { useTranslation } from 'react-i18next';
 
@@ -37,7 +38,7 @@ const BottomNavBar = () => {
           href="/models/claims/pages/create"
           className="flex items-center mx-auto bg-primary rounded-full p-4 hover:bg-primary-hover transition-colors duration-200"
         >
-          <FiAlertCircle className="w-10 h-10" />
+          <IoAdd className="w-10 h-10" />
         </Link>
 
         {/* Right: My Claims */}

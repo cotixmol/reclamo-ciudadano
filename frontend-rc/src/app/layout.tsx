@@ -2,6 +2,22 @@ import type { Metadata } from 'next';
 import React from 'react';
 import './globals.css';
 import BottomNavBar from './components/BottomNavBar';
+import { ClaimTypesResponse } from './models/claimTypes/types/claimTypes';
+import { ClaimTypesProvider } from './context/ClaimTypesContext';
+
+async function fetchClaimTypes(): Promise<ClaimTypesResponse[]> {
+  const res = await fetch(`${process.env.API_URL}/claim_types`, {
+    next: { revalidate: 600 },
+  });
+
+  if (!res.ok) {
+    console.error('Failed to fetch claim types:', res.statusText);
+    return [];
+  }
+
+  const data: ClaimTypesResponse[] = await res.json();
+  return data;
+}
 
 export const metadata: Metadata = {
   title: 'Reclamo Ciudadano',
@@ -12,16 +28,21 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const claimTypes = await fetchClaimTypes(); // Server-side fetch
+
   return (
     <html lang="en">
       <body className="relative min-h-screen bg-gray-900 text-gray-200">
-        <div className="pb-28">{children}</div> {/* Add padding for nav bar */}
-        <BottomNavBar />
+        <ClaimTypesProvider claimTypes={claimTypes}>
+          <div className="pb-28">{children}</div>{' '}
+          {/* Add padding for nav bar */}
+          <BottomNavBar />
+        </ClaimTypesProvider>
       </body>
     </html>
   );

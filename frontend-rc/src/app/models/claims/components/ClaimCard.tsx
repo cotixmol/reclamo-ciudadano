@@ -6,7 +6,7 @@ import Link from 'next/link';
 import '../../../i18n';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ClaimResponse, ClaimStatus } from '../types/types';
+import { ClaimResponse, ClaimStatus } from '../types/claim';
 import { TiDelete } from 'react-icons/ti';
 import { deleteClaimByPublicId } from '@/app/services/claims/delete';
 import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';

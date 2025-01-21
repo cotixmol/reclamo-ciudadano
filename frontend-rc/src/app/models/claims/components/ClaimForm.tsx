@@ -7,7 +7,8 @@ import '../../../i18n';
 
 import LoadingScreen from '@/app/components/LoadingScreen';
 import { createClaim } from '@/app/services/claims/create';
-import { ClaimCreateRequest } from '../types/types';
+import { ClaimCreateRequest } from '../types/claim';
+import ClaimTypesDropdown from '../../claimTypes/components/claimTypesDropdown';
 import { TiDelete } from 'react-icons/ti';
 import dynamic from 'next/dynamic';
 
@@ -25,6 +26,9 @@ export default function ClaimForm() {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [locationName, setLocationName] = useState('');
+  const [selectedClaimTypeId, setSelectedClaimTypeId] = useState<number | null>(
+    null
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,7 +43,7 @@ export default function ClaimForm() {
       title,
       description,
       status: 'Open',
-      type_category_id: 1,
+      type_category_id: selectedClaimTypeId ?? 1,
       claim_location: {
         type: 'Point',
         coordinates: [parseFloat(latitude), parseFloat(longitude)],
@@ -94,6 +98,12 @@ export default function ClaimForm() {
             </p>
           </div>
 
+          {/* Claim Type Dropdown */}
+          <ClaimTypesDropdown
+            selectedClaimTypeId={selectedClaimTypeId}
+            onChangeAction={(newId) => setSelectedClaimTypeId(newId)}
+          />
+
           {/* Description */}
           <div>
             <label htmlFor="description" className="block mb-1">
@@ -125,26 +135,26 @@ export default function ClaimForm() {
           </div>
 
           {/* Map */}
-          <div className="w-full rounded overflow-hidden ">
-            {/* New heading and subtitle */}
+          <div className="w-full rounded overflow-hidden relative z-0">
             <div className="mb-4">
               <h3 className="block mb-1">{t('selectLocationTitle')}</h3>
               <p className="text-sm text-gray-500 mt-1">
                 {t('selectLocationSubtitle')}
               </p>
             </div>
-            <MapSelector
-              latitude={latitude}
-              longitude={longitude}
-              onLocationChangeAction={(lat, lng, address) => {
-                setLatitude(lat);
-                setLongitude(lng);
-                if (address) setLocationName(address);
-              }}
-            />
+            <div className="relative z-0">
+              <MapSelector
+                latitude={latitude}
+                longitude={longitude}
+                onLocationChangeAction={(lat, lng, address) => {
+                  setLatitude(lat);
+                  setLongitude(lng);
+                  if (address) setLocationName(address);
+                }}
+              />
+            </div>
           </div>
-
-          {/* Show chosen address if you like */}
+          {/* Show chosen address*/}
           {hasLocation && locationName && (
             <p className="text-sm mt-2">
               <span className="font-semibold">{t('chosenAddress')}:</span>{' '}

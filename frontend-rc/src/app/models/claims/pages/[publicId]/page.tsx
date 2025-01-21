@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { fetchClaimByPublicId } from '@/app/services/claims/fetch';
-import { ClaimResponse } from '../../types/types';
+import { ClaimResponse } from '../../types/claim';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
 import ClaimNotFoundPage from '../../components/ClaimNotFound';

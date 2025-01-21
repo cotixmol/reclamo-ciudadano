@@ -7,12 +7,12 @@ from sqlalchemy.exc import SQLAlchemyError
 
 class ClaimTypesDAO(ABC):
     @abstractmethod
-    def load_all_claims_at_bootstart(self, db: Session) -> List[ClaimTypes]:
+    def load_all_claims_types_at_bootstart(self, db: Session) -> List[ClaimTypes]:
         pass
 
 
 class ClaimTypesSQLAlchemy(ClaimTypesDAO):
-    def load_all_claims_at_bootstart(self, db: Session) -> List[ClaimTypes]:
+    def load_all_claims_types_at_bootstart(self, db: Session) -> List[ClaimTypes]:
         statement = select(ClaimTypes)
         try:
             results = db.exec(statement).all()

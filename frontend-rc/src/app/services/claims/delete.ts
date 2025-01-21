@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ClaimResponse } from '@/app/models/claims/types/types';
+import { ClaimResponse } from '@/app/models/claims/types/claim';
 
 function removePublicId(publicId: string) {
   const existing = localStorage.getItem('publicIds');

@@ -2,6 +2,7 @@
   "formTitle": "Create a Claim",
   "claimTitle": "Title",
   "claimDescription": "Description",
+  "claimType": "Tipo de Reclamo",
   "claimLatitude": "Latitude",
   "claimLongitude": "Longitude",
   "claimSubmitButton": "Submit",
@@ -9,7 +10,8 @@
     "enterTitle": "Enter title",
     "enterDescription": "Enter description",
     "enterLatitude": "Enter latitude",
-    "enterLongitude": "Enter longitude"
+    "enterLongitude": "Enter longitude",
+    "chooseAnOption": "Choose an option"
   },
   "200characters": "/200 characters",
   "1000characters": "/1000 characters",

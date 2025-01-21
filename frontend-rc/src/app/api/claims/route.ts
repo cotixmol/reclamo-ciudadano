@@ -4,7 +4,7 @@ import { toCamelCase } from '@/app/utils/toCamelCase';
 import {
   ApiPublicIdsRequest,
   ClaimListResponse,
-} from '@/app/models/claims/types/types';
+} from '@/app/models/claims/types/claim';
 
 export async function POST(request: NextRequest) {
   try {
