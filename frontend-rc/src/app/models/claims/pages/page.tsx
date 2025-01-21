@@ -1,34 +1,37 @@
-"use client";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { Claim } from "../utils/types";
-import ClaimCard from "../components/ClaimCard";
-import LoadingScreen from "@/app/components/LoadingScreen";
-import ErrorPage from "@/app/components/ErrorPage";
-import ClaimNotFoundPage from "../components/ClaimNotFound";
+'use client';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { ClaimResponse } from '../types/types';
+import ClaimCard from '../components/ClaimCard';
+import LoadingScreen from '@/app/components/LoadingScreen';
+import ErrorPage from '@/app/components/ErrorPage';
+import ClaimNotFoundPage from '../components/ClaimNotFound';
+import { fetchAllClaimsByPublicIds } from '@/app/services/claims/fetch';
 
 export default function ClaimsPage() {
-  const [claims, setClaims] = useState<Claim[]>([]);
+  const [claims, setClaims] = useState<ClaimResponse[]>([]);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    const fetchClaims = async () => {
+    const loadClaims = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get<Claim[]>("/api/claims");
-        setClaims(response.data);
-      } catch (error) {
-        setError(error as Error);
+        const claimsData = await fetchAllClaimsByPublicIds();
+        setClaims(claimsData);
+        setClaims(claimsData.reverse());
+      } catch (err) {
+        setError(err as Error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchClaims();
+    loadClaims();
   }, []);
 
-  if (isLoading) {
+  if (isLoading || isDeleting) {
     return <LoadingScreen />;
   }
 
@@ -41,10 +44,14 @@ export default function ClaimsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-800 p-4 flex justify-center">
+    <div className="p-4 flex justify-center items-start">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {claims.map((claim) => (
-          <ClaimCard key={claim.id} claim={claim} />
+          <ClaimCard
+            key={claim.publicId}
+            claim={claim}
+            setIsDeleting={setIsDeleting}
+          />
         ))}
       </div>
     </div>

@@ -1,0 +1,20 @@
+{
+  "formTitle": "Crear un Reclamo",
+  "claimTitle": "Título",
+  "claimDescription": "Descripción",
+  "claimLatitude": "Latitud",
+  "claimLongitude": "Longitud",
+  "claimSubmitButton": "Crear",
+  "placeholder": {
+    "enterTitle": "Ingrese el título",
+    "enterDescription": "Ingrese la descripción",
+    "enterLatitude": "Ingrese la latitud",
+    "enterLongitude": "Ingrese la longitud"
+  },
+  "200characters": "/200 caracteres",
+  "1000characters": "/1000 caracteres",
+  "chosenAddress": "Dirección Elegida",
+  "claimLocation": "Pulsa la lupa y escribe dónde es el reclamo",
+  "selectLocationTitle": "Selecciona la ubicación",
+  "selectLocationSubtitle": "Pulsa la lupa, escribe la dirección, busca y selecciona la ubicación correcta."
+}

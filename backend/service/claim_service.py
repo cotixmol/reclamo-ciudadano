@@ -1,5 +1,4 @@
 from errors.claim_errors import (
-    ClaimsNotFoundError,
     ClaimNotFoundError,
     ClaimNotFoundToDeleteError,
     ClaimNotCreatedError,
@@ -11,21 +10,21 @@ class ClaimService:
     def __init__(self, repository):
         self.repository = repository
 
-    def read_all_claims(self):
+    def read_all_claims_by_public_ids(self, public_ids):
         try:
-            return self.repository.read_all_claims()
-        except ClaimsNotFoundError:
+            return self.repository.read_all_claims_by_public_ids(public_ids)
+        except Exception:
             raise
 
-    def read_claim_by_id(self, claim_id):
+    def read_claim_by_public_id(self, public_id):
         try:
-            return self.repository.read_claim_by_id(claim_id)
+            return self.repository.read_claim_by_public_id(public_id)
         except ClaimNotFoundError:
             raise
 
-    def delete_claim_by_id(self, claim_id):
+    def delete_claim_by_public_id(self, public_id):
         try:
-            return self.repository.delete_claim_by_id(claim_id)
+            return self.repository.delete_claim_by_public_id(public_id)
         except ClaimNotFoundToDeleteError:
             raise
 
@@ -35,8 +34,8 @@ class ClaimService:
         except ClaimNotCreatedError:
             raise
 
-    def update_claim_by_id(self, claim, claim_id):
+    def update_claim_by_public_id(self, claim, public_id):
         try:
-            return self.repository.update_claim_by_id(claim, claim_id)
+            return self.repository.update_claim_by_public_id(claim, public_id)
         except ClaimNotUpdatedError:
             raise
