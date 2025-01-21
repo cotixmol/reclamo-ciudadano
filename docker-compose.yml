@@ -16,11 +16,8 @@ services:
     image: registry.reputacion.digital/reclamo_ciudadano_front:${IMAGE_VERSION}
     volumes:
       - .env:/app/.env
-    #   - /app/node_modules
     ports:
       - "3007:3000"
-    # env_file:
-    #   - ./frontend-rc/.env
     command: ["npm", "run", "dev"]
     labels:
       # Enable Traefik for reclamo_ciudadano service
