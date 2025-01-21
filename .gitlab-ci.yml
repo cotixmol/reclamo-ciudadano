@@ -1,6 +1,6 @@
 stages:
   - build
-  - migrate
+  # - migrate
   - deploy
 
 build_front:
@@ -62,27 +62,27 @@ build_back:
     - if: $CI_COMMIT_BRANCH == "develop"
     # - if: $CI_COMMIT_BRANCH == "devops"
 
-migrate:
-  stage: migrate
-  image: python:3.12-slim-bookworm
-  tags:
-    - saas
-  script:
-    - |
-      if [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
-        mv .infra/.env_prod .env
-      else
-        mv .infra/.env_dev .env
-      fi
-    - chmod +x  .infra/.ansible/inject_secrets.sh 
-    - .infra/.ansible/inject_secrets.sh
-    - mv .env backend/.env && cd backend
-    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
-    - alembic upgrade head
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-    - if: $CI_COMMIT_BRANCH == "develop"
-    - if: $CI_COMMIT_BRANCH == "devops"
+# migrate:
+#   stage: migrate
+#   image: python:3.12-slim-bookworm
+#   tags:
+#     - saas
+#   script:
+#     - |
+#       if [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+#         mv .infra/.env_prod .env
+#       else
+#         mv .infra/.env_dev .env
+#       fi
+#     - chmod +x  .infra/.ansible/inject_secrets.sh 
+#     - .infra/.ansible/inject_secrets.sh
+#     - mv .env backend/.env && cd backend
+#     - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
+#     - alembic upgrade head
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "main"
+#     - if: $CI_COMMIT_BRANCH == "develop"
+#     - if: $CI_COMMIT_BRANCH == "devops"
 
 deploy:
   stage: deploy
