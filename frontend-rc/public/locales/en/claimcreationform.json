@@ -1,0 +1,20 @@
+{
+  "formTitle": "Create a Claim",
+  "claimTitle": "Title",
+  "claimDescription": "Description",
+  "claimLatitude": "Latitude",
+  "claimLongitude": "Longitude",
+  "claimSubmitButton": "Submit",
+  "placeholder": {
+    "enterTitle": "Enter title",
+    "enterDescription": "Enter description",
+    "enterLatitude": "Enter latitude",
+    "enterLongitude": "Enter longitude"
+  },
+  "200characters": "/200 characters",
+  "1000characters": "/1000 characters",
+  "chosenAddress": "Chosen Address",
+  "claimLocation": "Click the magnifying glass and enter where the claim is",
+  "selectLocationTitle": "Select the location",
+  "selectLocationSubtitle": "Click the magnifying glass, type the address, search, and select the correct location."
+}

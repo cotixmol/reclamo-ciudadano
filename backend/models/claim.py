@@ -1,3 +1,6 @@
+import uuid
+from uuid import UUID
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from datetime import datetime
 from typing import Optional, Union
 from sqlmodel import SQLModel, Field
@@ -8,6 +11,12 @@ from custom_types import GeometryPoint
 
 class Claim(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    public_id: UUID = Field(
+        sa_column=Column(
+            PG_UUID(as_uuid=True), unique=True, index=True, nullable=False
+        ),
+        default_factory=uuid.uuid4,
+    )
     type_category_id: Optional[int] = Field(
         sa_column=Column(Integer, ForeignKey("claimtypes.id"))
     )

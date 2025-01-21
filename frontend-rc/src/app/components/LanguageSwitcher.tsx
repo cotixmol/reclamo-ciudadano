@@ -1,7 +1,7 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { FiChevronDown } from "react-icons/fi"; // Import Chevron icon from React Icons
+'use client';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FiChevronDown } from 'react-icons/fi'; // Import Chevron icon from React Icons
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
@@ -23,12 +23,12 @@ export default function LanguageSwitcher() {
 
   const getFlag = (lang: string) => {
     switch (lang) {
-      case "en":
-        return "🇺🇸";
-      case "es":
-        return "🇪🇸";
+      case 'en':
+        return '🇺🇸';
+      case 'es':
+        return '🇪🇸';
       default:
-        return "🌐";
+        return '🌐';
     }
   };
 
@@ -51,9 +51,9 @@ export default function LanguageSwitcher() {
         <div className="absolute right-0 mt-2 font-medium rounded-md bg-gray-800 z-10">
           <ul>
             <li
-              onClick={() => handleLanguageChange("en")}
+              onClick={() => handleLanguageChange('en')}
               className={`block px-4 py-2 text-xs rounded-t-md cursor-pointer hover:bg-gray-700 ${
-                currentLang === "en" ? "bg-primary" : ""
+                currentLang === 'en' ? 'bg-primary' : ''
               }`}
             >
               <div className="flex items-center gap-2">
@@ -62,9 +62,9 @@ export default function LanguageSwitcher() {
               </div>
             </li>
             <li
-              onClick={() => handleLanguageChange("es")}
+              onClick={() => handleLanguageChange('es')}
               className={`block px-4 py-2 text-xs rounded-b-md cursor-pointer hover:bg-gray-700 ${
-                currentLang === "es" ? "bg-primary" : ""
+                currentLang === 'es' ? 'bg-primary' : ''
               }`}
             >
               <div className="flex items-center gap-2">
