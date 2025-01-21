@@ -1,10 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import '../../../i18n';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ClaimResponse, ClaimStatus } from '../types/claim';
 import { TiDelete } from 'react-icons/ti';
@@ -14,9 +13,14 @@ import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
 interface ClaimCardProps {
   claim: ClaimResponse;
   setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
+  imageUrl: string; // <--- New prop
 }
 
-const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
+const ClaimCard: React.FC<ClaimCardProps> = ({
+  claim,
+  setIsDeleting,
+  imageUrl,
+}) => {
   const { t } = useTranslation('claim');
   const { publicId, title, description, status, createdAt } = claim;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -29,7 +33,6 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
     closePopup();
     try {
       await deleteClaimByPublicId(publicId);
-      // Instead of window.location.reload(), consider updating parent's state or re-fetching data
       window.location.reload();
     } catch (error) {
       console.error('Deletion failed', error);
@@ -78,7 +81,6 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
         {/* Container for Quarter Circle and Delete Button */}
         <div className="absolute top-2 right-2">
           <div className="absolute inset-0 w-7 h-7 bg-gray-800 rounded-full"></div>
-          {/* Delete Button opens the confirmation pop-up */}
           <button
             onClick={openPopup}
             aria-label="Delete Claim"
@@ -88,8 +90,9 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
           </button>
         </div>
 
+        {/* 1) Use the passed-in imageUrl instead of a static URL */}
         <Image
-          src="https://upload.wikimedia.org/wikipedia/commons/0/05/Burnout_ops_on_Mangum_Fire_McCall_Smokejumpers.jpg"
+          src={imageUrl}
           alt={title}
           width={400}
           height={300}
@@ -122,7 +125,6 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claim, setIsDeleting }) => {
         <p className="mt-2 text-xs text-gray-400 leading-relaxed line-clamp-3">
           {description}
         </p>
-        {/* See More Information */}
         <div className="my-2">
           <Link href={`/models/claims/pages/${publicId}`}>
             <button className="relative z-10 text-sm font-semibold text-primary hover:underline hover:text-primary-hover transition duration-200">
