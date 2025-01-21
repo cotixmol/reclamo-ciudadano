@@ -9,7 +9,7 @@ for var in $(compgen -e); do
         if grep -q "$var" $TARGET_FILE; then
             # Replace the variable in the target file with its value
             sed -i "s|$var|${!var}|g" "$TARGET_FILE"
-            echo "Replaced '$var' with '${!var}' in $TARGET_FILE."
+            echo "Replaced '$var' in $TARGET_FILE."
         fi
     fi
 done

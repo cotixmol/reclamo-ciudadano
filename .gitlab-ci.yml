@@ -1,5 +1,6 @@
 stages:
   - build
+  - migrate
   - deploy
 
 build_front:
@@ -29,7 +30,7 @@ build_front:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "develop"
-    - if: $CI_COMMIT_BRANCH == "devops"
+    # - if: $CI_COMMIT_BRANCH == "devops"
 
 build_back:
   image: docker:latest
@@ -56,6 +57,28 @@ build_back:
     - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
   # Run this job in the development branch  (must have a dockerfile there)
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+    # - if: $CI_COMMIT_BRANCH == "devops"
+
+migrate:
+  stage: migrate
+  image: python:3.12-slim-bookworm
+  tags:
+    - saas
+  script:
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+        mv .infra/.env_prod .env
+      else
+        mv .infra/.env_dev .env
+      fi
+    - chmod +x  .infra/.ansible/inject_secrets.sh 
+    - .infra/.ansible/inject_secrets.sh
+    - mv .env backend/.env && cd backend
+    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
+    - alembic upgrade head
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "develop"
@@ -92,5 +115,5 @@ deploy:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "develop"
-    - if: $CI_COMMIT_BRANCH == "devops"
+    # - if: $CI_COMMIT_BRANCH == "devops"
 
