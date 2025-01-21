@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { JSX } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import 'leaflet-control-geocoder';
+import { customMapIcon } from './customMapIcon';
 
 interface MapSelectorProps {
   latitude: string;
@@ -19,19 +19,21 @@ export default function MapSelector({
   longitude,
   onLocationChangeAction,
 }: MapSelectorProps) {
+  // Default center
   const [center] = React.useState<[number, number]>([
     parseFloat(latitude) || -34.6,
     parseFloat(longitude) || -58.4,
   ]);
 
-  function GeocoderAndEvents(): JSX.Element {
+  function GeocoderAndEvents() {
     const map = useMap();
-    const geocoderControlRef = React.useRef<any>(null);
+    const geocoderControlRef = useRef<any>(null);
 
     useEffect(() => {
       if (!map) return;
       if (geocoderControlRef.current) return;
 
+      // Initialize geocoder
       const geocoderControl = (L.Control as any)
         .geocoder({
           geocoder: (L.Control as any).Geocoder.nominatim(),
@@ -43,7 +45,6 @@ export default function MapSelector({
         if (!e.geocode) return;
         const { center, name } = e.geocode;
         if (!center) return;
-
         onLocationChangeAction(
           center.lat.toString(),
           center.lng.toString(),
@@ -53,15 +54,15 @@ export default function MapSelector({
       });
 
       geocoderControlRef.current = geocoderControl;
-
       return () => {
         if (geocoderControlRef.current) {
           geocoderControlRef.current.remove();
           geocoderControlRef.current = null;
         }
       };
-    }, []);
-    return <></>;
+    }, [map]);
+
+    return null;
   }
 
   return (
@@ -73,6 +74,11 @@ export default function MapSelector({
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <GeocoderAndEvents />
+
+      {/* 
+        Pass our custom React Icons DivIcon using the createReactIcon() function.
+        You can change the color string as you wish. 
+      */}
       <Marker
         position={
           [
@@ -80,7 +86,8 @@ export default function MapSelector({
             parseFloat(longitude) || center[1],
           ] as LatLngExpression
         }
-      />{' '}
+        icon={customMapIcon('e4047d')}
+      />
     </MapContainer>
   );
 }
