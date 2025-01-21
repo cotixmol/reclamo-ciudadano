@@ -2,7 +2,7 @@
   "formTitle": "Create a Claim",
   "claimTitle": "Title",
   "claimDescription": "Description",
-  "claimType": "Tipo de Reclamo",
+  "claimType": "Claim Type",
   "claimLatitude": "Latitude",
   "claimLongitude": "Longitude",
   "claimSubmitButton": "Submit",
