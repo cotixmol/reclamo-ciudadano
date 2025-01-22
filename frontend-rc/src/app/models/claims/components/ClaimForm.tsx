@@ -137,13 +137,13 @@ export default function ClaimForm() {
           {/* Multimedia Upload Field */}
           <div>
             <label htmlFor="multimedia" className="block mb-1">
-              {t('multimediaUpload', 'Multimedia Upload')}
+              {t('multimediaUpload')}
             </label>
-            <div className="flex items-start bg-gray-700 rounded p-2 focus-within:ring-2 focus-within:ring-primary">
+            <div className="flex items-center bg-gray-700 rounded p-2 focus-within:ring-2 focus-within:ring-primary">
               <input
                 id="multimedia"
                 type="text"
-                placeholder="Coming Soon"
+                placeholder="Feature coming soon"
                 disabled
                 className="flex-grow bg-transparent text-gray-400 focus:outline-none"
               />
@@ -156,12 +156,6 @@ export default function ClaimForm() {
                 <FiPaperclip />
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
-              {t(
-                'multimediaNote',
-                'Upload images or take pictures – future feature'
-              )}
-            </p>
           </div>
 
           {/* Map */}

@@ -9,15 +9,17 @@ export default function HomePage() {
   const { t } = useTranslation('homepage'); // Use 'homepage' namespace
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 relative">
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-5 relative">
       {/* Version Info at Top-Left */}
-      <div className="absolute top-0 left-0 text-xs text-gray-400 p-1">
-        v.{process.env.NEXT_PUBLIC_VERSION}
-      </div>
+      <div className="flex justify-between items-center">
+        <div className="text-xs text-gray-400 flex self-start">
+          v.{process.env.NEXT_PUBLIC_VERSION}
+        </div>
 
-      {/* Language Switcher at the top */}
-      <div className="flex justify-end mb-4">
-        <LanguageSwitcher />
+        {/* Language Switcher Container */}
+        <div className="flex justify-end items-center">
+          <LanguageSwitcher />
+        </div>
       </div>
 
       {/* Hero Section */}
@@ -69,7 +71,7 @@ export default function HomePage() {
       </div>
 
       {/* Footer Section */}
-      <footer className="mt-16 text-center text-sm text-gray-500">
+      <footer className="my-16 text-center text-sm text-gray-500">
         <p>{t('footer.text')}</p>
       </footer>
     </div>

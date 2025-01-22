@@ -55,7 +55,7 @@ export default function ClaimsPage() {
   }
 
   return (
-    <div className="p-4 flex justify-center items-start">
+    <div className="p-5 flex justify-center items-start">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* 2) For each card, pick a random index from 0–9 to select the image */}
         {claims.map((claim) => {

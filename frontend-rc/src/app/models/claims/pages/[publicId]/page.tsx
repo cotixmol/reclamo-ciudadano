@@ -47,7 +47,7 @@ export default function ClaimDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen p-6 bg-gray-800 text-gray-200 flex flex-col">
+    <div className="min-h-screen p-5 bg-gray-800 text-gray-200 flex flex-col">
       {/* Back Button */}
       <div className="mb-6">
         <button

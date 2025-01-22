@@ -12,15 +12,16 @@ const BottomNavBar = () => {
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
+  const plusActive = isActive('/models/claims/pages/create');
 
   return (
     <nav className="fixed z-10 bottom-0 left-0 w-full bg-gray-900 text-gray-200 shadow-lg shadow-black/30 border-t border-primary">
-      <div className="grid grid-cols-3 items-center py-6">
+      <div className="grid grid-cols-3 items-center py-5">
         {/* Left: Home */}
         <Link
           href="/"
           className={`flex flex-col items-center space-y-1 ${
-            isActive('/') ? 'scale-125' : 'scale-100'
+            isActive('/') ? 'scale-110' : 'scale-100'
           } transition-transform duration-200`}
         >
           <FiHome
@@ -29,23 +30,29 @@ const BottomNavBar = () => {
             }`}
           />
           <span className={`text-sm ${isActive('/') ? 'text-primary' : ''}`}>
-            {t('homeButtom')}
+            {t('homeButton')}
           </span>
         </Link>
 
         {/* Center: Plus */}
         <Link
           href="/models/claims/pages/create"
-          className="flex items-center mx-auto bg-primary rounded-full p-4 hover:bg-primary-hover transition-colors duration-200"
+          className={`flex items-center mx-auto rounded-full p-4 transition-colors duration-200 ${
+            plusActive
+              ? 'bg-gray-900 border-2 border-primary'
+              : 'bg-primary border-2 hover:bg-primary-hover'
+          }`}
         >
-          <IoAdd className="w-10 h-10" />
+          <IoAdd
+            className={`w-8 h-8 ${plusActive ? 'text-primary' : 'text-white'}`}
+          />
         </Link>
 
         {/* Right: My Claims */}
         <Link
           href="/models/claims/pages"
           className={`flex flex-col items-center space-y-1 ${
-            isActive('/models/claims/pages') ? 'scale-125' : 'scale-100'
+            isActive('/models/claims/pages') ? 'scale-110' : 'scale-100'
           } transition-transform duration-200`}
         >
           <FiList
@@ -60,7 +67,7 @@ const BottomNavBar = () => {
               isActive('/models/claims/pages') ? 'text-primary' : ''
             }`}
           >
-            {t('myClaimsButtom')}
+            {t('myClaimsButton')}
           </span>
         </Link>
       </div>
