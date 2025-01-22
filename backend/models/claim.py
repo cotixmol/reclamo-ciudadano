@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from datetime import datetime
 from typing import Optional, Union
 from sqlmodel import SQLModel, Field
-from sqlalchemy import Column, String, DateTime, func, Integer, ForeignKey
+from sqlalchemy import Column, String, DateTime, func, Integer, ForeignKey, Boolean
 from geoalchemy2 import Geometry
 from custom_types import GeometryPoint
 
@@ -40,3 +40,7 @@ class Claim(SQLModel, table=True):
             nullable=False,
         )
     )
+    deleted_at: Optional[datetime] = Field(
+        sa_column=Column(DateTime(timezone=True), nullable=True)
+    )
+    deleted: bool = Field(sa_column=Column(Boolean, default=False, nullable=False))
