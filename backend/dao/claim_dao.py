@@ -1,7 +1,11 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
-from typing import List
-from sqlmodel import Session, select, orm
+from typing import List, Optional
+from datetime import datetime
+
+from sqlmodel import Session, select
+from sqlalchemy.exc import SQLAlchemyError
+
 from models.claim import Claim
 from utils import (
     wkb_element_to_geometry_point,
@@ -16,7 +20,6 @@ from errors.claim_errors import (
     ClaimNotUpdatedError,
 )
 from custom_types import GeometryPoint
-from sqlalchemy.exc import SQLAlchemyError
 
 
 class ClaimDAO(ABC):
@@ -49,101 +52,156 @@ class ClaimSQLAlchemy(ClaimDAO):
     def read_all_claims_by_public_ids(
         self, db: Session, public_ids: List[UUID]
     ) -> List[Claim]:
-        statement = select(Claim).where(Claim.public_id.in_(public_ids))
+        """
+        Return only the claims that are NOT logically deleted (deleted == False).
+        """
+        statement = (
+            select(Claim)
+            .where(Claim.public_id.in_(public_ids))
+            .where(Claim.deleted == False)
+        )
         try:
             results = db.exec(statement).all()
             if not results:
                 return []
+            # Convert claim_location from WKB to geometry
             for claim in results:
-                claim.claim_location = wkb_element_to_geometry_point(
-                    claim.claim_location
-                )
-
+                if claim.claim_location:
+                    claim.claim_location = wkb_element_to_geometry_point(
+                        claim.claim_location
+                    )
             return results
+
         except SQLAlchemyError as e:
             raise Exception(f"Database error listing claims: {e}")
         except ClaimNotConvertedError as e:
-            raise e
+            raise ClaimNotConvertedError(errors=e)
         except Exception as e:
             raise Exception(f"An unexpected error occurred listing claims: {e}")
 
     def read_claim_by_public_id(self, db: Session, public_id: UUID) -> Claim:
-        statement = select(Claim).where(Claim.public_id == public_id)
+        """
+        Return the claim only if it is NOT logically deleted (deleted == False).
+        """
+        statement = (
+            select(Claim)
+            .where(Claim.public_id == public_id)
+            .where(Claim.deleted == False)
+        )
         try:
             result = db.exec(statement).first()
             if result:
-                result.claim_location = wkb_element_to_geometry_point(
-                    result.claim_location
-                )
+                if result.claim_location:
+                    result.claim_location = wkb_element_to_geometry_point(
+                        result.claim_location
+                    )
                 return result
             else:
-                raise ClaimNotFoundError(claim_id=public_id, message="Claim not found")
+                raise ClaimNotFoundError(claim_id=public_id)
         except SQLAlchemyError as e:
             raise Exception(
                 f"Database error fetching claim with public_id {public_id}: {e}"
             )
         except ClaimNotConvertedError as e:
-            raise e
+            raise ClaimNotConvertedError(errors=e)
         except Exception as e:
-            raise ClaimNotFoundError(claim_id=public_id, message=str(e))
+            raise ClaimNotFoundError(claim_id=public_id)
 
     def delete_claim_by_public_id(self, db: Session, public_id: UUID) -> Claim:
-        statement = select(Claim).where(Claim.public_id == public_id)
+        """
+        Perform a 'soft delete' by setting deleted=True and deleted_at to now.
+        """
+        statement = (
+            select(Claim)
+            .where(Claim.public_id == public_id)
+            .where(Claim.deleted == False)
+        )
         try:
             claim = db.exec(statement).first()
             if claim:
-                db.delete(claim)
+                # Soft delete
+                claim.deleted = True
+                claim.deleted_at = datetime.utcnow()
+
+                db.add(claim)
                 db.commit()
-                claim.claim_location = wkb_element_to_geometry_point(
-                    claim.claim_location
-                )
+                db.refresh(claim)
+
+                # Convert location if needed
+                if claim.claim_location:
+                    claim.claim_location = wkb_element_to_geometry_point(
+                        claim.claim_location
+                    )
                 return claim
             else:
                 raise ClaimNotFoundToDeleteError(claim_id=public_id)
         except SQLAlchemyError as e:
             db.rollback()
             raise Exception(
-                f"Database error deleting claim with public_id {public_id}: {e}"
+                f"Database error soft-deleting claim with public_id {public_id}: {e}"
             )
         except Exception as e:
             db.rollback()
             raise ClaimNotFoundToDeleteError(
                 claim_id=public_id,
-                message=f"An unexpected error occurred deleting claim with public_id {public_id}: {e}",
             )
 
     def create_claim(self, db: Session, claim: Claim) -> Claim:
+        """
+        Create a new claim. By default, `deleted=False` in your model ensures it is active.
+        """
         try:
-            claim.claim_location = geometry_point_to_wkb_element(claim.claim_location)
+            if claim.claim_location:
+                claim.claim_location = geometry_point_to_wkb_element(
+                    claim.claim_location
+                )
+
             db.add(claim)
             db.commit()
             db.refresh(claim)
-            claim.claim_location = wkb_element_to_geometry_point(claim.claim_location)
+
+            if claim.claim_location:
+                claim.claim_location = wkb_element_to_geometry_point(
+                    claim.claim_location
+                )
+
             return claim
         except SQLAlchemyError as e:
             db.rollback()
             raise Exception(f"Database error creating claim: {e}")
         except ClaimNotConvertedError as e:
             db.rollback()
-            raise e
+            raise ClaimNotConvertedError(errors=e)
         except Exception as e:
             db.rollback()
-            raise ClaimNotCreatedError(
-                message=f"An unexpected error occurred creating claim: {e}"
-            )
+            raise ClaimNotCreatedError(errors=e)
 
     def update_claim_by_public_id(
         self, db: Session, claim: Claim, public_id: UUID
     ) -> Claim:
-        statement = select(Claim).where(Claim.public_id == public_id)
+        """
+        Update only if the claim is not deleted (deleted == False).
+        """
+        statement = (
+            select(Claim)
+            .where(Claim.public_id == public_id)
+            .where(Claim.deleted == False)
+        )
         try:
             claim_to_update = db.exec(statement).first()
             if claim_to_update:
                 updated_data = claim.model_dump(
                     exclude_unset=True,
-                    exclude={"id", "public_id", "created_at", "updated_at"},
+                    exclude={
+                        "id",
+                        "public_id",
+                        "created_at",
+                        "updated_at",
+                        "deleted",
+                        "deleted_at",
+                    },
                 )
-                # Convert location if present in updated data
+
                 if updated_data.get("claim_location") and updated_data[
                     "claim_location"
                 ].get("coordinates"):
@@ -164,9 +222,12 @@ class ClaimSQLAlchemy(ClaimDAO):
                 db.add(claim_to_update)
                 db.commit()
                 db.refresh(claim_to_update)
-                claim_to_update.claim_location = wkb_element_to_geometry_point(
-                    claim_to_update.claim_location
-                )
+
+                if claim_to_update.claim_location:
+                    claim_to_update.claim_location = wkb_element_to_geometry_point(
+                        claim_to_update.claim_location
+                    )
+
                 return claim_to_update
             else:
                 raise ClaimNotFoundError(claim_id=public_id)
@@ -177,9 +238,7 @@ class ClaimSQLAlchemy(ClaimDAO):
             )
         except ClaimNotConvertedError as e:
             db.rollback()
-            raise e
+            raise ClaimNotConvertedError(errors=e)
         except Exception as e:
             db.rollback()
-            raise ClaimNotUpdatedError(
-                message=f"An unexpected error occurred updating claim with public_id {public_id}: {e}"
-            )
+            raise ClaimNotUpdatedError(errors=e)
