@@ -1,15 +1,15 @@
 {
   "status": {
     "Open": "Open",
-    "Close": "Close"
+    "Close": "Closed"
   },
-  "unknownDate": "Unknown Date",
-  "unknownTime": "Unknown Time",
+  "unknownDate": "Unknown date",
+  "unknownTime": "Unknown time",
   "edited": "Edited",
   "seeMore": "See more",
   "confirmDeletionTitle": "Confirm Deletion",
   "confirmDeletionMessage": "Are you sure you want to delete this claim?",
   "cancel": "Cancel",
-  "confirm": "Yes, Delete",
-  "deletionFailed": "Failed to delete claim."
+  "confirm": "Yes, delete",
+  "deletionFailed": "Failed to delete the claim. Please try again."
 }

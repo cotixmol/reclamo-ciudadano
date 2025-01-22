@@ -7,9 +7,9 @@
   "unknownTime": "Hora desconocida",
   "edited": "Editado",
   "seeMore": "Ver más",
-  "confirmDeletionTitle": "Confirmar Eliminación",
+  "confirmDeletionTitle": "Confirmar eliminación",
   "confirmDeletionMessage": "¿Estás seguro de que deseas eliminar este reclamo?",
   "cancel": "Cancelar",
-  "confirm": "Sí, Eliminar",
-  "deletionFailed": "Error al eliminar el reclamo."
+  "confirm": "Sí, eliminar",
+  "deletionFailed": "Error al eliminar el reclamo. Inténtalo de nuevo."
 }
