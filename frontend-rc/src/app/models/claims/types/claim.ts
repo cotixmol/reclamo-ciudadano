@@ -44,8 +44,7 @@ export interface ClaimResponse {
   status: ClaimStatus;
   createdAt: string;
   updatedAt: string;
+  deleted: string;
+  deletedAt: string;
 }
-
-export type ClaimListResponse = ClaimResponse[];
-
 
