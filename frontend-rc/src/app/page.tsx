@@ -9,7 +9,12 @@ export default function HomePage() {
   const { t } = useTranslation('homepage'); // Use 'homepage' namespace
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-6">
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-6 relative">
+      {/* Version Info at Top-Left */}
+      <div className="absolute top-0 left-0 text-xs text-gray-400 p-1">
+        v.{process.env.NEXT_PUBLIC_VERSION}
+      </div>
+
       {/* Language Switcher at the top */}
       <div className="flex justify-end mb-4">
         <LanguageSwitcher />
