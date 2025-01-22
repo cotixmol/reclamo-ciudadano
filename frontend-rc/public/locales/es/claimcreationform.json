@@ -6,6 +6,7 @@
   "claimLatitude": "Latitud",
   "claimLongitude": "Longitud",
   "claimSubmitButton": "Crear",
+  "multimediaUpload": "Subir multimedia",
   "placeholder": {
     "enterTitle": "Ingrese el título",
     "enterDescription": "Ingrese la descripción",
