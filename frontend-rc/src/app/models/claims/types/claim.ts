@@ -48,3 +48,6 @@ export interface ClaimResponse {
   deletedAt: string;
 }
 
+export interface ClaimErrorResponse {
+  detail: string;
+}

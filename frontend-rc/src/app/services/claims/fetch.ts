@@ -22,14 +22,15 @@ export async function fetchAllClaimsByPublicIds(): Promise<ClaimResponse[]> {
   }
 }
 
-export async function fetchClaimByPublicId(
-  publicId: string
-): Promise<ClaimResponse> {
+export async function fetchClaimByPublicId(publicId: string): Promise<ClaimResponse> {
   try {
     const response = await axios.get<ClaimResponse>(`/api/claims/${publicId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching claim by public ID:', error);
-    throw error;
+    if (axios.isAxiosError(error) && error.response) {
+      const { data } = error.response;
+      throw new Error(data?.error || 'Failed to fetch claim');
+    }
+    throw new Error('An unknown error occurred');
   }
 }

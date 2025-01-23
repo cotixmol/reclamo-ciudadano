@@ -1,16 +1,17 @@
 'use client';
-import React from 'react';
-import { useEffect, useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { validate as isUUID } from 'uuid';
 import Image from 'next/image';
+import { FiArrowLeft } from 'react-icons/fi';
+
 import { fetchClaimByPublicId } from '@/app/services/claims/fetch';
-import { ClaimResponse } from '../../types/claim';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
 import ClaimNotFoundPage from '../../components/ClaimNotFound';
+import { ClaimResponse } from '../../types/claim';
 import { UUID } from 'crypto';
-import { validate as isUUID } from 'uuid';
-import { FiArrowLeft } from 'react-icons/fi'; // Import the arrow left icon
 
 export default function ClaimDetailsPage() {
   const params = useParams() as { publicId: UUID };
@@ -23,7 +24,7 @@ export default function ClaimDetailsPage() {
   useEffect(() => {
     const loadClaim = async () => {
       if (!isUUID(params.publicId)) {
-        setError(new Error('Invalid ID'));
+        setError(new Error('The requested claim was not found'));
         setIsLoading(false);
         return;
       }
@@ -61,7 +62,7 @@ export default function ClaimDetailsPage() {
           onClick={() => router.back()}
           className="flex items-center space-x-2 text-[#e4047d] hover:text-[#ff4da6] transition duration-200"
         >
-          <FiArrowLeft className="w-5 h-5" /> {/* Use the FiArrowLeft icon */}
+          <FiArrowLeft className="w-5 h-5" />
           <span className="text-sm font-medium">Back</span>
         </button>
       </div>

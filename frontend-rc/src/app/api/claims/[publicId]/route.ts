@@ -2,29 +2,43 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { ClaimResponse } from '@/app/models/claims/types/claim';
 import { toCamelCase } from '@/app/utils/toCamelCase';
-import { ClaimUpdateRequest } from '@/app/models/claims/types/claim';
+import { ClaimUpdateRequest, ClaimErrorResponse } from '@/app/models/claims/types/claim';
 
 export async function GET(
   request: Request,
   context: { params: { publicId: string } }
 ): Promise<NextResponse> {
   try {
-    const { publicId } = await context.params;
+    const { publicId } = context.params;
     if (!publicId) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
-    const response = await axios.get<ClaimResponse>(
-      `${process.env.API_URL}/claim/${publicId}`
+
+    const backendResponse = await axios.get<ClaimResponse | ClaimErrorResponse>(
+      `${process.env.API_URL}/claim/${publicId}`,
+      {
+        validateStatus: () => true, 
+      }
     );
-    const transformedData: ClaimResponse = toCamelCase(response.data);
-    return NextResponse.json(transformedData, { status: 200 });
-  } catch (error: unknown) {
-    console.error('Error fetching claim:', error);
-    let errorMessage = 'Failed to fetch claim';
-    if (error instanceof Error) {
-      errorMessage = error.message;
+
+    if (backendResponse.status !== 200) {
+      const backendError = backendResponse.data as ClaimErrorResponse;
+      return NextResponse.json(
+        {
+          error: backendError.detail ?? 'Failed to fetch claim',
+        },
+        { status: backendResponse.status }
+      );
     }
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+
+    const transformedData = toCamelCase(backendResponse.data as ClaimResponse);
+    return NextResponse.json(transformedData, { status: 200 });
+
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
   }
 }
 
