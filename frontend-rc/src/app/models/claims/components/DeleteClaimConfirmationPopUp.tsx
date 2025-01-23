@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { FiAlertCircle } from 'react-icons/fi';
 
 interface DeleteClaimConfirmationPopUpProps {
   isOpen: boolean;
@@ -18,15 +19,26 @@ const DeleteClaimConfirmationPopUp: React.FC<
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900/80 z-20">
-      <div className="bg-gray-800 rounded-lg p-8">
-        <h2 className="flex justify-center text-2xl font-semibold mb-4">
+      {/* Popup Container */}
+      <div className="max-w-lg w-full mx-4 p-6 bg-gray-800 rounded-lg border-t-4 border-primary text-center">
+        {/* Icon */}
+        <div className="flex justify-center mb-4">
+          <FiAlertCircle className="text-primary w-16 h-16" />
+        </div>
+
+        {/* Title */}
+        <h2 className="text-2xl font-semibold mb-4">
           {t('confirmDeletionTitle')}
         </h2>
-        <p className="mb-6">{t('confirmDeletionMessage')}</p>
-        <div className="flex justify-center gap-10">
+
+        {/* Message */}
+        <p className="text-gray-400 mb-6">{t('confirmDeletionMessage')}</p>
+
+        {/* Buttons */}
+        <div className="flex justify-center gap-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-500 transition-colors duration-200"
+            className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 transition-colors duration-200"
           >
             {t('cancel')}
           </button>
