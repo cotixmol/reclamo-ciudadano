@@ -24,7 +24,6 @@ export const metadata: Metadata = {
   description:
     'Reporta problemas en tu ciudad y sigue el estado de los reclamos.',
   manifest: '/manifest.json',
-  themeColor: '#e4047d',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -46,7 +45,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const claimTypes = await fetchClaimTypes(); // Server-side fetch
+  const claimTypes = await fetchClaimTypes();
 
   return (
     <html lang="en">
