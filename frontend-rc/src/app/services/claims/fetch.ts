@@ -12,13 +12,15 @@ export async function fetchAllClaimsByPublicIds(): Promise<ClaimResponse[]> {
     const response = await axios.post<ClaimResponse[]>('/api/claims', {
       public_ids: publicIds,
     });
-    if (response) {
-      return response.data;
-    }
-    return [];
+    return response.data;
   } catch (error) {
     console.error('Error fetching claims:', error);
-    throw error;
+
+    if (axios.isAxiosError(error) && error.response) {
+      const { data } = error.response;
+      throw new Error(data?.error || 'Failed to fetch claims');
+    }
+    throw new Error('An unknown error occurred');
   }
 }
 
@@ -31,6 +33,6 @@ export async function fetchClaimByPublicId(publicId: string): Promise<ClaimRespo
       const { data } = error.response;
       throw new Error(data?.error || 'Failed to fetch claim');
     }
-    throw new Error('An unknown error occurred');
+    throw new Error('An unknown error occurred while fetching claim');
   }
 }

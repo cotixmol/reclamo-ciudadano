@@ -3,17 +3,19 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import '../../../i18n';
 import { useTranslation } from 'react-i18next';
-import { ClaimResponse, ClaimStatus } from '../types/claim';
 import { TiDelete } from 'react-icons/ti';
+import { validate as isUUID } from 'uuid'; // <--- For UUID validation
+
+import '../../../i18n';
 import { deleteClaimByPublicId } from '@/app/services/claims/delete';
+import { ClaimResponse, ClaimStatus } from '../types/claim';
 import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
 
 interface ClaimCardProps {
   claim: ClaimResponse;
   setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
-  imageUrl: string; // <--- New prop
+  imageUrl: string;
 }
 
 const ClaimCard: React.FC<ClaimCardProps> = ({
@@ -24,6 +26,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
   const { t } = useTranslation('claim');
   const { publicId, title, description, status, createdAt } = claim;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState<string>('');
 
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
@@ -31,11 +34,18 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
   const handleDeleteConfirmed = async () => {
     setIsDeleting(true);
     closePopup();
+    if (!isUUID(publicId)) {
+      setDeleteError('Invalid or missing Claim ID');
+      setIsDeleting(false);
+      return;
+    }
+
     try {
       await deleteClaimByPublicId(publicId);
       window.location.reload();
     } catch (error) {
-      console.error('Deletion failed', error);
+      const msg = (error as Error).message || 'Deletion failed';
+      setDeleteError(msg);
       setIsDeleting(false);
     }
   };
@@ -78,7 +88,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
       />
 
       <div className="relative w-full">
-        {/* Container for Quarter Circle and Delete Button */}
+        {/* Delete Button */}
         <div className="absolute top-2 right-2">
           <div className="absolute inset-0 w-7 h-7 bg-gray-800 rounded-full"></div>
           <button
@@ -90,7 +100,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
           </button>
         </div>
 
-        {/* 1) Use the passed-in imageUrl instead of a static URL */}
+        {/* Image */}
         <Image
           src={imageUrl}
           alt={title}
@@ -132,10 +142,15 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
             </button>
           </Link>
         </div>
+
+        {/* 5) Show an inline error if present */}
+        {deleteError && (
+          <p className="mt-2 text-red-500 text-sm">{deleteError}</p>
+        )}
       </div>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
     </div>
   );
 };

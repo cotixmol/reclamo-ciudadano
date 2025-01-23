@@ -1,3 +1,4 @@
+// src/app/services/claims/create.ts
 import axios from 'axios';
 import {
   ClaimCreateRequest,
@@ -15,15 +16,16 @@ export async function createClaim(
   data: ClaimCreateRequest
 ): Promise<ClaimResponse> {
   try {
-    const response = await axios.post<ClaimResponse>(
-      '/api/claims/create',
-      data
-    );
+    const response = await axios.post<ClaimResponse>('/api/claims/create', data);
     const { publicId } = response.data;
     savePublicId(publicId);
     return response.data;
   } catch (error) {
-    console.error('Error in createClaim service:', error);
-    throw error;
+    console.error('Error creating claim:', error);
+    if (axios.isAxiosError(error) && error.response) {
+      const { data } = error.response;
+      throw new Error(data?.error || 'Failed to create claim');
+    }
+    throw new Error('An unknown error occurred while creating claim');
   }
 }
