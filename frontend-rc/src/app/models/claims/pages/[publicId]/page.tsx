@@ -9,6 +9,8 @@ import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
 import ClaimNotFoundPage from '../../components/ClaimNotFound';
 import { UUID } from 'crypto';
+import { validate as isUUID } from 'uuid';
+import { FiArrowLeft } from 'react-icons/fi'; // Import the arrow left icon
 
 export default function ClaimDetailsPage() {
   const params = useParams() as { publicId: UUID };
@@ -20,7 +22,12 @@ export default function ClaimDetailsPage() {
 
   useEffect(() => {
     const loadClaim = async () => {
-      if (!params.publicId) return;
+      if (!isUUID(params.publicId)) {
+        setError(new Error('Invalid ID'));
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const data = await fetchClaimByPublicId(params.publicId);
         setClaim(data);
@@ -54,20 +61,7 @@ export default function ClaimDetailsPage() {
           onClick={() => router.back()}
           className="flex items-center space-x-2 text-[#e4047d] hover:text-[#ff4da6] transition duration-200"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            className="w-5 h-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 19.5L8.25 12l7.5-7.5"
-            />
-          </svg>
+          <FiArrowLeft className="w-5 h-5" /> {/* Use the FiArrowLeft icon */}
           <span className="text-sm font-medium">Back</span>
         </button>
       </div>
