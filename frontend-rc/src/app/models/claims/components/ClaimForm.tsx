@@ -7,10 +7,12 @@ import '../../../i18n';
 import { FiPaperclip } from 'react-icons/fi';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import { createClaim } from '@/app/services/claims/create';
-import { ClaimCreateRequest } from '../types/claim';
+import { ClaimCreateRequest, PriorityEnum } from '../types/claim';
 import ClaimTypesDropdown from '../../claimTypes/components/claimTypesDropdown';
 import { TiDelete } from 'react-icons/ti';
 import dynamic from 'next/dynamic';
+import PrioritySlider from './PrioritySlider';
+import { Slider } from '@heroui/react';
 
 const MapSelector = dynamic(() => import('./MapSelector'), {
   ssr: false,
@@ -29,6 +31,7 @@ export default function ClaimForm() {
   const [selectedClaimTypeId, setSelectedClaimTypeId] = useState<number | null>(
     null
   );
+  const [priority, setPriority] = useState<PriorityEnum>(PriorityEnum.LOW);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -97,6 +100,15 @@ export default function ClaimForm() {
               {t('200characters')}
             </p>
           </div>
+
+          {/* Priority Slider */}
+          <label htmlFor="title" className="block mb-1">
+            {t('priorityLabelTitle')}
+          </label>
+          <PrioritySlider
+            selectedPriority={priority}
+            onPriorityChange={(newPriority) => setPriority(newPriority)}
+          />
 
           {/* Claim Type Dropdown */}
           <ClaimTypesDropdown

@@ -19,5 +19,6 @@
   "chosenAddress": "Dirección elegida",
   "claimLocation": "Pulsa la lupa y escribe la dirección del reclamo",
   "selectLocationTitle": "Selecciona la ubicación",
-  "selectLocationSubtitle": "Pulsa la lupa, escribe la dirección, busca y selecciona la ubicación correcta."
+  "selectLocationSubtitle": "Pulsa la lupa, escribe la dirección, busca y selecciona la ubicación correcta.",
+  "priorityLabelTitle": "Prioridad"
 }
