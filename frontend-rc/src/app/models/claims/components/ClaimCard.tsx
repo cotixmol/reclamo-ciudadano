@@ -5,11 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { TiDelete } from 'react-icons/ti';
-import { validate as isUUID } from 'uuid'; // <--- For UUID validation
+import { validate as isUUID } from 'uuid';
 
 import '../../../i18n';
 import { deleteClaimByPublicId } from '@/app/services/claims/delete';
-import { ClaimResponse, ClaimStatus } from '../types/claim';
+import { ClaimResponse, ClaimStatusEnum, PriorityEnum } from '../types/claim';
 import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
 
 interface ClaimCardProps {
@@ -24,7 +24,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
   imageUrl,
 }) => {
   const { t } = useTranslation('claim');
-  const { publicId, title, description, status, createdAt } = claim;
+  const { publicId, title, description, status, priority, createdAt } = claim;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [deleteError, setDeleteError] = useState<string>('');
 
@@ -35,16 +35,17 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
     setIsDeleting(true);
     closePopup();
     if (!isUUID(publicId)) {
-      setDeleteError('Invalid or missing Claim ID');
+      setDeleteError(t('invalidClaimId'));
       setIsDeleting(false);
       return;
     }
 
     try {
       await deleteClaimByPublicId(publicId);
+      // Instead of reloading the page, you might want to handle state updates here
       window.location.reload();
     } catch (error) {
-      const msg = (error as Error).message || 'Deletion failed';
+      const msg = (error as Error).message || t('deletionFailed');
       setDeleteError(msg);
       setIsDeleting(false);
     }
@@ -66,20 +67,32 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
           minute: '2-digit',
         })
       : t('unknownTime');
-
-  const getStatusColor = (status: ClaimStatus) => {
+  const getStatusColor = (status: ClaimStatusEnum) => {
     switch (status) {
-      case ClaimStatus.Open:
-        return 'bg-blue-400';
-      case ClaimStatus.Close:
-        return 'bg-red-400';
+      case ClaimStatusEnum.Open:
+        return 'text-blue-400';
+      case ClaimStatusEnum.Close:
+        return 'text-red-400';
       default:
-        return 'bg-green-400';
+        return 'text-green-400';
+    }
+  };
+
+  const getPriorityColor = (priority: PriorityEnum) => {
+    switch (priority) {
+      case PriorityEnum.LOW:
+        return 'text-green-400';
+      case PriorityEnum.MEDIUM:
+        return 'text-yellow-400';
+      case PriorityEnum.HIGH:
+        return 'text-red-400';
+      default:
+        return 'text-gray-400';
     }
   };
 
   return (
-    <div className="group relative bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ease-in-out md:max-h-[500px]">
+    <div className="flex flex-col border-2 border-gray-700 bg-gray-800 rounded-lg overflow-hidden">
       {/* Confirmation Popup */}
       <DeleteClaimConfirmationPopUp
         isOpen={isPopupOpen}
@@ -87,70 +100,81 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
         onConfirm={handleDeleteConfirmed}
       />
 
-      <div className="relative w-full">
-        {/* Delete Button */}
-        <div className="absolute top-2 right-2">
-          <div className="absolute inset-0 w-7 h-7 bg-gray-800 rounded-full"></div>
+      {/* Top Section: Status Tag, Priority Tag, and Delete Button */}
+      <div className="flex justify-between items-center">
+        <div className="flex h-full">
+          <span
+            className={`flex text-xs text-gray-900 font-semibold px-2 rounded-tl-lg ${getStatusColor(
+              status
+            )} capitalize flex items-center font-semibold border-r-2 border-gray-700`}
+          >
+            {t(`status.${status}`)}
+          </span>
+
+          <span
+            className={`flex text-xs text-gray-900 font-semibold px-2 ${getPriorityColor(
+              priority
+            )} capitalize flex items-center font-semibold border-r-2 border-gray-700`}
+          >
+            {t(`priority.${priority}`)}
+          </span>
+        </div>
+        <div>
           <button
             onClick={openPopup}
-            aria-label="Delete Claim"
-            className="relative p-0.5 z-10"
+            aria-label={t('deleteClaim')} // Ensure this key exists in your translation files
+            className="rounded-tr-lg transition-colors duration-200 flex items-center justify-center p-1"
           >
-            <TiDelete className="w-6 h-6 text-primary hover:text-primary-hover transition-colors duration-200" />
+            <TiDelete className="w-6 h-6 transition-colors duration-200" />
           </button>
         </div>
+      </div>
 
-        {/* Image */}
+      {/* Pink Line Abpve Image */}
+      <div className="w-full h-0.5 bg-gray-700"></div>
+
+      {/* Middle Section: Image */}
+      <div className="w-full h-48 md:h-64 relative">
         <Image
           src={imageUrl}
           alt={title}
-          width={400}
-          height={300}
-          className="w-full h-full max-h-64 min-h-32 md:max-h-64 object-cover"
+          layout="fill"
+          objectFit="cover"
+          className="w-full h-full object-cover"
         />
-
-        {/* Status Tag */}
-        <span
-          className={`absolute top-2 left-2 z-10 text-xs font-semibold px-3 py-1 mt-1 rounded-full ${getStatusColor(
-            status
-          )} capitalize`}
-        >
-          {t(`status.${status}`)}
-        </span>
       </div>
 
-      {/* Card Content Section */}
-      <div className="p-4 bg-gray-800 text-gray-200">
-        <h3 className="text-base font-semibold text-gray-100 whitespace-normal">
-          {title}
-        </h3>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-1">
-            <span className="text-xs text-gray-400">
-              {formattedDate}{' '}
-              <span className="text-gray-500">{formattedTime}</span>
-            </span>
-          </div>
+      {/* Pink Line Below Image */}
+      <div className="w-full h-0.5 bg-primary"></div>
+
+      {/* Bottom Section: Information */}
+      <div className="p-4 bg-gray-800 text-gray-200 flex flex-col flex-grow">
+        <h3 className="text-base font-semibold whitespace-normal">{title}</h3>
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-xs text-gray-400">
+            {formattedDate}{' '}
+            <span className="text-gray-500">{formattedTime}</span>
+          </span>
         </div>
         <p className="mt-2 text-xs text-gray-400 leading-relaxed line-clamp-3">
           {description}
         </p>
-        <div className="my-2">
+        <div className="mt-auto">
           <Link href={`/models/claims/pages/${publicId}`}>
-            <button className="relative z-10 text-sm font-semibold text-primary hover:underline hover:text-primary-hover transition duration-200">
+            <button className="text-sm font-semibold text-primary hover:underline hover:text-primary-hover transition duration-200">
               {t('seeMore')}
             </button>
           </Link>
         </div>
 
-        {/* 5) Show an inline error if present */}
+        {/* Show an inline error if present */}
         {deleteError && (
           <p className="mt-2 text-red-500 text-sm">{deleteError}</p>
         )}
       </div>
-
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
+      {/* Optional: Overlay on Hover */}
+      {/* If you still want an overlay effect, you can keep this */}
+      {/* <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300" /> */}
     </div>
   );
 };

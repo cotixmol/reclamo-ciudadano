@@ -1,9 +1,15 @@
 import { UUID } from 'crypto';
 
 /** Enums **/
-export enum ClaimStatus {
+export enum ClaimStatusEnum {
   Open = 'Open',
   Close = 'Close',
+}
+
+export enum PriorityEnum {
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
 }
 
 /** Fundamental Interfaces **/
@@ -41,7 +47,8 @@ export interface ClaimResponse {
   claimLocation: ClaimLocation;
   title: string;
   description: string;
-  status: ClaimStatus;
+  status: ClaimStatusEnum;
+  priority: PriorityEnum;
   createdAt: string;
   updatedAt: string;
   deleted: string;

@@ -3,6 +3,11 @@
     "Open": "Abierto",
     "Close": "Cerrado"
   },
+  "priority": {
+    "LOW": "Baja Prioridad",
+    "MEDIUM": "Prioridad Media",
+    "HIGH": "Alta Prioridad"
+  },
   "unknownDate": "Fecha desconocida",
   "unknownTime": "Hora desconocida",
   "edited": "Editado",
@@ -11,5 +16,6 @@
   "confirmDeletionMessage": "¿Estás seguro de que deseas eliminar este reclamo?",
   "cancel": "Cancelar",
   "confirm": "Sí, eliminar",
-  "deletionFailed": "Error al eliminar el reclamo. Inténtalo de nuevo."
+  "deletionFailed": "Error al eliminar el reclamo. Inténtalo de nuevo.",
+  "invalidClaimId": "ID de reclamo inválido"
 }
