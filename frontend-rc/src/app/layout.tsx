@@ -1,23 +1,9 @@
-import type { Metadata } from 'next';
 import React from 'react';
+import { Metadata } from 'next';
 import './globals.css';
 import BottomNavBar from './components/BottomNavBar';
-import { ClaimTypesResponse } from './models/claimTypes/types/claimTypes';
 import { ClaimTypesProvider } from './context/ClaimTypesContext';
-
-async function fetchClaimTypes(): Promise<ClaimTypesResponse[]> {
-  const res = await fetch(`${process.env.API_URL}/claim_types`, {
-    next: { revalidate: 600 },
-  });
-
-  if (!res.ok) {
-    console.error('Failed to fetch claim types:', res.statusText);
-    return [];
-  }
-
-  const data: ClaimTypesResponse[] = await res.json();
-  return data;
-}
+import { loadAllClaimsTypesAtBootstart } from './services/claim_types/fetch';
 
 export const metadata: Metadata = {
   title: 'Reclamo Ciudadano',
@@ -45,7 +31,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const claimTypes = await fetchClaimTypes();
+  const claimTypes = await loadAllClaimsTypesAtBootstart();
 
   return (
     <html lang="en">

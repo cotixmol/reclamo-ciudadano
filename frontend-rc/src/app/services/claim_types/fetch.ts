@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { ClaimResponse } from '@/app/models/claims/types/claim';
+import { ClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes';
 
-export async function loadAllClaimsAtBootstart(): Promise<ClaimResponse[]> {
+export async function loadAllClaimsTypesAtBootstart(): Promise<ClaimTypesResponse[]> {
   try {
-    const response = await axios.post<ClaimResponse[]>('/api/claim_types');
-    if (response) {
-      return response.data;
-    }
-    return [];
+    const response = await axios.get<ClaimTypesResponse[]>(`${process.env.API_URL}/claim_types`);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching types of claims:', error);
-    throw error;
+    if (axios.isAxiosError(error) && error.response) {
+      const { data } = error.response;
+      throw new Error(data?.error || 'Failed to fetch claim');
+    }
+    throw new Error('An unknown error occurred while fetching claim');
   }
 }
