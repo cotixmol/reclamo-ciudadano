@@ -13,9 +13,10 @@ from sqlalchemy import (
     ForeignKey,
     Boolean,
     text,
+    Enum as SQLAlchemyEnum,
 )
 from geoalchemy2 import Geometry
-from custom_types import GeometryPoint
+from custom_types import GeometryPoint, PriorityEnum
 
 
 class Claim(SQLModel, table=True):
@@ -38,6 +39,15 @@ class Claim(SQLModel, table=True):
     title: str = Field(sa_column=Column(String(255), nullable=False))
     description: str = Field(sa_column=Column(String(1024), nullable=False))
     status: str = Field(sa_column=Column(String(255), nullable=False))
+    priority: PriorityEnum = Field(
+        sa_column=Column(
+            SQLAlchemyEnum(PriorityEnum, name="priority_enum"),
+            nullable=False,
+            server_default="LOW",
+        ),
+        default=PriorityEnum.LOW,
+    )
+
     created_at: datetime = Field(
         sa_column=Column(DateTime(timezone=True), default=func.now(), nullable=False)
     )

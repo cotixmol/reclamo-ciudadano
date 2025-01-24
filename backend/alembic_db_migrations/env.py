@@ -11,7 +11,7 @@ from geoalchemy2 import alembic_helpers
 from alembic import context
 from sqlmodel import SQLModel
 
-from models import Multimedia, Claim, ClaimTypes
+from models import *
 
 # This is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,6 +20,7 @@ config = context.config
 # Interpret the config file for Python logging.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
 
 # Our SQLModel metadata:
 target_metadata = SQLModel.metadata
