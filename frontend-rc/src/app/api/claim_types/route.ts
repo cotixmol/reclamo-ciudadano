@@ -3,9 +3,7 @@ import axios from 'axios';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import { ClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes';
 
-export async function GET(
-  request: Request,
-): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
   try {
     const response = await axios.get<ClaimTypesResponse[]>(
       `${process.env.API_URL}/claim_types`

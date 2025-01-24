@@ -10,13 +10,11 @@ import {
 export async function POST(request: NextRequest) {
   try {
     const body: ClaimCreateRequest = await request.json();
-    const backendResponse = await axios.post<ClaimResponse | ClaimErrorResponse>(
-      `${process.env.API_URL}/claim`,
-      body,
-      {
-        validateStatus: () => true,
-      }
-    );
+    const backendResponse = await axios.post<
+      ClaimResponse | ClaimErrorResponse
+    >(`${process.env.API_URL}/claim`, body, {
+      validateStatus: () => true,
+    });
     if (backendResponse.status !== 200) {
       const backendError = backendResponse.data as ClaimErrorResponse;
       return NextResponse.json(
@@ -33,6 +31,9 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Unexpected error occurred' },
+      { status: 500 }
+    );
   }
 }

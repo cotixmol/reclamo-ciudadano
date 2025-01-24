@@ -11,13 +11,11 @@ export async function POST(request: NextRequest) {
   try {
     const body: ApiPublicIdsRequest = await request.json();
 
-    const backendResponse = await axios.post<ClaimResponse[] | ClaimErrorResponse>(
-      `${process.env.API_URL}/claims`,
-      body,
-      {
-        validateStatus: () => true,
-      }
-    );
+    const backendResponse = await axios.post<
+      ClaimResponse[] | ClaimErrorResponse
+    >(`${process.env.API_URL}/claims`, body, {
+      validateStatus: () => true,
+    });
 
     if (backendResponse.status !== 200) {
       const backendError = backendResponse.data as ClaimErrorResponse;
@@ -29,7 +27,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const transformedData = toCamelCase(backendResponse.data as ClaimResponse[]);
+    const transformedData = toCamelCase(
+      backendResponse.data as ClaimResponse[]
+    );
     return NextResponse.json(transformedData, { status: 200 });
   } catch (error) {
     if (error instanceof Error) {

@@ -16,7 +16,10 @@ export async function createClaim(
   data: ClaimCreateRequest
 ): Promise<ClaimResponse> {
   try {
-    const response = await axios.post<ClaimResponse>('/api/claims/create', data);
+    const response = await axios.post<ClaimResponse>(
+      '/api/claims/create',
+      data
+    );
     const { publicId } = response.data;
     savePublicId(publicId);
     return response.data;

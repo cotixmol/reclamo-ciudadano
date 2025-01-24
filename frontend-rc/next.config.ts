@@ -15,10 +15,9 @@ const nextConfig: NextConfig = {
   },
 
   env: {
-    API_URL: process.env.API_URL
+    API_URL: process.env.API_URL,
   },
 };
-
 
 // 2) Require `next-pwa` library and call it with ONLY your PWA-specific options:
 //    - `dest`: Where to output the service worker files
@@ -29,7 +28,6 @@ const nextPWACustom = require('next-pwa')({
   register: true,
   skipWaiting: true,
 });
-
 
 // 3) Export the merged config by calling `nextPWACustom(...)` with:
 //   - Your base Next.js config (`...nextConfig`)
