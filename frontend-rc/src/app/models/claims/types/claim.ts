@@ -38,6 +38,7 @@ export interface ClaimUpdateRequest {
   description?: string;
   status?: 'Open' | 'Close' | string;
   claim_location?: ClaimLocation;
+  priority?: PriorityEnum;
 }
 
 /** API Response Interfaces **/
