@@ -70,22 +70,22 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
   const getStatusColor = (status: ClaimStatusEnum) => {
     switch (status) {
       case ClaimStatusEnum.Open:
-        return 'text-blue-400';
+        return 'text-blue-300';
       case ClaimStatusEnum.Close:
-        return 'text-red-400';
+        return 'text-red-300';
       default:
-        return 'text-green-400';
+        return 'text-green-300';
     }
   };
 
   const getPriorityColor = (priority: PriorityEnum) => {
     switch (priority) {
       case PriorityEnum.LOW:
-        return 'text-green-400';
+        return 'text-green-300';
       case PriorityEnum.MEDIUM:
-        return 'text-yellow-400';
+        return 'text-yellow-300';
       case PriorityEnum.HIGH:
-        return 'text-red-400';
+        return 'text-red-300';
       default:
         return 'text-gray-400';
     }
@@ -130,7 +130,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
         </div>
       </div>
 
-      {/* Pink Line Abpve Image */}
+      {/* Pink Line Above Image */}
       <div className="w-full h-0.5 bg-gray-700"></div>
 
       {/* Middle Section: Image */}

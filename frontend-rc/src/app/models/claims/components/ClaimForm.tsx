@@ -12,7 +12,6 @@ import ClaimTypesDropdown from '../../claimTypes/components/claimTypesDropdown';
 import { TiDelete } from 'react-icons/ti';
 import dynamic from 'next/dynamic';
 import PrioritySlider from './PrioritySlider';
-import { Slider } from '@heroui/react';
 
 const MapSelector = dynamic(() => import('./MapSelector'), {
   ssr: false,
@@ -51,6 +50,7 @@ export default function ClaimForm() {
         type: 'Point',
         coordinates: [parseFloat(latitude), parseFloat(longitude)],
       },
+      priority,
     };
 
     try {

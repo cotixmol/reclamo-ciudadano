@@ -29,6 +29,7 @@ export interface ClaimCreateRequest {
   type_category_id: number;
   status: 'Open' | 'Close' | string;
   claim_location: ClaimLocation;
+  priority: PriorityEnum;
 }
 
 export interface ClaimUpdateRequest {
