@@ -70,22 +70,22 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
   const getStatusColor = (status: ClaimStatusEnum) => {
     switch (status) {
       case ClaimStatusEnum.Open:
-        return 'text-blue-300';
+        return 'bg-blue-400';
       case ClaimStatusEnum.Close:
-        return 'text-red-300';
+        return 'bg-red-400';
       default:
-        return 'text-green-300';
+        return 'bg-green-400';
     }
   };
 
   const getPriorityColor = (priority: PriorityEnum) => {
     switch (priority) {
       case PriorityEnum.LOW:
-        return 'text-green-300';
+        return 'bg-green-400';
       case PriorityEnum.MEDIUM:
-        return 'text-yellow-300';
+        return 'bg-yellow-400';
       case PriorityEnum.HIGH:
-        return 'text-red-300';
+        return 'bg-red-400';
       default:
         return 'text-gray-400';
     }
@@ -161,7 +161,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
         </p>
         <div className="mt-auto">
           <Link href={`/models/claims/pages/${publicId}`}>
-            <button className="text-sm font-semibold text-primary hover:underline hover:text-primary-hover transition duration-200">
+            <button className="text-sm pt-4 font-semibold text-primary hover:underline hover:text-primary-hover transition duration-200">
               {t('seeMore')}
             </button>
           </Link>
@@ -169,12 +169,9 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
 
         {/* Show an inline error if present */}
         {deleteError && (
-          <p className="mt-2 text-red-500 text-sm">{deleteError}</p>
+          <p className="mt-2 text-red-300 text-sm">{deleteError}</p>
         )}
       </div>
-      {/* Optional: Overlay on Hover */}
-      {/* If you still want an overlay effect, you can keep this */}
-      {/* <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300" /> */}
     </div>
   );
 };
