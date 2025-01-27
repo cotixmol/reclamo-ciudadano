@@ -102,13 +102,19 @@ export default function ClaimForm() {
           </div>
 
           {/* Priority Slider */}
-          <label htmlFor="title" className="block mb-1">
-            {t('priorityLabelTitle')}
-          </label>
-          <PrioritySlider
-            selectedPriority={priority}
-            onPriorityChange={(newPriority) => setPriority(newPriority)}
-          />
+          <div>
+            <label htmlFor="priority" className="block mb-1">
+              {t('priorityLabelTitle')}
+            </label>
+            {/* Priority Description */}
+            <p className="text-sm text-gray-500 mt-1">
+              {t('priorityDescription')}
+            </p>
+            <PrioritySlider
+              selectedPriority={priority}
+              onPriorityChange={(newPriority) => setPriority(newPriority)}
+            />
+          </div>
 
           {/* Claim Type Dropdown */}
           <ClaimTypesDropdown

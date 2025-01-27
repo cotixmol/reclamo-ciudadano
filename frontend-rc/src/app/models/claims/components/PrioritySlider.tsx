@@ -6,32 +6,35 @@ import React from 'react';
 import { PriorityEnum } from '../types/claim';
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import '../../../i18n';
+import { useTranslation } from 'react-i18next';
 
 interface PrioritySliderProps {
   selectedPriority: PriorityEnum;
   onPriorityChange: (priority: PriorityEnum) => void;
 }
 
-const marks = [
-  {
-    value: 1,
-    label: 'LOW',
-  },
-  {
-    value: 2,
-    label: 'MEDIUM',
-  },
-  {
-    value: 3,
-    label: 'HIGH',
-  },
-];
-
 const PrioritySlider: React.FC<PrioritySliderProps> = ({
   selectedPriority,
   onPriorityChange,
 }) => {
+  const { t } = useTranslation('claimcreationform');
+
+  const marks = [
+    {
+      value: 1,
+      label: <span className="text-green-300">{t('priority.LOW')}</span>, // Tailwind's green-300
+    },
+    {
+      value: 2,
+      label: <span className="text-yellow-300">{t('priority.MEDIUM')}</span>, // Tailwind's yellow-300
+    },
+    {
+      value: 3,
+      label: <span className="text-red-300">{t('priority.HIGH')}</span>, // Tailwind's red-300
+    },
+  ];
+
   // Map PriorityEnum to numerical values for the slider
   const priorityValues: { [key in PriorityEnum]: number } = {
     [PriorityEnum.LOW]: 1,
@@ -46,7 +49,7 @@ const PrioritySlider: React.FC<PrioritySliderProps> = ({
     3: PriorityEnum.HIGH,
   };
 
-  const handleChange = (event: Event, value: number | number[]) => {
+  const handleChange = (e: Event, value: number | number[]) => {
     if (typeof value === 'number') {
       const priority = valueToPriority[value];
       onPriorityChange(priority);
@@ -64,15 +67,12 @@ const PrioritySlider: React.FC<PrioritySliderProps> = ({
         min={1}
         max={3}
         sx={{
-          color: '#ec4899', // Tailwind's pink-500
+          color: '#ec4899',
           '& .MuiSlider-rail': {
-            color: '#4b5563', // Tailwind's gray-700
+            color: '#4b5563',
           },
-          '& .MuiSlider-markLabel': {
-            color: '#d1d5db', // Tailwind's gray-300
-            fontSize: '0.75rem',
-            fontWeight: 500,
-          },
+          // Remove the generic label color to allow Tailwind classes to take effect
+          '& .MuiSlider-markLabel': {},
         }}
       />
     </Box>

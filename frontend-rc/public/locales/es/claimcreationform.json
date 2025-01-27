@@ -2,6 +2,7 @@
   "formTitle": "Crear un reclamo",
   "claimTitle": "Título",
   "claimDescription": "Descripción",
+  "priorityDescription": "Seleccione el nivel de prioridad en función de la urgencia y el impacto de su reclamo.",
   "claimType": "Tipo de reclamo",
   "claimLatitude": "Latitud",
   "claimLongitude": "Longitud",
@@ -13,6 +14,11 @@
     "enterLatitude": "Ingrese la latitud",
     "enterLongitude": "Ingrese la longitud",
     "chooseAnOption": "Seleccione una opción"
+  },
+  "priority": {
+    "LOW": "Baja",
+    "MEDIUM": "Media",
+    "HIGH": "Alta"
   },
   "200characters": "/200 caracteres",
   "1000characters": "/1000 caracteres",

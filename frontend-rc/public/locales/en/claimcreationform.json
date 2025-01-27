@@ -2,6 +2,7 @@
   "formTitle": "Create a Claim",
   "claimTitle": "Title",
   "claimDescription": "Description",
+  "priorityDescription": "Select the priority level based on the urgency and impact of your claim.",
   "claimType": "Claim Type",
   "claimLatitude": "Latitude",
   "claimLongitude": "Longitude",
@@ -13,6 +14,11 @@
     "enterLatitude": "Enter latitude",
     "enterLongitude": "Enter longitude",
     "chooseAnOption": "Choose an option"
+  },
+  "priority": {
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High"
   },
   "200characters": "/200 characters",
   "1000characters": "/1000 characters",
