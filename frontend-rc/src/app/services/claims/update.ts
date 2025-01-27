@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ClaimResponse, ClaimUpdateRequest } from '@/app/types/claim';
+import { ClaimResponse, ClaimUpdateRequest } from '@/app/models/claims/types/claim';
 
 export async function updateClaimByPublicId(
   publicId: string,
@@ -10,7 +10,7 @@ export async function updateClaimByPublicId(
       `/api/claims/${publicId}`,
       payload
     );
-    return response.data;
+    return response.data as ClaimResponse;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
