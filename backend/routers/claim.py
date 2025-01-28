@@ -71,7 +71,7 @@ async def create_claim(
 ):
     try:
         new_claim = claim_service.create_claim(claim)
-        url = minio_service.generate_presigned_url(new_claim)
+        url = minio_service.generate_presigned_urls(new_claim)
         return {
             "new_claim": new_claim,
             "presigned_url": url or "No presigned URL generated",

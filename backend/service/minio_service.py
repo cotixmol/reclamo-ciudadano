@@ -2,8 +2,8 @@ class MinioService:
     def __init__(self, repository):
         self.repository = repository
 
-    def generate_presigned_url(self, claim):
+    def generate_presigned_urls(self, claim):
         try:
-            return self.repository.generate_presigned_url(claim)
+            return self.repository.generate_presigned_urls(claim)
         except Exception as e:
             raise e
