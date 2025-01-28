@@ -1,10 +1,8 @@
 import uuid
-from pydantic import BaseModel
+from typing import Optional, Union, List  # Added List
 from uuid import UUID
+from pydantic import BaseModel
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
-from datetime import datetime
-from typing import Optional, Union
-from sqlmodel import SQLModel, Field
 from sqlalchemy import (
     Column,
     String,
@@ -15,7 +13,10 @@ from sqlalchemy import (
     Boolean,
     text,
     Enum as SQLAlchemyEnum,
+    ARRAY,
 )
+from sqlmodel import SQLModel, Field
+from datetime import datetime
 from geoalchemy2 import Geometry
 from custom_types import GeometryPoint, PriorityEnum
 
@@ -55,6 +56,10 @@ class Claim(SQLModel, table=True):
             nullable=False,
             server_default=text("false"),
         ),
+    )
+    files: List[str] = Field(
+        default_factory=list,
+        sa_column=Column(ARRAY(String), nullable=True),
     )
     created_at: datetime = Field(
         sa_column=Column(DateTime(timezone=True), default=func.now(), nullable=False)
