@@ -1,7 +1,7 @@
 from service import ClaimTypesService
 from dao import ClaimTypesSQLAlchemy
 from repository import ClaimTypesRepository
-from db import db_reporte_ciudadano
+from config.db import db_reporte_ciudadano
 
 
 def get_claim_types_service() -> ClaimTypesService:
