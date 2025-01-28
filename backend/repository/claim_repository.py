@@ -1,8 +1,7 @@
 from models import Claim
 from sqlmodel import Session
 from typing import List
-from dao import ClaimDAO, ClaimSQLAlchemy
-from sqlalchemy.exc import NoResultFound
+from dao import ClaimDAO
 from errors.claim_errors import (
     ClaimNotFoundError,
     ClaimNotFoundToDeleteError,
@@ -11,9 +10,9 @@ from errors.claim_errors import (
 
 
 class ClaimRepository:
-    def __init__(self, db_reporte_ciudadano: Session, claim_dao: ClaimDAO = None):
+    def __init__(self, db_reporte_ciudadano: Session, claim_dao: ClaimDAO):
         self.db_reporte_ciudadano = db_reporte_ciudadano
-        self.claim_dao = claim_dao or ClaimSQLAlchemy()
+        self.claim_dao = claim_dao
 
     def read_all_claims_by_public_ids(self, public_ids) -> List[Claim]:
         try:

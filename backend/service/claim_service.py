@@ -4,10 +4,13 @@ from errors import (
     ClaimNotCreatedError,
     ClaimNotUpdatedError,
 )
+from repository import ClaimRepository
+from repository import ClaimRepository
+from errors.claim_errors import ClaimNotCreatedError
 
 
 class ClaimService:
-    def __init__(self, repository):
+    def __init__(self, repository: ClaimRepository):
         self.repository = repository
 
     def read_all_claims_by_public_ids(self, public_ids):

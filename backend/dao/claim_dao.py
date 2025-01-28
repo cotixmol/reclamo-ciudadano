@@ -124,7 +124,7 @@ class ClaimSQLAlchemy(ClaimDAO):
                 claim.deleted_at = datetime.utcnow()
 
                 db.add(claim)
-                db.commit()
+                db.flush()
                 db.refresh(claim)
 
                 # Convert location if needed

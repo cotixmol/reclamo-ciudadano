@@ -68,16 +68,13 @@ class StoreObjectRepository:
             else:
                 raise RuntimeError(f"Error checking bucket existence: {e}") from e
 
-    def generate_presigned_urls(
-        self, claim: Claim, expiration: int = 3600
-    ) -> Optional[Dict[str, str]]:
-        """
-        Generates presigned URLs for each file in the claim.
-        """
-        urls = {}
+
+class StoreObjectRepository:
+    def generate_presigned_urls(self, claim: Claim, expiration: int = 3600):
         try:
+            urls = {}
             for file in claim.files:
-                sanitized_file = self._sanitize_filename(file)
+                sanitized_file = os.path.basename(file)
                 object_name = f"claims/{claim.public_id}/{sanitized_file}"
 
                 url = self.s3_client.generate_presigned_url(
@@ -87,11 +84,9 @@ class StoreObjectRepository:
                 )
 
                 urls[file] = url
-
             return urls
-        except ClientError as e:
-            print(f"Error generating presigned URLs: {e}")
-            return None
+        except Exception as e:
+            raise Exception(f"Error generating presigned URLs: {e}")
 
     @staticmethod
     def _sanitize_filename(filename: str) -> str:
