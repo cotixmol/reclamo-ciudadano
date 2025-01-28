@@ -12,6 +12,9 @@ from errors.claim_errors import (
     ClaimNotCreatedError,
     ClaimNotUpdatedError,
 )
+from config.db import db_reporte_ciudadano
+from sqlmodel import Session
+
 
 claim_router = APIRouter()
 
@@ -66,12 +69,14 @@ async def delete_claim_by_public_id(
 @claim_router.post("/claim/", response_model=CreateClaimResponse)
 async def create_claim(
     claim: Claim,
+    session: Session = Depends(db_reporte_ciudadano.get_session),
     claim_service: ClaimService = Depends(get_claim_service),
     store_object_service: StoreObjectService = Depends(get_store_object_service),
 ):
     try:
-        new_claim = claim_service.create_claim(claim)
-        url = store_object_service.generate_presigned_urls(new_claim)
+        with session.begin():  # TODO: Check if this block can be placed somewhere else. It's not a good practice to have it here.
+            new_claim = claim_service.create_claim(claim)
+            url = store_object_service.generate_presigned_urls(new_claim)
         return {
             "new_claim": new_claim,
             "presigned_url": url or "No presigned URL generated",
