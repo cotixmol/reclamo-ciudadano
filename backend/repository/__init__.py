@@ -1,3 +1,3 @@
 from .claim_repository import ClaimRepository
 from .claim_types_repository import ClaimTypesRepository
-from .minio_repository import MinioRepository
+from .store_object_repository import StoreObjectRepository

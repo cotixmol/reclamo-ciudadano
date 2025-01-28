@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from service import ClaimService, MinioService
+from service import ClaimService, StoreObjectService
 from typing import Optional
-from dependencies import get_claim_service, get_minio_service
+from dependencies import get_claim_service, get_store_object_service
 from models import Claim, CreateClaimResponse
 from uuid import UUID
 from typing import List
@@ -67,11 +67,11 @@ async def delete_claim_by_public_id(
 async def create_claim(
     claim: Claim,
     claim_service: ClaimService = Depends(get_claim_service),
-    minio_service: MinioService = Depends(get_minio_service),
+    store_object_service: StoreObjectService = Depends(get_store_object_service),
 ):
     try:
         new_claim = claim_service.create_claim(claim)
-        url = minio_service.generate_presigned_urls(new_claim)
+        url = store_object_service.generate_presigned_urls(new_claim)
         return {
             "new_claim": new_claim,
             "presigned_url": url or "No presigned URL generated",

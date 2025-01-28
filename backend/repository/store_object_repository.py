@@ -1,0 +1,101 @@
+import os
+from typing import Dict, Optional
+
+import boto3
+from botocore.exceptions import ClientError
+
+from models import Claim
+
+
+class StoreObjectRepository:
+    def __init__(
+        self,
+        endpoint_url: Optional[str] = None,
+        access_key: Optional[str] = None,
+        secret_key: Optional[str] = None,
+        bucket_name: Optional[str] = None,
+        region_name: Optional[str] = "us-east-1",
+        use_ssl: bool = False,
+    ):
+        """
+        Initializes the S3Repository with the necessary configurations.
+        """
+        self.endpoint_url = endpoint_url or os.getenv("S3_URL")
+        self.access_key = access_key or os.getenv("SECRET_S3_ACCESS_KEY")
+        self.secret_key = secret_key or os.getenv("SECRET_S3_SECRET_KEY")
+        self.bucket_name = bucket_name or os.getenv("S3_BUCKET")
+        self.region_name = region_name
+
+        if not all(
+            [self.endpoint_url, self.access_key, self.secret_key, self.bucket_name]
+        ):
+            raise ValueError("S3 configuration is incomplete.")
+
+        self.s3_client = boto3.client(
+            "s3",
+            endpoint_url=self.endpoint_url,
+            aws_access_key_id=self.access_key,
+            aws_secret_access_key=self.secret_key,
+            region_name=self.region_name,
+            use_ssl=use_ssl,
+        )
+
+        self._ensure_bucket_exists()
+
+    def _ensure_bucket_exists(self):
+        """
+        Ensures that the specified bucket exists; creates it if it doesn't.
+        """
+        try:
+            self.s3_client.head_bucket(Bucket=self.bucket_name)
+        except ClientError as e:
+            error_code = int(e.response["Error"]["Code"])
+            if error_code == 404:
+                try:
+                    self.s3_client.create_bucket(
+                        Bucket=self.bucket_name,
+                        CreateBucketConfiguration=(
+                            {"LocationConstraint": self.region_name}
+                            if self.region_name
+                            else {}
+                        ),
+                    )
+                    print(f"Bucket '{self.bucket_name}' created successfully.")
+                except ClientError as create_error:
+                    raise RuntimeError(
+                        f"Error creating bucket: {create_error}"
+                    ) from create_error
+            else:
+                raise RuntimeError(f"Error checking bucket existence: {e}") from e
+
+    def generate_presigned_urls(
+        self, claim: Claim, expiration: int = 3600
+    ) -> Optional[Dict[str, str]]:
+        """
+        Generates presigned URLs for each file in the claim.
+        """
+        urls = {}
+        try:
+            for file in claim.files:
+                sanitized_file = self._sanitize_filename(file)
+                object_name = f"claims/{claim.public_id}/{sanitized_file}"
+
+                url = self.s3_client.generate_presigned_url(
+                    "put_object",
+                    Params={"Bucket": self.bucket_name, "Key": object_name},
+                    ExpiresIn=expiration,
+                )
+
+                urls[file] = url
+
+            return urls
+        except ClientError as e:
+            print(f"Error generating presigned URLs: {e}")
+            return None
+
+    @staticmethod
+    def _sanitize_filename(filename: str) -> str:
+        """
+        Sanitizes the filename to prevent security issues like path traversal.
+        """
+        return os.path.basename(filename)

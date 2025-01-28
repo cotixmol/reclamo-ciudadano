@@ -1,3 +1,3 @@
 from .claim_dependency import get_claim_service
 from .claim_types_dependency import get_claim_types_service
-from .minio_dependency import get_minio_service
+from .store_object_dependency import get_store_object_service
