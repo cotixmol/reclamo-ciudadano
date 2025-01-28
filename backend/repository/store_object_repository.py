@@ -1,9 +1,7 @@
 import os
 from typing import Dict, Optional
-
 import boto3
 from botocore.exceptions import ClientError
-
 from models import Claim
 
 
@@ -18,7 +16,7 @@ class StoreObjectRepository:
         use_ssl: bool = False,
     ):
         """
-        Initializes the S3Repository with the necessary configurations.
+        Initializes the StoreObjectRepository with the necessary configurations.
         """
         self.endpoint_url = endpoint_url or os.getenv("S3_URL")
         self.access_key = access_key or os.getenv("SECRET_S3_ACCESS_KEY")
@@ -68,13 +66,20 @@ class StoreObjectRepository:
             else:
                 raise RuntimeError(f"Error checking bucket existence: {e}") from e
 
+    def generate_presigned_urls(
+        self, claim: Claim, expiration: int = 3600
+    ) -> Dict[str, str]:
+        """
+        Generates presigned URLs for each file in the claim.
 
-class StoreObjectRepository:
-    def generate_presigned_urls(self, claim: Claim, expiration: int = 3600):
+        :param claim: The claim object containing file information.
+        :param expiration: Time in seconds for the presigned URL to remain valid.
+        :return: A dictionary mapping file names to their presigned URLs.
+        """
         try:
             urls = {}
             for file in claim.files:
-                sanitized_file = os.path.basename(file)
+                sanitized_file = self._sanitize_filename(file)
                 object_name = f"claims/{claim.public_id}/{sanitized_file}"
 
                 url = self.s3_client.generate_presigned_url(
@@ -86,11 +91,14 @@ class StoreObjectRepository:
                 urls[file] = url
             return urls
         except Exception as e:
-            raise Exception(f"Error generating presigned URLs: {e}")
+            raise Exception(f"Error generating presigned URLs: {e}") from e
 
     @staticmethod
     def _sanitize_filename(filename: str) -> str:
         """
         Sanitizes the filename to prevent security issues like path traversal.
+
+        :param filename: The original filename.
+        :return: The sanitized filename.
         """
         return os.path.basename(filename)
