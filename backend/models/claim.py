@@ -1,4 +1,5 @@
 import uuid
+from pydantic import BaseModel
 from uuid import UUID
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from datetime import datetime
@@ -47,7 +48,14 @@ class Claim(SQLModel, table=True):
         ),
         default=PriorityEnum.LOW,
     )
-
+    has_multimedia: bool = Field(
+        default=False,
+        sa_column=Column(
+            Boolean,
+            nullable=False,
+            server_default=text("false"),
+        ),
+    )
     created_at: datetime = Field(
         sa_column=Column(DateTime(timezone=True), default=func.now(), nullable=False)
     )
@@ -70,3 +78,12 @@ class Claim(SQLModel, table=True):
             server_default=text("false"),
         ),
     )
+
+
+class CreateClaimResponse(BaseModel):
+    new_claim: Claim
+    presigned_url: Optional[str] = None
+    status: str
+
+    class Config:
+        from_attributes = True

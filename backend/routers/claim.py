@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from service import ClaimService
+from service import ClaimService, MinioService
 from typing import Optional
-from dependencies import get_claim_service
-from models import Claim
+from dependencies import get_claim_service, get_minio_service
+from models import Claim, CreateClaimResponse
 from uuid import UUID
 from typing import List
 from custom_types import AllClaimsRequest
@@ -19,10 +19,10 @@ claim_router = APIRouter()
 @claim_router.post("/claims/", response_model=List[Claim])
 async def read_all_claims_by_public_ids(
     request: AllClaimsRequest,
-    service: ClaimService = Depends(get_claim_service),
+    claim_service: ClaimService = Depends(get_claim_service),
 ):
     try:
-        all_claims = service.read_all_claims_by_public_ids(request.public_ids)
+        all_claims = claim_service.read_all_claims_by_public_ids(request.public_ids)
         return all_claims
     except Exception as e:
         raise HTTPException(
@@ -33,10 +33,10 @@ async def read_all_claims_by_public_ids(
 
 @claim_router.get("/claim/{public_id}", response_model=Claim)
 async def read_claim_by_public_id(
-    public_id: UUID, service: ClaimService = Depends(get_claim_service)
+    public_id: UUID, claim_service: ClaimService = Depends(get_claim_service)
 ):
     try:
-        claim = service.read_claim_by_public_id(public_id)
+        claim = claim_service.read_claim_by_public_id(public_id)
         return claim
     except ClaimNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
@@ -49,10 +49,10 @@ async def read_claim_by_public_id(
 
 @claim_router.delete("/claim/{public_id}", response_model=Claim)
 async def delete_claim_by_public_id(
-    public_id: UUID, service: ClaimService = Depends(get_claim_service)
+    public_id: UUID, claim_service: ClaimService = Depends(get_claim_service)
 ):
     try:
-        claim = service.delete_claim_by_public_id(public_id)
+        claim = claim_service.delete_claim_by_public_id(public_id)
         return claim
     except ClaimNotFoundToDeleteError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
@@ -63,13 +63,20 @@ async def delete_claim_by_public_id(
         )
 
 
-@claim_router.post("/claim/", response_model=Claim)
+@claim_router.post("/claim/", response_model=CreateClaimResponse)
 async def create_claim(
-    claim: Claim, service: ClaimService = Depends(get_claim_service)
+    claim: Claim,
+    claim_service: ClaimService = Depends(get_claim_service),
+    minio_service: MinioService = Depends(get_minio_service),
 ):
     try:
-        new_claim = service.create_claim(claim)
-        return new_claim
+        new_claim = claim_service.create_claim(claim)
+        url = minio_service.generate_presigned_url(new_claim)
+        return {
+            "new_claim": new_claim,
+            "presigned_url": url or "No presigned URL generated",
+            "status": "pending",
+        }
     except ClaimNotCreatedError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except Exception as e:
@@ -81,10 +88,12 @@ async def create_claim(
 
 @claim_router.put("/claim/{public_id}", response_model=Claim)
 async def update_claim_by_public_id(
-    claim: Claim, public_id: UUID, service: ClaimService = Depends(get_claim_service)
+    claim: Claim,
+    public_id: UUID,
+    claim_service: ClaimService = Depends(get_claim_service),
 ):
     try:
-        updated_claim = service.update_claim_by_public_id(claim, public_id)
+        updated_claim = claim_service.update_claim_by_public_id(claim, public_id)
         return updated_claim
     except ClaimNotUpdatedError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
