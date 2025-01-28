@@ -7,9 +7,9 @@ export enum ClaimStatusEnum {
 }
 
 export enum PriorityEnum {
-  LOW = "LOW",
-  MEDIUM = "MEDIUM",
-  HIGH = "HIGH",
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
 }
 
 /** Fundamental Interfaces **/
@@ -51,12 +51,21 @@ export interface ClaimResponse {
   description: string;
   status: ClaimStatusEnum;
   priority: PriorityEnum;
+  hasMultimedia: boolean;
   createdAt: string;
   updatedAt: string;
-  deleted: string;
+  deleted: boolean;
   deletedAt: string;
 }
 
+/** Error Response Interface **/
 export interface ClaimErrorResponse {
   detail: string;
+}
+
+/** Create New Claim Response Interface **/
+export interface CreateNewClaimResponse {
+  newClaim: ClaimResponse;
+  presignedUrl: Record<string, string>;
+  status: string;
 }
