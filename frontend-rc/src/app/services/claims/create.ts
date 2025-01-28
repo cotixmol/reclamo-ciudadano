@@ -2,7 +2,7 @@
 import axios from 'axios';
 import {
   ClaimCreateRequest,
-  ClaimResponse,
+  CreateNewClaimResponse,
 } from '@/app/models/claims/types/claim';
 
 function savePublicId(newId: string) {
@@ -14,13 +14,13 @@ function savePublicId(newId: string) {
 
 export async function createClaim(
   data: ClaimCreateRequest
-): Promise<ClaimResponse> {
+): Promise<CreateNewClaimResponse> {
   try {
-    const response = await axios.post<ClaimResponse>(
+    const response = await axios.post<CreateNewClaimResponse>(
       '/api/claims/create',
       data
     );
-    const { publicId } = response.data;
+    const { publicId } = response.data.newClaim;
     savePublicId(publicId);
     return response.data;
   } catch (error) {

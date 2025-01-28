@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { ClaimResponse, ClaimUpdateRequest } from '@/app/models/claims/types/claim';
+import {
+  ClaimResponse,
+  ClaimUpdateRequest,
+} from '@/app/models/claims/types/claim';
 
 export async function updateClaimByPublicId(
   publicId: string,
