@@ -88,7 +88,6 @@ class Claim(SQLModel, table=True):
 class CreateClaimResponse(BaseModel):
     new_claim: Claim
     presigned_url: Optional[object] = None
-    status: str
 
     class Config:
         from_attributes = True

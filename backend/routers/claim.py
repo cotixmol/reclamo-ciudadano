@@ -80,7 +80,6 @@ async def create_claim(
         return {
             "new_claim": new_claim,
             "presigned_url": url or "No presigned URL generated",
-            "status": "pending",
         }
     except ClaimNotCreatedError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
