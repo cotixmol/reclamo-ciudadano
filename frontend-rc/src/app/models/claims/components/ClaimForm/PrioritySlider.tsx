@@ -3,10 +3,10 @@
 'use client';
 
 import React from 'react';
-import { PriorityEnum } from '../types/claim';
+import { PriorityEnum } from '../../types/claim';
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
-import '../../../i18n';
+import '../../../../i18n';
 import { useTranslation } from 'react-i18next';
 
 interface PrioritySliderProps {

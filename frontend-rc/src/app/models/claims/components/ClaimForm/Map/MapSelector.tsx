@@ -6,7 +6,7 @@ import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import 'leaflet-control-geocoder';
-import { customMapIcon } from './customMapIcon';
+import { customMapIcon } from '../../customMapIcon';
 
 interface MapSelectorProps {
   latitude: string;
