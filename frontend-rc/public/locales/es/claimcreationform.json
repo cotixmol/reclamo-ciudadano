@@ -20,6 +20,7 @@
     "MEDIUM": "Media",
     "HIGH": "Alta"
   },
+  "selectFiles": "  Click aqui para cargar hasta 5 imagenes o videos",
   "200characters": "/200 caracteres",
   "1000characters": "/1000 caracteres",
   "chosenAddress": "Dirección elegida",

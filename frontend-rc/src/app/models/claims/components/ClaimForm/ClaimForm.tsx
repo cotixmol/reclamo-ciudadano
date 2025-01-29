@@ -1,4 +1,3 @@
-// components/ClaimForm/ClaimForm.tsx
 'use client';
 
 import React, { useState, FormEvent } from 'react';
@@ -15,9 +14,9 @@ import MultimediaUpload from './MultimediaUpload';
 import PrioritySection from './PrioritySection';
 import SubmitButton from './SubmitButton';
 import ClaimTypesDropdown from '@/app/models/claimTypes/components/claimTypesDropdown';
-import LoadingMap from './Map/LoadingMap'; // Adjust the path if necessary
+import LoadingMap from './Map/LoadingMap';
+import { PutObjectInS3 } from '@/app/services/s3/putObject';
 
-// Dynamic import with LoadingMap as fallback
 const MapSelector = dynamic(() => import('./Map/MapSelector'), {
   ssr: false,
   loading: () => <LoadingMap />,
@@ -40,6 +39,10 @@ export default function ClaimForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Multimedia States
+  const [fileNames, setFileNames] = useState<string[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
+
   // For enabling the submit if lat/long are set
   const hasLocation = !!latitude && !!longitude;
 
@@ -60,7 +63,15 @@ export default function ClaimForm() {
     };
 
     try {
-      await createClaim(claimData);
+      const response = await createClaim(claimData);
+      const { presignedUrl } = response;
+
+      const uploadPromises = files.map((file) => {
+        const url = presignedUrl[file.name];
+        return PutObjectInS3(url, file);
+      });
+      await Promise.all(uploadPromises);
+
       router.push('/models/claims/pages');
     } catch (err) {
       console.error(err);
@@ -97,7 +108,12 @@ export default function ClaimForm() {
           />
 
           {/* Multimedia Upload */}
-          <MultimediaUpload />
+          <MultimediaUpload
+            fileNames={fileNames}
+            setFileNames={setFileNames}
+            files={files}
+            setFiles={setFiles}
+          />
 
           {/* Map Selector */}
           <div className="w-full rounded overflow-hidden relative z-0">

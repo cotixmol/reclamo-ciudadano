@@ -67,5 +67,4 @@ export interface ClaimErrorResponse {
 export interface CreateNewClaimResponse {
   newClaim: ClaimResponse;
   presignedUrl: Record<string, string>;
-  status: string;
 }
