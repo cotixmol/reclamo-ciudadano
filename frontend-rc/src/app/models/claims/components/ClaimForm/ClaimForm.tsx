@@ -1,3 +1,4 @@
+// components/ClaimForm/ClaimForm.tsx
 'use client';
 
 import React, { useState, FormEvent } from 'react';
@@ -14,8 +15,9 @@ import MultimediaUpload from './MultimediaUpload';
 import PrioritySection from './PrioritySection';
 import SubmitButton from './SubmitButton';
 import ClaimTypesDropdown from '@/app/models/claimTypes/components/claimTypesDropdown';
-import LoadingMap from './Map/LoadingMap';
+import LoadingMap from './Map/LoadingMap'; // Adjust the path if necessary
 
+// Dynamic import with LoadingMap as fallback
 const MapSelector = dynamic(() => import('./Map/MapSelector'), {
   ssr: false,
   loading: () => <LoadingMap />,
@@ -71,7 +73,7 @@ export default function ClaimForm() {
   }
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-3xl bg-gray-900 p-8 rounded-lg">
         <h2 className="text-2xl font-semibold mb-6">{t('formTitle')}</h2>
 
@@ -115,7 +117,7 @@ export default function ClaimForm() {
                 </button>
               </div>
             </div>
-            <div className="relative z-0">
+            <div className="relative w-full h-64">
               <MapSelector
                 latitude={latitude}
                 longitude={longitude}

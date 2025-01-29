@@ -1,15 +1,23 @@
+// components/Map/LoadingMap.tsx
 import React from 'react';
-import Image from 'next/image';
 
 const LoadingMap: React.FC = () => {
   return (
-    <div className="relative flex items-center justify-center h-full">
+    <div className="relative w-full h-full bg-gray-800 rounded-lg overflow-hidden">
       {/* Blurred Map Image */}
-      <Image src="/blurmap.png" alt="Loading Map" width={400} height={300} />
+      <img
+        src="/blurmap.png"
+        alt="Loading Map"
+        className="absolute inset-0 w-full h-full object-cover blur-sm"
+      />
 
-      {/* Spinner */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="h-10 w-10 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+      {/* Spinner Overlay */}
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <div
+          className="h-10 w-10 border-4 border-white border-t-transparent rounded-full animate-spin"
+          role="status"
+          aria-label="Loading map"
+        ></div>
       </div>
     </div>
   );
