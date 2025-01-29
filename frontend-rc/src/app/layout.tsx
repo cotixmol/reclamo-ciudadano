@@ -4,6 +4,7 @@ import './globals.css';
 import BottomNavBar from './components/BottomNavBar';
 import { ClaimTypesProvider } from './context/ClaimTypesContext';
 import { loadAllClaimsTypesAtBootstart } from './services/claim_types/fetch';
+import PreloadMapSelector from './models/claims/components/ClaimForm/Map/PreloadMapSelector';
 
 export const metadata: Metadata = {
   title: 'Reclamo Ciudadano',
@@ -39,6 +40,7 @@ export default async function RootLayout({
         <ClaimTypesProvider claimTypes={claimTypes}>
           <div className="pb-28">{children}</div>
           <BottomNavBar />
+          <PreloadMapSelector />
         </ClaimTypesProvider>
       </body>
     </html>
