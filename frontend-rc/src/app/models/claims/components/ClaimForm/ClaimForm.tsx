@@ -60,6 +60,7 @@ export default function ClaimForm() {
         coordinates: [parseFloat(latitude), parseFloat(longitude)],
       },
       priority,
+      files: fileNames,
     };
 
     try {

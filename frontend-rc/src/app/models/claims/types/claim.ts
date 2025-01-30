@@ -30,6 +30,7 @@ export interface ClaimCreateRequest {
   status: 'Open' | 'Close' | string;
   claim_location: ClaimLocation;
   priority: PriorityEnum;
+  files: string[];
 }
 
 export interface ClaimUpdateRequest {

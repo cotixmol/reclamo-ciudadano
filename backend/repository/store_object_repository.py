@@ -1,5 +1,7 @@
 import os
-from typing import Dict, Optional
+import urllib.parse
+import mimetypes
+from typing import Dict, Optional, List
 import boto3
 from botocore.exceptions import ClientError
 from models import Claim
@@ -35,6 +37,7 @@ class StoreObjectRepository:
             aws_access_key_id=self.access_key,
             aws_secret_access_key=self.secret_key,
             region_name=self.region_name,
+            config=boto3.session.Config(signature_version="s3v4"),
             use_ssl=use_ssl,
         )
 
@@ -70,21 +73,35 @@ class StoreObjectRepository:
         self, claim: Claim, expiration: int = 3600
     ) -> Dict[str, str]:
         """
-        Generates presigned URLs for each file in the claim.
+        Generates presigned URLs for multiple files.
 
         :param claim: The claim object containing file information.
         :param expiration: Time in seconds for the presigned URL to remain valid.
         :return: A dictionary mapping file names to their presigned URLs.
+        :raises ValueError: If a file has an unsupported MIME type.
         """
+        allowed_mime_types = self._get_allowed_mime_types()
+
         try:
             urls = {}
             for file in claim.files:
                 sanitized_file = self._sanitize_filename(file)
                 object_name = f"claims/{claim.public_id}/{sanitized_file}"
 
+                content_type, _ = mimetypes.guess_type(sanitized_file)
+
+                if not self._is_allowed_mime_type(content_type, allowed_mime_types):
+                    raise ValueError(
+                        f"Unsupported file type for '{file}'. Allowed types are images and videos."
+                    )
+
                 url = self.s3_client.generate_presigned_url(
                     "put_object",
-                    Params={"Bucket": self.bucket_name, "Key": object_name},
+                    Params={
+                        "Bucket": self.bucket_name,
+                        "Key": object_name,
+                        "ContentType": content_type,
+                    },
                     ExpiresIn=expiration,
                 )
 
@@ -99,6 +116,24 @@ class StoreObjectRepository:
         Sanitizes the filename to prevent security issues like path traversal.
 
         :param filename: The original filename.
-        :return: The sanitized filename.
+        :return: The sanitized and URL-encoded filename.
         """
-        return os.path.basename(filename)
+        sanitized = os.path.basename(filename)
+        return urllib.parse.quote(sanitized, safe="")
+
+    @staticmethod
+    def _get_allowed_mime_types() -> List[str]:
+        return [
+            # Images
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/webp",
+            # Videos
+            "video/mp4",
+            "video/mpeg",
+        ]
+
+    @staticmethod
+    def _is_allowed_mime_type(content_type: str, allowed_mime_types: List[str]) -> bool:
+        return content_type.lower() in allowed_mime_types
