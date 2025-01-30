@@ -3,6 +3,7 @@ import urllib.parse
 import mimetypes
 from typing import Dict, Optional, List
 import boto3
+from datetime import datetime
 from botocore.exceptions import ClientError
 from models import Claim
 
@@ -81,12 +82,17 @@ class StoreObjectRepository:
         :raises ValueError: If a file has an unsupported MIME type.
         """
         allowed_mime_types = self._get_allowed_mime_types()
+        now = datetime.now()
+        month_name = now.strftime("%B")
+        day = now.strftime("%d")
 
         try:
             urls = {}
             for file in claim.files:
                 sanitized_file = self._sanitize_filename(file)
-                object_name = f"claims/{claim.public_id}/{sanitized_file}"
+                object_name = (
+                    f"claims/{month_name}/{day}/{claim.public_id}/{sanitized_file}"
+                )
 
                 content_type, _ = mimetypes.guess_type(sanitized_file)
 
