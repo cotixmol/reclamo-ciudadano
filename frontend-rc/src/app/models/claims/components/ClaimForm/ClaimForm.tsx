@@ -16,6 +16,7 @@ import SubmitButton from './SubmitButton';
 import ClaimTypesDropdown from '@/app/models/claimTypes/components/claimTypesDropdown';
 import LoadingMap from './Map/LoadingMap';
 import { PutObjectInS3 } from '@/app/services/s3/putObject';
+import { saveMetadata } from '@/app/services/multimedia/createMetadata';
 
 //  Dynamic Map Selector
 const MapSelector = dynamic(() => import('./Map/MapSelector'), {
@@ -65,13 +66,16 @@ export default function ClaimForm() {
 
     try {
       const response = await createClaim(claimData);
-      const { presignedUrl } = response;
+      const { newClaim, presignedUrl } = response;
+      const { id } = newClaim;
 
       const uploadPromises = files.map((file) => {
         const url = presignedUrl[file.name];
         return PutObjectInS3(url, file);
       });
       await Promise.all(uploadPromises);
+
+      await saveMetadata(id, presignedUrl, files);
 
       router.push('/models/claims/pages');
     } catch (err) {

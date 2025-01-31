@@ -42,6 +42,15 @@ export interface ClaimUpdateRequest {
   priority?: PriorityEnum;
 }
 
+export interface MultimediaMetadataRequest {
+  claim_id: number;
+  s3_url: string;
+  file_name: string;
+  file_type: string;
+  file_size: number;
+}
+
+
 /** API Response Interfaces **/
 export interface ClaimResponse {
   id: number;
@@ -68,4 +77,20 @@ export interface ClaimErrorResponse {
 export interface CreateNewClaimResponse {
   newClaim: ClaimResponse;
   presignedUrl: Record<string, string>;
+}
+
+/** Create New Multimedia Metadata Response Interface **/
+export interface MultimediaMetadataResponse {
+  id: number;
+  s3Url: string;
+  fileName: string;
+  claimId: number;
+  uploadedAt: string;
+  fileType: string;
+  fileSize: number;
+}
+
+/** Multimedia Metadata Response Interface **/
+export interface MultimediaErrorResponse {
+  detail: string;
 }
