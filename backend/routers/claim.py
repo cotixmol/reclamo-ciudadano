@@ -106,3 +106,41 @@ async def update_claim_by_public_id(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred: {e}",
         )
+
+
+@claim_router.post("/claim/{public_id}/failed", response_model=CreateClaimResponse)
+async def update_claim_processing_state_to_failed(
+    public_id: UUID,
+    claim_service: ClaimService = Depends(get_claim_service),
+):
+    try:
+        new_claim = claim_service.update_claim_processing_state_to_failed(public_id)
+        return {
+            "new_claim": new_claim,
+        }
+    except ClaimNotCreatedError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred: {e}",
+        )
+
+
+@claim_router.post("/claim/{public_id}/finished", response_model=CreateClaimResponse)
+async def update_claim_processing_state_to_finished(
+    public_id: UUID,
+    claim_service: ClaimService = Depends(get_claim_service),
+):
+    try:
+        new_claim = claim_service.update_claim_processing_state_to_finished(public_id)
+        return {
+            "new_claim": new_claim,
+        }
+    except ClaimNotCreatedError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred: {e}",
+        )

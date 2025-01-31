@@ -54,3 +54,21 @@ class ClaimRepository:
                 return self.claim_dao.update_claim_by_public_id(db, claim, public_id)
         except Exception as e:
             raise e
+
+    def update_claim_processing_state_to_failed(self, public_id):
+        try:
+            for db in self.db_reporte_ciudadano.get_session_generator():
+                return self.claim_dao.update_claim_processing_state_to_failed(
+                    db, public_id
+                )
+        except Exception as e:
+            raise e
+
+    def update_claim_processing_state_to_finished(self, public_id):
+        try:
+            for db in self.db_reporte_ciudadano.get_session_generator():
+                return self.claim_dao.update_claim_processing_state_to_finished(
+                    db, public_id
+                )
+        except Exception as e:
+            raise e

@@ -5,8 +5,7 @@ from datetime import datetime
 
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
-
-from models.claim import Claim
+from models import Claim
 from utils import (
     wkb_element_to_geometry_point,
     geometry_point_to_wkb_element,
@@ -19,7 +18,7 @@ from errors.claim_errors import (
     ClaimNotConvertedError,
     ClaimNotUpdatedError,
 )
-from custom_types import GeometryPoint
+from custom_types import ClaimProcessingStateEnum
 
 
 class ClaimDAO(ABC):
@@ -59,6 +58,7 @@ class ClaimSQLAlchemy(ClaimDAO):
             select(Claim)
             .where(Claim.public_id.in_(public_ids))
             .where(Claim.deleted == False)
+            .where(Claim.processing_state == ClaimProcessingStateEnum.FINISHED)
         )
         try:
             results = db.exec(statement).all()
@@ -87,6 +87,7 @@ class ClaimSQLAlchemy(ClaimDAO):
             select(Claim)
             .where(Claim.public_id == public_id)
             .where(Claim.deleted == False)
+            .where(Claim.processing_state == ClaimProcessingStateEnum.FINISHED)
         )
         try:
             result = db.exec(statement).first()
@@ -115,6 +116,7 @@ class ClaimSQLAlchemy(ClaimDAO):
             select(Claim)
             .where(Claim.public_id == public_id)
             .where(Claim.deleted == False)
+            .where(Claim.processing_state == ClaimProcessingStateEnum.FINISHED)
         )
         try:
             claim = db.exec(statement).first()
@@ -189,6 +191,7 @@ class ClaimSQLAlchemy(ClaimDAO):
             select(Claim)
             .where(Claim.public_id == public_id)
             .where(Claim.deleted == False)
+            .where(Claim.processing_state == ClaimProcessingStateEnum.FINISHED)
         )
         try:
             claim_to_update = db.exec(statement).first()
@@ -248,3 +251,64 @@ class ClaimSQLAlchemy(ClaimDAO):
         except Exception as e:
             db.rollback()
             raise ClaimNotUpdatedError(errors=e)
+
+    def _update_claim_processing_state(
+        self, db: Session, public_id: UUID, new_state: ClaimProcessingStateEnum
+    ) -> Claim:
+        """
+        Generic method to update the processing state of a claim.
+        """
+        statement = (
+            select(Claim)
+            .where(Claim.public_id == public_id)
+            .where(Claim.deleted == False)
+            .where(Claim.processing_state != ClaimProcessingStateEnum.FINISHED)
+        )
+        try:
+            claim_to_update = db.exec(statement).first()
+            if not claim_to_update:
+                raise ClaimNotFoundError(claim_id=public_id)
+
+            # Update the processing state
+            claim_to_update.processing_state = new_state
+
+            # Save changes
+            db.add(claim_to_update)
+            db.commit()
+            db.refresh(claim_to_update)
+
+            if claim_to_update.claim_location:
+                claim_to_update.claim_location = wkb_element_to_geometry_point(
+                    claim_to_update.claim_location
+                )
+
+            return claim_to_update
+
+        except SQLAlchemyError as e:
+            db.rollback()
+            raise Exception(
+                f"Database error updating claim processing state to '{new_state}' with public_id {public_id}: {e}"
+            )
+        except Exception as e:
+            db.rollback()
+            raise ClaimNotUpdatedError(errors=e)
+
+    def update_claim_processing_state_to_failed(
+        self, db: Session, public_id: UUID
+    ) -> Claim:
+        """
+        Update the claim processing state to 'FAILED'.
+        """
+        return self._update_claim_processing_state(
+            db, public_id, ClaimProcessingStateEnum.FAILED
+        )
+
+    def update_claim_processing_state_to_finished(
+        self, db: Session, public_id: UUID
+    ) -> Claim:
+        """
+        Update the claim processing state to 'FINISHED'.
+        """
+        return self._update_claim_processing_state(
+            db, public_id, ClaimProcessingStateEnum.FINISHED
+        )

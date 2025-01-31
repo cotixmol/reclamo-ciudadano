@@ -42,3 +42,15 @@ class ClaimService:
             return self.repository.update_claim_by_public_id(claim, public_id)
         except ClaimNotUpdatedError:
             raise
+
+    def update_claim_processing_state_to_failed(self, public_id):
+        try:
+            return self.repository.update_claim_processing_state_to_failed(public_id)
+        except ClaimNotUpdatedError:
+            raise
+
+    def update_claim_processing_state_to_finished(self, public_id):
+        try:
+            return self.repository.update_claim_processing_state_to_finished(public_id)
+        except ClaimNotUpdatedError:
+            raise
