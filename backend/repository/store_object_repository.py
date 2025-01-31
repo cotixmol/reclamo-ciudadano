@@ -71,7 +71,7 @@ class StoreObjectRepository:
                 raise RuntimeError(f"Error checking bucket existence: {e}") from e
 
     def generate_presigned_urls(
-        self, claim: Claim, expiration: int = 3600
+        self, claim: Claim, expiration: int = 60
     ) -> Dict[str, str]:
         """
         Generates presigned URLs for multiple files.

@@ -7,7 +7,7 @@ export const PutObjectInS3 = async (url: string, file: File): Promise<void> => {
         'Content-Length': file.size,
         'Content-Type': file.type,
       },
-      timeout: 1000000,
+      timeout: 10000,
     };
 
     const response = await axios.put(url, file, config);
