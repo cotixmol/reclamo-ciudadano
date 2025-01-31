@@ -6,6 +6,10 @@ import { useTranslation } from 'react-i18next';
 import '../../../../i18n';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import { createClaim } from '@/app/services/claims/create';
+import {
+  markClaimAsFailed,
+  markClaimAsFinished,
+} from '@/app/services/claims/markProcessingStatus';
 import { ClaimCreateRequest, PriorityEnum } from '../../types/claim';
 import dynamic from 'next/dynamic';
 import TitleInput from './TitleInput';
@@ -18,15 +22,12 @@ import LoadingMap from './Map/LoadingMap';
 import { PutObjectInS3 } from '@/app/services/s3/putObject';
 import { saveMetadata } from '@/app/services/multimedia/createMetadata';
 
-//  Dynamic Map Selector
 const MapSelector = dynamic(() => import('./Map/MapSelector'), {
   ssr: false,
   loading: () => <LoadingMap />,
 });
 
-//  Main ClaimForm Logic
 export default function ClaimForm() {
-  // Router & i18n hooks
   const router = useRouter();
   const { t } = useTranslation('claimcreationform');
 
@@ -42,11 +43,10 @@ export default function ClaimForm() {
   const [priority, setPriority] = useState<PriorityEnum>(PriorityEnum.LOW);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const hasLocation = !!latitude && !!longitude;
 
-  //  Submit Handler for Claim
+  const hasLocation = Boolean(latitude && longitude);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -67,71 +67,73 @@ export default function ClaimForm() {
     try {
       const response = await createClaim(claimData);
       const { newClaim, presignedUrl } = response;
-      const { id } = newClaim;
+      const { id, publicId } = newClaim;
 
-      if (newClaim.hasMultimedia) {
-        const uploadPromises = files.map((file) => {
-          const url = presignedUrl[file.name];
-          return PutObjectInS3(url, file);
-        });
-        await Promise.all(uploadPromises);
+      if (newClaim.hasMultimedia && files.length > 0) {
+        try {
+          const uploadPromises = files.map((file) =>
+            PutObjectInS3(presignedUrl[file.name], file)
+          );
+          await Promise.all(uploadPromises);
+        } catch (err) {
+          await markClaimAsFailed(publicId);
+          throw err;
+        }
 
-        await saveMetadata(id, presignedUrl, files);
+        try {
+          await saveMetadata(id, presignedUrl, files);
+        } catch (err) {
+          await markClaimAsFailed(publicId);
+          throw err;
+        }
       }
 
+      await markClaimAsFinished(publicId);
+
       router.push('/models/claims/pages');
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       setIsSubmitting(false);
     }
   };
 
-  //  Display Loading if Needed
   if (isSubmitting) {
     return <LoadingScreen />;
   }
 
-  //  Render Form & Map Integration
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-3xl bg-gray-900 p-8 rounded-lg">
         <h2 className="text-2xl font-semibold mb-6">{t('formTitle')}</h2>
-
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Title Input */}
+          {/* Title */}
           <TitleInput title={title} setTitle={setTitle} />
-
-          {/* Priority Section */}
+          {/* Priority */}
           <PrioritySection priority={priority} setPriority={setPriority} />
-
-          {/* Claim Type Dropdown */}
+          {/* Claim Type */}
           <ClaimTypesDropdown
             selectedClaimTypeId={selectedClaimTypeId}
             onChangeAction={(newId) => setSelectedClaimTypeId(newId)}
           />
-
-          {/* Description Input */}
+          {/* Description */}
           <DescriptionInput
             description={description}
             setDescription={setDescription}
           />
-
-          {/* Multimedia Upload */}
+          {/* Multimedia */}
           <MultimediaUpload
             fileNames={fileNames}
             setFileNames={setFileNames}
             files={files}
             setFiles={setFiles}
           />
-
-          {/* Map Selector */}
+          {/* Map */}
           <div className="w-full rounded overflow-hidden relative z-0">
             <div className="mb-4">
               <h3 className="block mb-1">{t('selectLocationTitle')}</h3>
               <p className="text-sm text-gray-500 mt-1">
                 {t('selectLocationSubtitle')}
               </p>
-              {/* "My Location" Button */}
               <div className="mt-2">
                 <button
                   type="button"
@@ -154,7 +156,6 @@ export default function ClaimForm() {
               />
             </div>
           </div>
-
           {/* Show chosen address */}
           {hasLocation && locationName && (
             <p className="text-sm mt-2">
@@ -162,8 +163,6 @@ export default function ClaimForm() {
               <span className="text-gray-400">{locationName}</span>
             </p>
           )}
-
-          {/* Submit Button */}
           <SubmitButton disabled={!hasLocation} isSubmitting={isSubmitting} />
         </form>
       </div>
