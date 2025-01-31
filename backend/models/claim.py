@@ -18,7 +18,7 @@ from sqlalchemy import (
 from sqlmodel import SQLModel, Field
 from datetime import datetime
 from geoalchemy2 import Geometry
-from custom_types import GeometryPoint, PriorityEnum
+from custom_types import GeometryPoint, PriorityEnum, ClaimProcessingStateEnum
 
 
 class Claim(SQLModel, table=True):
@@ -41,6 +41,16 @@ class Claim(SQLModel, table=True):
     title: str = Field(sa_column=Column(String(255), nullable=False))
     description: str = Field(sa_column=Column(String(1024), nullable=False))
     status: str = Field(sa_column=Column(String(255), nullable=False))
+    processing_state: ClaimProcessingStateEnum = Field(
+        sa_column=Column(
+            SQLAlchemyEnum(
+                ClaimProcessingStateEnum, name="claim_processing_state_enum"
+            ),
+            nullable=False,
+            server_default=ClaimProcessingStateEnum.DRAFT,  # New claims start in DRAFT
+        ),
+        default=ClaimProcessingStateEnum.DRAFT,
+    )
     priority: PriorityEnum = Field(
         sa_column=Column(
             SQLAlchemyEnum(PriorityEnum, name="priority_enum"),

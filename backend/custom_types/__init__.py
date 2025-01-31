@@ -1,3 +1,3 @@
 from .geometry_point import GeometryPoint
-from .all_claims_request import AllClaimsRequest
+from .claims import AllClaimsRequest, ClaimProcessingStateEnum
 from .priority import PriorityEnum
