@@ -32,7 +32,6 @@ class MultimediaSQLAlchemy(MultimediaDAO):
 
             db.commit()
 
-            # Refresh to load generated IDs, timestamps, etc.
             for record in new_records:
                 db.refresh(record)
 
