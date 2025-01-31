@@ -3,6 +3,7 @@ from typing import List
 from sqlmodel import Session, select
 from models import Multimedia, MultimediaCreate
 from sqlalchemy.exc import SQLAlchemyError
+from errors import MultimediaNotCreatedError, MultimediaNotFoundError
 
 
 class MultimediaDAO(ABC):
@@ -38,6 +39,8 @@ class MultimediaSQLAlchemy(MultimediaDAO):
             return new_records
 
         except SQLAlchemyError as e:
+            db.rollback()
             raise Exception(f"Database error creating multimedia: {e}")
         except Exception as e:
-            raise Exception(f"An unexpected error occurred creating multimedia: {e}")
+            db.rollback()
+            raise MultimediaNotCreatedError(errors=e)

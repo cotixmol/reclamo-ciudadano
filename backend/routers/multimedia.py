@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
-from sqlmodel import Session
-
 from service import MultimediaService
+from errors import MultimediaNotCreatedError
 from dependencies import get_multimedia_service
 from models import Multimedia, MultimediaCreate
 
@@ -20,8 +19,8 @@ async def create_multimedia_metadata(
     try:
         new_records = service.create_multimedia_metadata(metadata_list)
         return new_records
-    except HTTPException:
-        raise
+    except MultimediaNotCreatedError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

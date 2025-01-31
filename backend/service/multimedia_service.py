@@ -1,5 +1,6 @@
 from typing import List
 from models import Multimedia, MultimediaCreate
+from errors import MultimediaNotCreatedError
 
 
 class MultimediaService:
@@ -11,5 +12,5 @@ class MultimediaService:
     ) -> List[Multimedia]:
         try:
             return self.repository.create_multimedia_metadata(metadata_list)
-        except Exception:
+        except MultimediaNotCreatedError:
             raise
