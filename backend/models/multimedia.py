@@ -1,7 +1,6 @@
 from datetime import datetime
-from .claim import Claim
 from typing import Optional
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field
 from sqlalchemy import Column, String, Integer, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -16,3 +15,11 @@ class Multimedia(SQLModel, table=True):
     uploaded_at: datetime = Field(
         sa_column=Column(DateTime(timezone=True), default=func.now(), nullable=False)
     )
+
+
+class MultimediaCreate(SQLModel):
+    claim_id: int
+    s3_url: str
+    file_name: str
+    file_type: str
+    file_size: int
