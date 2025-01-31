@@ -148,13 +148,16 @@ class ClaimSQLAlchemy(ClaimDAO):
 
     def create_claim(self, db: Session, claim: Claim) -> Claim:
         """
-        Create a new claim. By default, `deleted=False` in your model ensures it is active.
+        Create a new claim. By default, `deleted=False` ensures it is active.
+        The `has_multimedia` field is automatically set based on whether `files` exist.
         """
         try:
             if claim.claim_location:
                 claim.claim_location = geometry_point_to_wkb_element(
                     claim.claim_location
                 )
+
+            claim.has_multimedia = bool(claim.files)
 
             db.add(claim)
             db.commit()
@@ -199,6 +202,9 @@ class ClaimSQLAlchemy(ClaimDAO):
                         "updated_at",
                         "deleted",
                         "deleted_at",
+                        "files",
+                        "has_multimedia",
+                        "processing_state",
                     },
                 )
 
