@@ -50,7 +50,6 @@ export interface MultimediaMetadataRequest {
   file_size: number;
 }
 
-
 /** API Response Interfaces **/
 export interface ClaimResponse {
   id: number;

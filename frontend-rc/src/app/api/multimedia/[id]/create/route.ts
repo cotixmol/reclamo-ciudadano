@@ -2,16 +2,16 @@ import { NextResponse, NextRequest } from 'next/server';
 import axios from 'axios';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import {
-    MultimediaMetadataRequest,
-    MultimediaMetadataResponse,
-    MultimediaErrorResponse
+  MultimediaMetadataRequest,
+  MultimediaMetadataResponse,
+  MultimediaErrorResponse,
 } from '@/app/models/claims/types/claim';
 
 export async function POST(request: NextRequest) {
   try {
     const body: MultimediaMetadataRequest = await request.json();
     const backendResponse = await axios.post<
-        MultimediaMetadataResponse | MultimediaErrorResponse
+      MultimediaMetadataResponse | MultimediaErrorResponse
     >(`${process.env.API_URL}/multimedia_metadata`, body, {
       validateStatus: () => true,
     });
@@ -25,7 +25,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const transformedData = toCamelCase(backendResponse.data as MultimediaMetadataResponse);
+    const transformedData = toCamelCase(
+      backendResponse.data as MultimediaMetadataResponse
+    );
     return NextResponse.json(transformedData, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

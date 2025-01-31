@@ -7,7 +7,7 @@ export const saveMetadata = async (
   files: File[]
 ): Promise<void> => {
   try {
-    const fileMetadataArray: MultimediaMetadataRequest[] = files.map(file => {
+    const fileMetadataArray: MultimediaMetadataRequest[] = files.map((file) => {
       const rawUrl = presignedUrl[file.name];
       const s3Url = rawUrl.split('?')[0];
 
