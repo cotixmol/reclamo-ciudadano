@@ -69,13 +69,15 @@ export default function ClaimForm() {
       const { newClaim, presignedUrl } = response;
       const { id } = newClaim;
 
-      const uploadPromises = files.map((file) => {
-        const url = presignedUrl[file.name];
-        return PutObjectInS3(url, file);
-      });
-      await Promise.all(uploadPromises);
+      if (newClaim.hasMultimedia) {
+        const uploadPromises = files.map((file) => {
+          const url = presignedUrl[file.name];
+          return PutObjectInS3(url, file);
+        });
+        await Promise.all(uploadPromises);
 
-      await saveMetadata(id, presignedUrl, files);
+        await saveMetadata(id, presignedUrl, files);
+      }
 
       router.push('/models/claims/pages');
     } catch (err) {
