@@ -1,3 +1,4 @@
 from .claim_repository import ClaimRepository
 from .claim_types_repository import ClaimTypesRepository
 from .store_object_repository import StoreObjectRepository
+from .multimedia_repository import MultimediaRepository
