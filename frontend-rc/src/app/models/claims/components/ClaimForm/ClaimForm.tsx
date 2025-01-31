@@ -17,18 +17,21 @@ import ClaimTypesDropdown from '@/app/models/claimTypes/components/claimTypesDro
 import LoadingMap from './Map/LoadingMap';
 import { PutObjectInS3 } from '@/app/services/s3/putObject';
 
+//  Dynamic Map Selector
 const MapSelector = dynamic(() => import('./Map/MapSelector'), {
   ssr: false,
   loading: () => <LoadingMap />,
 });
 
+//  Main ClaimForm Logic
 export default function ClaimForm() {
+  // Router & i18n hooks
   const router = useRouter();
   const { t } = useTranslation('claimcreationform');
 
+  // Form states
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [locationName, setLocationName] = useState('');
@@ -36,16 +39,13 @@ export default function ClaimForm() {
     null
   );
   const [priority, setPriority] = useState<PriorityEnum>(PriorityEnum.LOW);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Multimedia States
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
 
-  // For enabling the submit if lat/long are set
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const hasLocation = !!latitude && !!longitude;
 
+  //  Submit Handler for Claim
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -80,10 +80,12 @@ export default function ClaimForm() {
     }
   };
 
+  //  Display Loading if Needed
   if (isSubmitting) {
     return <LoadingScreen />;
   }
 
+  //  Render Form & Map Integration
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-3xl bg-gray-900 p-8 rounded-lg">
