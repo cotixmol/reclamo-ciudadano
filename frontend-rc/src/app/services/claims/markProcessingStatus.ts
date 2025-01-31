@@ -16,6 +16,7 @@ export async function markClaimAsFailed(publicId: string): Promise<void> {
 export async function markClaimAsFinished(publicId: string): Promise<void> {
   try {
     await axios.post(`/api/claims/${publicId}/finished`);
+
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errorMsg = error.response?.data?.error ?? 'Failed to mark claim as finished';
