@@ -23,14 +23,17 @@ claim_router = APIRouter()
 async def read_all_claims_by_public_ids(
     request: AllClaimsRequest,
     claim_service: ClaimService = Depends(get_claim_service),
+    store_object_service: StoreObjectService = Depends(get_store_object_service),
 ):
     try:
         claims = claim_service.read_all_claims_by_public_ids(request.public_ids)
+        updated_claims = store_object_service.generate_presigned_read_urls(claims)
         return [
             ReadClaimResponse(
-                claim=c, multimedia=[MultimediaRead.from_orm(m) for m in c.multimedia]
+                claim=c,
+                multimedia=[MultimediaRead.model_validate(m) for m in c.multimedia],
             )
-            for c in claims
+            for c in updated_claims
         ]
     except Exception as e:
         raise HTTPException(
@@ -41,13 +44,18 @@ async def read_all_claims_by_public_ids(
 
 @claim_router.get("/claim/{public_id}", response_model=ReadClaimResponse)
 async def read_claim_by_public_id(
-    public_id: UUID, claim_service: ClaimService = Depends(get_claim_service)
+    public_id: UUID,
+    claim_service: ClaimService = Depends(get_claim_service),
+    store_object_service: StoreObjectService = Depends(get_store_object_service),
 ):
     try:
         claim = claim_service.read_claim_by_public_id(public_id)
+        updated_claim = store_object_service.generate_presigned_read_url(claim)
         response = ReadClaimResponse(
-            claim=claim,
-            multimedia=[MultimediaRead.model_validate(m) for m in claim.multimedia],
+            claim=updated_claim,
+            multimedia=[
+                MultimediaRead.model_validate(m) for m in updated_claim.multimedia
+            ],
         )
         return response
     except ClaimNotFoundError as e:
@@ -85,7 +93,7 @@ async def create_claim(
     try:
         with session.begin():  # TODO: Check if this block can be placed somewhere else. It's not a good practice to have it here.
             new_claim = claim_service.create_claim(claim)
-            url = store_object_service.generate_presigned_urls(new_claim)
+            url = store_object_service.generate_presigned_write_urls(new_claim)
         return {
             "new_claim": new_claim,
             "presigned_url": url or "No presigned URL generated",
