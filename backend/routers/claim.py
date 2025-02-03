@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from service import ClaimService, StoreObjectService
 from typing import Optional
 from dependencies import get_claim_service, get_store_object_service
-from models import Claim, CreateClaimResponse
+from models import Claim, CreateClaimResponse, ReadClaimResponse, MultimediaRead
 from uuid import UUID
 from typing import List
 from custom_types import AllClaimsRequest
@@ -19,14 +19,19 @@ from sqlmodel import Session
 claim_router = APIRouter()
 
 
-@claim_router.post("/claims/", response_model=List[Claim])
+@claim_router.post("/claims/", response_model=List[ReadClaimResponse])
 async def read_all_claims_by_public_ids(
     request: AllClaimsRequest,
     claim_service: ClaimService = Depends(get_claim_service),
 ):
     try:
-        all_claims = claim_service.read_all_claims_by_public_ids(request.public_ids)
-        return all_claims
+        claims = claim_service.read_all_claims_by_public_ids(request.public_ids)
+        return [
+            ReadClaimResponse(
+                claim=c, multimedia=[MultimediaRead.from_orm(m) for m in c.multimedia]
+            )
+            for c in claims
+        ]
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -34,13 +39,17 @@ async def read_all_claims_by_public_ids(
         )
 
 
-@claim_router.get("/claim/{public_id}", response_model=Claim)
+@claim_router.get("/claim/{public_id}", response_model=ReadClaimResponse)
 async def read_claim_by_public_id(
     public_id: UUID, claim_service: ClaimService = Depends(get_claim_service)
 ):
     try:
         claim = claim_service.read_claim_by_public_id(public_id)
-        return claim
+        response = ReadClaimResponse(
+            claim=claim,
+            multimedia=[MultimediaRead.model_validate(m) for m in claim.multimedia],
+        )
+        return response
     except ClaimNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except Exception as e:

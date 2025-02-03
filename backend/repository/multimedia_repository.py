@@ -2,7 +2,7 @@ from typing import List
 from sqlmodel import Session
 from dao import MultimediaDAO
 from errors import MultimediaNotCreatedError
-from models import Multimedia, MultimediaCreate
+from models import Multimedia, MultimediaCreateRequest
 
 
 class MultimediaRepository:
@@ -11,7 +11,7 @@ class MultimediaRepository:
         self.multimedia_dao = multimedia_dao
 
     def create_multimedia_metadata(
-        self, metadata_list: List[MultimediaCreate]
+        self, metadata_list: List[MultimediaCreateRequest]
     ) -> List[Multimedia]:
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():

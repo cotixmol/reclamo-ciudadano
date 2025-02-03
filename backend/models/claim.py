@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, Union, List  # Added List
+from typing import Optional, Union, List, TYPE_CHECKING
 from uuid import UUID
 from pydantic import BaseModel
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
@@ -15,10 +15,14 @@ from sqlalchemy import (
     Enum as SQLAlchemyEnum,
     ARRAY,
 )
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
 from geoalchemy2 import Geometry
 from custom_types import GeometryPoint, PriorityEnum, ClaimProcessingStateEnum
+from models import MultimediaRead
+
+if TYPE_CHECKING:
+    from models import Multimedia
 
 
 class Claim(SQLModel, table=True):
@@ -93,11 +97,20 @@ class Claim(SQLModel, table=True):
             server_default=text("false"),
         ),
     )
+    multimedia: List["Multimedia"] = Relationship()
 
 
 class CreateClaimResponse(BaseModel):
     new_claim: Claim
     presigned_url: Optional[object] = None
+
+    class Config:
+        from_attributes = True
+
+
+class ReadClaimResponse(BaseModel):
+    claim: Claim
+    multimedia: List[MultimediaRead] = []
 
     class Config:
         from_attributes = True

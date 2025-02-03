@@ -3,14 +3,14 @@ from typing import List
 from service import MultimediaService
 from errors import MultimediaNotCreatedError
 from dependencies import get_multimedia_service
-from models import Multimedia, MultimediaCreate
+from models import Multimedia, MultimediaCreateRequest
 
 multimedia_router = APIRouter()
 
 
 @multimedia_router.post("/multimedia_metadata", response_model=List[Multimedia])
 async def create_multimedia_metadata(
-    metadata_list: List[MultimediaCreate],
+    metadata_list: List[MultimediaCreateRequest],
     service: MultimediaService = Depends(get_multimedia_service),
 ):
     """

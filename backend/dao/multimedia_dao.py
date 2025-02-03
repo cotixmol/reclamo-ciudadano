@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 from sqlmodel import Session, select
-from models import Multimedia, MultimediaCreate
+from models import Multimedia, MultimediaCreateRequest
 from sqlalchemy.exc import SQLAlchemyError
 from errors import MultimediaNotCreatedError, MultimediaNotFoundError
 
@@ -9,14 +9,14 @@ from errors import MultimediaNotCreatedError, MultimediaNotFoundError
 class MultimediaDAO(ABC):
     @abstractmethod
     def create_multimedia_metadata(
-        self, db: Session, metadata_list: List[MultimediaCreate]
+        self, db: Session, metadata_list: List[MultimediaCreateRequest]
     ) -> List[Multimedia]:
         pass
 
 
 class MultimediaSQLAlchemy(MultimediaDAO):
     def create_multimedia_metadata(
-        self, db: Session, metadata_list: List[MultimediaCreate]
+        self, db: Session, metadata_list: List[MultimediaCreateRequest]
     ) -> List[Multimedia]:
         try:
             new_records = []

@@ -17,9 +17,22 @@ class Multimedia(SQLModel, table=True):
     )
 
 
-class MultimediaCreate(SQLModel):
+class MultimediaCreateRequest(SQLModel):
     claim_id: int
     s3_url: str
     file_name: str
     file_type: str
     file_size: int
+
+
+class MultimediaRead(SQLModel):
+    id: int
+    claim_id: int
+    s3_url: str
+    file_name: str
+    file_type: str
+    file_size: int
+    uploaded_at: datetime
+
+    class Config:
+        from_attributes = True
