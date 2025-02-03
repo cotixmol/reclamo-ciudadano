@@ -7,7 +7,7 @@ const nextConfig = {
         hostname: '**', // allow any https host
       },
       {
-        protocol: 'http',
+        protocol: 'https',
         hostname: 'minio.reputacion.digital',
         port: '9000',
         pathname: '/**',
