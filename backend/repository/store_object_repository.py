@@ -110,7 +110,7 @@ class StoreObjectRepository:
                         f"Unsupported file type for '{file}'. Allowed types are images and videos."
                     )
 
-                url = self.s3_client.generate_presigned_write_url(
+                url = self.s3_client.generate_presigned_url(
                     "put_object",
                     Params={
                         "Bucket": self.bucket_name,
