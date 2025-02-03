@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { ClaimResponse } from '@/app/models/claims/types/claim';
+import { ClaimWithMultimediaResponse } from '@/app/models/claims/types/claim';
 
 function getStoredPublicIds(): string[] {
   const existing = localStorage.getItem('publicIds');
   return existing ? JSON.parse(existing) : [];
 }
 
-export async function fetchAllClaimsByPublicIds(): Promise<ClaimResponse[]> {
+export async function fetchAllClaimsByPublicIds(): Promise<ClaimWithMultimediaResponse[]> {
   const publicIds = getStoredPublicIds();
   try {
-    const response = await axios.post<ClaimResponse[]>('/api/claims', {
+    const response = await axios.post<ClaimWithMultimediaResponse[]>('/api/claims', {
       public_ids: publicIds,
     });
     return response.data;
@@ -26,9 +26,9 @@ export async function fetchAllClaimsByPublicIds(): Promise<ClaimResponse[]> {
 
 export async function fetchClaimByPublicId(
   publicId: string
-): Promise<ClaimResponse> {
+): Promise<ClaimWithMultimediaResponse> {
   try {
-    const response = await axios.get<ClaimResponse>(`/api/claims/${publicId}`);
+    const response = await axios.get<ClaimWithMultimediaResponse>(`/api/claims/${publicId}`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

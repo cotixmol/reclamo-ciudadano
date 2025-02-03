@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
-import { ClaimResponse } from '@/app/models/claims/types/claim';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import {
+  ClaimWithMultimediaResponse,
+  ClaimResponse,
   ClaimUpdateRequest,
   ClaimErrorResponse,
 } from '@/app/models/claims/types/claim';
@@ -17,7 +18,7 @@ export async function GET(
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    const backendResponse = await axios.get<ClaimResponse | ClaimErrorResponse>(
+    const backendResponse = await axios.get<ClaimWithMultimediaResponse | ClaimErrorResponse>(
       `${process.env.API_URL}/claim/${publicId}`,
       {
         validateStatus: () => true,
@@ -34,7 +35,7 @@ export async function GET(
       );
     }
 
-    const transformedData = toCamelCase(backendResponse.data as ClaimResponse);
+    const transformedData = toCamelCase(backendResponse.data as ClaimWithMultimediaResponse);
     return NextResponse.json(transformedData, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

@@ -67,6 +67,12 @@ export interface ClaimResponse {
   deletedAt: string;
 }
 
+export interface ClaimWithMultimediaResponse {
+  claim: ClaimResponse;
+  multimedia: MultimediaMetadataResponse[];
+}
+
+
 /** Error Response Interface **/
 export interface ClaimErrorResponse {
   detail: string;

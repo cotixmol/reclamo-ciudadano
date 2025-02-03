@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import {
   ApiPublicIdsRequest,
-  ClaimResponse,
+  ClaimWithMultimediaResponse,
   ClaimErrorResponse,
 } from '@/app/models/claims/types/claim';
 
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     const body: ApiPublicIdsRequest = await request.json();
 
     const backendResponse = await axios.post<
-      ClaimResponse[] | ClaimErrorResponse
+    ClaimWithMultimediaResponse[] | ClaimErrorResponse
     >(`${process.env.API_URL}/claims`, body, {
       validateStatus: () => true,
     });
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
 
     const transformedData = toCamelCase(
-      backendResponse.data as ClaimResponse[]
+      backendResponse.data as ClaimWithMultimediaResponse[]
     );
     return NextResponse.json(transformedData, { status: 200 });
   } catch (error) {
