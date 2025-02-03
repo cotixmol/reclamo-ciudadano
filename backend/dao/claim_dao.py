@@ -5,6 +5,7 @@ from datetime import datetime
 
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import selectinload
 from models import Claim
 from utils import (
     wkb_element_to_geometry_point,
@@ -59,6 +60,7 @@ class ClaimSQLAlchemy(ClaimDAO):
             .where(Claim.public_id.in_(public_ids))
             .where(Claim.deleted == False)
             .where(Claim.processing_state == ClaimProcessingStateEnum.FINISHED)
+            .options(selectinload(Claim.multimedia))
         )
         try:
             results = db.exec(statement).all()
@@ -88,6 +90,7 @@ class ClaimSQLAlchemy(ClaimDAO):
             .where(Claim.public_id == public_id)
             .where(Claim.deleted == False)
             .where(Claim.processing_state == ClaimProcessingStateEnum.FINISHED)
+            .options(selectinload(Claim.multimedia))
         )
         try:
             result = db.exec(statement).first()
