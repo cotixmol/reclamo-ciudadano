@@ -4,14 +4,8 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**', // allow any https host
-      },
-      {
-        protocol: 'https',
-        hostname: 'minio.reputacion.digital',
-        port: '9000',
-        pathname: '/**',
-      }      
+        hostname: '**',
+      },   
     ],
   },
   env: {

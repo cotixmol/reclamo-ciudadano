@@ -16,7 +16,7 @@ class StoreObjectRepository:
         secret_key: Optional[str] = None,
         bucket_name: Optional[str] = None,
         region_name: Optional[str] = "us-east-1",
-        use_ssl: bool = False,
+        use_ssl: bool = True,
     ):
         """
         Initializes the StoreObjectRepository with the necessary S3 configurations.
