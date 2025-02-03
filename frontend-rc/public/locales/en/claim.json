@@ -8,6 +8,7 @@
     "MEDIUM": "Medium Priority",
     "HIGH": "High Priority"
   },
+  "noImageAvailable": "There is not any image attached.",
   "unknownDate": "Unknown date",
   "unknownTime": "Unknown time",
   "edited": "Edited",

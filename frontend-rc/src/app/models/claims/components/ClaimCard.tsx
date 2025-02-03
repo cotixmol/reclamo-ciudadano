@@ -9,27 +9,52 @@ import { validate as isUUID } from 'uuid';
 
 import '../../../i18n';
 import { deleteClaimByPublicId } from '@/app/services/claims/delete';
-import { ClaimResponse, ClaimStatusEnum, PriorityEnum } from '../types/claim';
+import {
+  ClaimWithMultimediaResponse,
+  ClaimStatusEnum,
+  PriorityEnum,
+} from '../types/claim';
 import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
 
 interface ClaimCardProps {
-  claim: ClaimResponse;
+  claimData: ClaimWithMultimediaResponse;
   setIsDeleting: React.Dispatch<React.SetStateAction<boolean>>;
-  imageUrl: string;
 }
 
-const ClaimCard: React.FC<ClaimCardProps> = ({
-  claim,
-  setIsDeleting,
-  imageUrl,
-}) => {
+const ClaimCard: React.FC<ClaimCardProps> = ({ claimData, setIsDeleting }) => {
   const { t } = useTranslation('claim');
+  const { claim, multimedia } = claimData;
   const { publicId, title, description, status, priority, createdAt } = claim;
+
+  // Convert multimedia to a format we can handle easily.
+  // If no multimedia exists, we'll just keep an empty array.
+  const [mediaFiles] = useState(() => {
+    if (!multimedia || multimedia.length === 0) {
+      return [] as { url: string; fileType: string }[];
+    }
+    return multimedia.map((m) => ({
+      url: m.s3Url,
+      fileType: m.fileType,
+    }));
+  });
+
+  // Carousel state
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [deleteError, setDeleteError] = useState<string>('');
 
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? mediaFiles.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % mediaFiles.length);
+  };
 
   const handleDeleteConfirmed = async () => {
     setIsDeleting(true);
@@ -39,10 +64,8 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
       setIsDeleting(false);
       return;
     }
-
     try {
       await deleteClaimByPublicId(publicId);
-      // Instead of reloading the page, you might want to handle state updates here
       window.location.reload();
     } catch (error) {
       const msg = (error as Error).message || t('deletionFailed');
@@ -67,6 +90,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
           minute: '2-digit',
         })
       : t('unknownTime');
+
   const getStatusColor = (status: ClaimStatusEnum) => {
     switch (status) {
       case ClaimStatusEnum.Open:
@@ -106,45 +130,93 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
           <span
             className={`flex text-xs text-gray-900 font-semibold px-2 rounded-tl-lg ${getStatusColor(
               status
-            )} capitalize flex items-center font-semibold border-r-2 border-gray-700`}
+            )} capitalize flex items-center border-r-2 border-gray-700`}
           >
             {t(`status.${status}`)}
           </span>
-
           <span
             className={`flex text-xs text-gray-900 font-semibold px-2 ${getPriorityColor(
               priority
-            )} capitalize flex items-center font-semibold border-r-2 border-gray-700`}
+            )} capitalize flex items-center border-r-2 border-gray-700`}
           >
             {t(`priority.${priority}`)}
           </span>
         </div>
-        <div>
-          <button
-            onClick={openPopup}
-            aria-label={t('deleteClaim')} // Ensure this key exists in your translation files
-            className="rounded-tr-lg transition-colors duration-200 flex items-center justify-center p-1"
-          >
-            <TiDelete className="w-6 h-6 transition-colors duration-200" />
-          </button>
-        </div>
+        <button
+          onClick={openPopup}
+          aria-label={t('deleteClaim')}
+          className="rounded-tr-lg transition-colors duration-200 flex items-center justify-center p-1"
+        >
+          <TiDelete className="w-6 h-6 transition-colors duration-200" />
+        </button>
       </div>
 
-      {/* Pink Line Above Image */}
+      {/* Divider Above Media */}
       <div className="w-full h-0.5 bg-gray-700"></div>
 
-      {/* Middle Section: Image */}
-      <div className="w-full h-48 md:h-64 relative">
-        <Image
-          src={imageUrl}
-          alt={title}
-          layout="fill"
-          objectFit="cover"
-          className="w-full h-full object-cover"
-        />
+      {/* Middle Section: Carousel or Placeholder */}
+      <div className="relative w-full h-48 md:h-64 overflow-hidden">
+        {mediaFiles.length > 0 ? (
+          <>
+            {mediaFiles.map((file, index) => {
+              const { url, fileType } = file;
+              const isActive = index === currentIndex;
+              const isImage = fileType.startsWith('image/');
+              const isVideo = fileType.startsWith('video/');
+
+              return (
+                <div
+                  key={index}
+                  className={`absolute inset-0 transition-opacity duration-500 ${
+                    isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                  }`}
+                >
+                  {isImage && (
+                    <Image
+                      src={url}
+                      alt={title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      className="w-full h-full"
+                    />
+                  )}
+                  {isVideo && (
+                    <video
+                      src={url}
+                      className="w-full h-full object-cover"
+                      controls
+                    />
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Show next/prev buttons only if we have multiple media files */}
+            {mediaFiles.length > 1 && (
+              <>
+                <button
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded z-20 text-2xl"
+                  onClick={handlePrev}
+                >
+                  ‹
+                </button>
+                <button
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded z-20 text-2xl"
+                  onClick={handleNext}
+                >
+                  ›
+                </button>
+              </>
+            )}
+          </>
+        ) : (
+          <div className="flex items-center justify-center w-full h-full text-gray-500">
+            {t('noImageAvailable')}
+          </div>
+        )}
       </div>
 
-      {/* Pink Line Below Image */}
+      {/* Divider Below Media */}
       <div className="w-full h-0.5 bg-primary"></div>
 
       {/* Bottom Section: Information */}
@@ -166,8 +238,6 @@ const ClaimCard: React.FC<ClaimCardProps> = ({
             </button>
           </Link>
         </div>
-
-        {/* Show an inline error if present */}
         {deleteError && (
           <p className="mt-2 text-red-300 text-sm">{deleteError}</p>
         )}

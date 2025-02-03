@@ -8,6 +8,7 @@
     "MEDIUM": "Prioridad Media",
     "HIGH": "Alta Prioridad"
   },
+  "noImageAvailable": "No se anexó ninguna imagen",
   "unknownDate": "Fecha desconocida",
   "unknownTime": "Hora desconocida",
   "edited": "Editado",
