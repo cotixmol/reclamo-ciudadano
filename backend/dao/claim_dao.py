@@ -226,9 +226,9 @@ class ClaimSQLAlchemy(ClaimDAO):
                 for key, value in updated_data.items():
                     setattr(claim_to_update, key, value)
 
-                if claim_to_update.claim_location:
-                    claim_to_update.claim_location = geometry_point_to_wkb_element(
-                        claim_to_update.claim_location
+                if updated_data.get("claim_location"):
+                    updated_data.claim_location = geometry_point_to_wkb_element(
+                        updated_data.claim_location
                     )
 
                 db.add(claim_to_update)
