@@ -169,18 +169,22 @@ class StoreObjectRepository:
             for claim in claims
         ]
 
+    # TODO: Improve decoding and encoding methods. This is awful.
     @staticmethod
     def _sanitize_filename(filename: str) -> str:
         """
         Sanitizes the filename to prevent security issues like path traversal.
-
-        Uses os.path.basename to remove directory paths and URL-encodes the result.
+        First decodes any existing encoding, then encodes the result.
 
         :param filename: The original filename.
         :return: The sanitized and URL-encoded filename.
         """
-        sanitized = os.path.basename(filename)
-        return urllib.parse.quote(sanitized, safe="")
+        # Get only the base name (strip any directory components)
+        base = os.path.basename(filename)
+        # Decode any percent-encoded sequences (to avoid double encoding)
+        decoded = urllib.parse.unquote(base)
+        # Encode the filename once to ensure it's URL-safe
+        return urllib.parse.quote(decoded, safe="")
 
     @staticmethod
     def _get_allowed_mime_types() -> List[str]:
@@ -216,13 +220,20 @@ class StoreObjectRepository:
         Assumes the URL is formatted as:
         "http://minio.reputacion.digital:9000/{bucket_name}/claims/..."
         and removes the bucket name from the path.
+        If the key appears double-encoded (evidenced by '%25'), it decodes it once
+        to maintain the original, single-encoded value.
 
         :param s3_url: The stored S3 URL.
-        :return: The S3 object key.
+        :return: The properly unquoted S3 object key.
         """
         parsed = urllib.parse.urlparse(s3_url)
         path = parsed.path.lstrip("/")
         bucket_prefix = f"{self.bucket_name}/"
         if path.startswith(bucket_prefix):
-            return path[len(bucket_prefix) :]
-        return path
+            key = path[len(bucket_prefix) :]
+        else:
+            key = path
+        # If the key contains '%25', it is likely double-encoded; unquote once.
+        if "%25" in key:
+            key = urllib.parse.unquote(key)
+        return key
