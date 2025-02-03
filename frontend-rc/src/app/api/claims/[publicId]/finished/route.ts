@@ -8,12 +8,11 @@ interface FinishedErrorResponse {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { publicId: string } }
+  context: { params: { publicId: string } }
 ) {
   try {
-    const { publicId } = params;
+    const { publicId } = await context.params;
 
-    // Similar approach: no body needed, just inform the backend
     const backendResponse = await axios.post<FinishedErrorResponse>(
       `${process.env.API_URL}/claim/${publicId}/finished`,
       null,
@@ -28,7 +27,6 @@ export async function POST(
       return NextResponse.json({ error: errorMessage }, { status: backendResponse.status });
     }
 
-    // Return success payload from backend
     return NextResponse.json(backendResponse.data, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

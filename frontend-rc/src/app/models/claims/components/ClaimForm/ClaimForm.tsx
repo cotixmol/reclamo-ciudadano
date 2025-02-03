@@ -20,7 +20,7 @@ import SubmitButton from './SubmitButton';
 import ClaimTypesDropdown from '@/app/models/claimTypes/components/claimTypesDropdown';
 import LoadingMap from './Map/LoadingMap';
 import { PutObjectInS3 } from '@/app/services/s3/putObject';
-import { saveMetadata } from '@/app/services/multimedia/createMetadata';
+import { saveMetadata } from '@/app/services/multimedia/saveMetadata';
 
 const MapSelector = dynamic(() => import('./Map/MapSelector'), {
   ssr: false,

@@ -1,5 +1,10 @@
-import { MultimediaMetadataRequest } from '@/app/models/claims/types/claim';
+
+import { 
+  MultimediaMetadataRequest, 
+  MultimediaMetadataResponse 
+} from '@/app/models/claims/types/claim';
 import axios from 'axios';
+
 
 export const saveMetadata = async (
   id: number,
@@ -10,7 +15,6 @@ export const saveMetadata = async (
     const fileMetadataArray: MultimediaMetadataRequest[] = files.map((file) => {
       const rawUrl = presignedUrl[file.name];
       const s3Url = rawUrl.split('?')[0];
-
       return {
         claim_id: id,
         s3_url: s3Url,
@@ -20,7 +24,10 @@ export const saveMetadata = async (
       };
     });
 
-    await axios.post(`/api/multimedia/${id}/create`, fileMetadataArray);
+    await axios.post<MultimediaMetadataResponse[]>(
+      `/api/multimedia/${id}/create`,
+      fileMetadataArray
+    );
   } catch (error) {
     console.error('Error saving metadata:', error);
     if (axios.isAxiosError(error) && error.response) {
