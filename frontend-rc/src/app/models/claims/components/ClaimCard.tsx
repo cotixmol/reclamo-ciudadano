@@ -26,8 +26,6 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claimData, setIsDeleting }) => {
   const { claim, multimedia } = claimData;
   const { publicId, title, description, status, priority, createdAt } = claim;
 
-  // Convert multimedia to a format we can handle easily.
-  // If no multimedia exists, we'll just keep an empty array.
   const [mediaFiles] = useState(() => {
     if (!multimedia || multimedia.length === 0) {
       return [] as { url: string; fileType: string }[];
@@ -178,6 +176,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claimData, setIsDeleting }) => {
                       fill
                       style={{ objectFit: 'cover' }}
                       className="w-full h-full"
+                      unoptimized
                     />
                   )}
                   {isVideo && (

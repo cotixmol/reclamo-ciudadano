@@ -1,12 +1,7 @@
 // next.config.js
 const nextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },   
-    ],
+    domains: ['us-southeast-1.linodeobjects.com'],
   },
   env: {
     API_URL: process.env.API_URL,
