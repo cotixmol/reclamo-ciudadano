@@ -10,8 +10,8 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'minio.reputacion.digital',
         port: '9000',
-        pathname: '/saas-reclamo-ciudadano-dev/claims/**',
-      },
+        pathname: '/**',
+      }      
     ],
   },
   env: {
