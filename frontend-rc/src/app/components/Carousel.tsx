@@ -44,12 +44,10 @@ const Carousel: React.FC<CarouselProps> = ({
             }`}
           >
             {isImage && (
-              <Image
+              <img
                 src={file.url}
                 alt="Media content"
-                fill
                 style={{ objectFit: 'cover' }}
-                unoptimized
                 className={imageClassName}
               />
             )}

@@ -30,7 +30,10 @@ export async function POST(request: NextRequest) {
     const transformedData = toCamelCase(
       backendResponse.data as ClaimWithMultimediaResponse[]
     );
-    return NextResponse.json(transformedData, { status: 200 });
+    return NextResponse.json(transformedData, { 
+      status: 200, 
+      headers: { 'Cache-Control': 'no-store' }
+    });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

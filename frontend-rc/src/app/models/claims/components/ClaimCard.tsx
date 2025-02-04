@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { TiDelete } from 'react-icons/ti';
@@ -15,6 +14,8 @@ import {
   PriorityEnum,
 } from '../types/claim';
 import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
+import Carousel, { MediaFile } from '@/app/components/Carousel';
+import { getStatusColor, getPriorityColor } from '@/app/utils/claimColors';
 
 interface ClaimCardProps {
   claimData: ClaimWithMultimediaResponse;
@@ -26,33 +27,21 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claimData, setIsDeleting }) => {
   const { claim, multimedia } = claimData;
   const { publicId, title, description, status, priority, createdAt } = claim;
 
-  const [mediaFiles] = useState(() => {
-    if (!multimedia || multimedia.length === 0) {
-      return [] as { url: string; fileType: string }[];
-    }
-    return multimedia.map((m) => ({
-      url: m.s3Url,
-      fileType: m.fileType,
-    }));
-  });
+  // Prepare media files for the Carousel component
+  const mediaFiles: MediaFile[] =
+    multimedia && multimedia.length > 0
+      ? multimedia.map((m) => ({
+          url: m.s3Url,
+          fileType: m.fileType,
+        }))
+      : [];
 
-  // Carousel state
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Popup state
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [deleteError, setDeleteError] = useState<string>('');
 
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? mediaFiles.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % mediaFiles.length);
-  };
 
   const handleDeleteConfirmed = async () => {
     setIsDeleting(true);
@@ -88,30 +77,6 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claimData, setIsDeleting }) => {
           minute: '2-digit',
         })
       : t('unknownTime');
-
-  const getStatusColor = (status: ClaimStatusEnum) => {
-    switch (status) {
-      case ClaimStatusEnum.Open:
-        return 'bg-blue-400';
-      case ClaimStatusEnum.Close:
-        return 'bg-red-400';
-      default:
-        return 'bg-green-400';
-    }
-  };
-
-  const getPriorityColor = (priority: PriorityEnum) => {
-    switch (priority) {
-      case PriorityEnum.LOW:
-        return 'bg-green-400';
-      case PriorityEnum.MEDIUM:
-        return 'bg-yellow-400';
-      case PriorityEnum.HIGH:
-        return 'bg-red-400';
-      default:
-        return 'text-gray-400';
-    }
-  };
 
   return (
     <div className="flex flex-col border-2 border-gray-700 bg-gray-800 rounded-lg overflow-hidden">
@@ -152,62 +117,14 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claimData, setIsDeleting }) => {
       {/* Divider Above Media */}
       <div className="w-full h-0.5 bg-gray-700"></div>
 
-      {/* Middle Section: Carousel or Placeholder */}
+      {/* Carousel Section using the reusable Carousel component */}
       <div className="relative w-full h-48 md:h-64 overflow-hidden">
         {mediaFiles.length > 0 ? (
-          <>
-            {mediaFiles.map((file, index) => {
-              const { url, fileType } = file;
-              const isActive = index === currentIndex;
-              const isImage = fileType.startsWith('image/');
-              const isVideo = fileType.startsWith('video/');
-
-              return (
-                <div
-                  key={index}
-                  className={`absolute inset-0 transition-opacity duration-500 ${
-                    isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                  }`}
-                >
-                  {isImage && (
-                    <Image
-                      src={url}
-                      alt={title}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      className="w-full h-full"
-                      unoptimized
-                    />
-                  )}
-                  {isVideo && (
-                    <video
-                      src={url}
-                      className="w-full h-full object-cover"
-                      controls
-                    />
-                  )}
-                </div>
-              );
-            })}
-
-            {/* Show next/prev buttons only if we have multiple media files */}
-            {mediaFiles.length > 1 && (
-              <>
-                <button
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded z-20 text-2xl"
-                  onClick={handlePrev}
-                >
-                  ‹
-                </button>
-                <button
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded z-20 text-2xl"
-                  onClick={handleNext}
-                >
-                  ›
-                </button>
-              </>
-            )}
-          </>
+          <Carousel
+            mediaFiles={mediaFiles}
+            containerClassName="w-full h-full"
+            imageClassName="w-full h-full"
+          />
         ) : (
           <div className="flex items-center justify-center w-full h-full text-gray-500">
             {t('noImageAvailable')}

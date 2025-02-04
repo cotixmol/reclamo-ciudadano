@@ -15,7 +15,7 @@ class StoreObjectRepository:
         access_key: Optional[str] = None,
         secret_key: Optional[str] = None,
         bucket_name: Optional[str] = None,
-        region_name: Optional[str] = "us-east-1",
+        region_name: Optional[str] = "us-southeast-1",
         use_ssl: bool = True,
     ):
         """
@@ -92,6 +92,7 @@ class StoreObjectRepository:
         """
         allowed_mime_types = self._get_allowed_mime_types()
         now = datetime.now()
+        year = now.strftime("%Y")
         month_name = now.strftime("%B")
         day = now.strftime("%d")
 
@@ -99,9 +100,7 @@ class StoreObjectRepository:
             urls = {}
             for file in claim.files:
                 sanitized_file = self._sanitize_filename(file)
-                object_name = (
-                    f"claims/{month_name}/{day}/{claim.public_id}/{sanitized_file}"
-                )
+                object_name = f"claims/{year}/{month_name}/{day}/{claim.public_id}/{sanitized_file}"
 
                 content_type, _ = mimetypes.guess_type(sanitized_file)
 
@@ -125,7 +124,7 @@ class StoreObjectRepository:
             raise Exception(f"Error generating presigned write URLs: {e}") from e
 
     def generate_presigned_read_url_for_claim(
-        self, claim: Claim, expiration: int = 3600
+        self, claim: Claim, expiration: int = 120
     ) -> Claim:
         """
         Generates presigned read URLs for all multimedia items in a single Claim.
@@ -152,7 +151,7 @@ class StoreObjectRepository:
         return claim
 
     def generate_presigned_read_urls(
-        self, claims: List[Claim], expiration: int = 3600
+        self, claims: List[Claim], expiration: int = 120
     ) -> List[Claim]:
         """
         Generates presigned read URLs for each Claim in a list.

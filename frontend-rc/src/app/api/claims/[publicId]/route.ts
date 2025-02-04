@@ -36,8 +36,11 @@ export async function GET(
     }
 
     const transformedData = toCamelCase(backendResponse.data as ClaimWithMultimediaResponse);
-    return NextResponse.json(transformedData, { status: 200 });
-  } catch (error: unknown) {
+    return NextResponse.json(transformedData, { 
+      status: 200, 
+      headers: { 'Cache-Control': 'no-store' }
+    });
+    } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
