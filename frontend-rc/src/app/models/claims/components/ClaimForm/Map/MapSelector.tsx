@@ -18,7 +18,6 @@ export default function MapSelector({
   longitude,
   onLocationChangeAction,
 }: MapSelectorProps) {
-  // Default center
   const [center] = React.useState<[number, number]>([
     parseFloat(latitude) || -34.6,
     parseFloat(longitude) || -58.4,
@@ -32,7 +31,6 @@ export default function MapSelector({
       if (!map) return;
       if (geocoderControlRef.current) return;
 
-      // Initialize geocoder
       const geocoderControl = (L.Control as any)
         .geocoder({
           geocoder: (L.Control as any).Geocoder.nominatim(),
@@ -73,11 +71,6 @@ export default function MapSelector({
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <GeocoderAndEvents />
-
-      {/* 
-        Pass our custom React Icons DivIcon using the createReactIcon() function.
-        You can change the color string as you wish. 
-      */}
       <Marker
         position={
           [

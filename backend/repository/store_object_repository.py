@@ -57,7 +57,6 @@ class StoreObjectRepository:
             self.s3_client.head_bucket(Bucket=self.bucket_name)
         except ClientError as e:
             error_code = int(e.response["Error"]["Code"])
-            # If bucket not found (error 404), then create it.
             if error_code == 404:
                 try:
                     self.s3_client.create_bucket(
