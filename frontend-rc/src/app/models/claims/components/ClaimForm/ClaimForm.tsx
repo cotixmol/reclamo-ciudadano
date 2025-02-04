@@ -102,47 +102,32 @@ export default function ClaimForm() {
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="w-full max-w-3xl bg-gray-900 p-6 rounded-lg">
+    <div className="flex items-center justify-center p-6">
+      <div className="w-full max-w-3xl">
         <h2 className="text-2xl font-semibold mb-6">{t('formTitle')}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Title */}
           <TitleInput title={title} setTitle={setTitle} />
-          {/* Priority */}
           <PrioritySection priority={priority} setPriority={setPriority} />
-          {/* Claim Type */}
           <ClaimTypesDropdown
             selectedClaimTypeId={selectedClaimTypeId}
             onChangeAction={(newId) => setSelectedClaimTypeId(newId)}
           />
-          {/* Description */}
           <DescriptionInput
             description={description}
             setDescription={setDescription}
           />
-          {/* Multimedia */}
           <MultimediaUpload
             fileNames={fileNames}
             setFileNames={setFileNames}
             files={files}
             setFiles={setFiles}
           />
-          {/* Map */}
           <div className="w-full rounded overflow-hidden relative z-0">
             <div className="mb-4">
               <h3 className="block mb-1">{t('selectLocationTitle')}</h3>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-gray-500 mt-1">
                 {t('selectLocationSubtitle')}
               </p>
-              <div className="mt-2">
-                <button
-                  type="button"
-                  disabled
-                  className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-hover cursor-not-allowed"
-                >
-                  {t('myLocation', 'My Location (Coming Soon)')}
-                </button>
-              </div>
             </div>
             <div className="relative w-full h-64">
               <MapSelector
