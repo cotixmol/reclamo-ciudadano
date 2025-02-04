@@ -102,8 +102,8 @@ export default function ClaimForm() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
-      <div className="w-full max-w-3xl bg-gray-900 p-8 rounded-lg">
+    <div className="flex items-center justify-center">
+      <div className="w-full max-w-3xl bg-gray-900 p-6 rounded-lg">
         <h2 className="text-2xl font-semibold mb-6">{t('formTitle')}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
