@@ -44,11 +44,18 @@ export default function ClaimForm() {
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [locationError, setLocationError] = useState(false);
 
   const hasLocation = Boolean(latitude && longitude);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (!hasLocation) {
+      setLocationError(true);
+      return;
+    }
+    setLocationError(false);
     setIsSubmitting(true);
 
     const claimData: ClaimCreateRequest = {
@@ -89,7 +96,6 @@ export default function ClaimForm() {
       }
 
       await markClaimAsFinished(publicId);
-
       router.push('/models/claims/pages');
     } catch (error) {
       console.error(error);
@@ -97,11 +103,9 @@ export default function ClaimForm() {
     }
   };
 
-  if (isSubmitting) {
-    return <LoadingScreen />;
-  }
-
-  return (
+  return isSubmitting ? (
+    <LoadingScreen />
+  ) : (
     <div className="flex items-center justify-center p-6">
       <div className="w-full max-w-3xl">
         <h2 className="text-2xl font-semibold mb-6">{t('formTitle')}</h2>
@@ -137,18 +141,21 @@ export default function ClaimForm() {
                   setLatitude(lat);
                   setLongitude(lng);
                   if (address) setLocationName(address);
+                  if (lat && lng) setLocationError(false);
                 }}
               />
             </div>
           </div>
-          {/* Show chosen address */}
           {hasLocation && locationName && (
             <p className="text-sm mt-2">
               <span className="font-semibold">{t('chosenAddress')}:</span>{' '}
               <span className="text-gray-400">{locationName}</span>
             </p>
           )}
-          <SubmitButton disabled={!hasLocation} isSubmitting={isSubmitting} />
+          <SubmitButton
+            isSubmitting={isSubmitting}
+            locationError={locationError}
+          />
         </form>
       </div>
     </div>

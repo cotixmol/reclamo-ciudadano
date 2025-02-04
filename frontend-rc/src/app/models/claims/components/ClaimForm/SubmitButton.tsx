@@ -1,30 +1,37 @@
-// components/SubmitButton.tsx
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface SubmitButtonProps {
-  disabled: boolean;
   isSubmitting: boolean;
+  locationError: boolean;
 }
 
 const SubmitButton: React.FC<SubmitButtonProps> = ({
-  disabled,
   isSubmitting,
+  locationError,
 }) => {
   const { t } = useTranslation('claimcreationform');
+  const disabled = isSubmitting || locationError;
 
   return (
-    <button
-      type="submit"
-      disabled={disabled || isSubmitting}
-      className={`w-full py-2 px-4 rounded transition ${
-        disabled || isSubmitting
-          ? 'bg-gray-600 cursor-not-allowed'
-          : 'bg-primary hover:bg-primary-hover'
-      }`}
-    >
-      {t('claimSubmitButton')}
-    </button>
+    <div>
+      {locationError && (
+        <p className="text-red-400 text-sm mb-2">
+          {t('missingLocationTooltip')}
+        </p>
+      )}
+      <button
+        type="submit"
+        disabled={disabled}
+        className={`w-full py-2 rounded transition ${
+          disabled
+            ? 'bg-gray-700 cursor-not-allowed'
+            : 'bg-primary hover:bg-primary-hover'
+        }`}
+      >
+        {t('claimSubmitButton')}
+      </button>
+    </div>
   );
 };
 
