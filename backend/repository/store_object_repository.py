@@ -76,7 +76,7 @@ class StoreObjectRepository:
                 raise RuntimeError(f"Error checking bucket existence: {e}") from e
 
     def generate_presigned_write_urls(
-        self, claim: Claim, expiration: int = 60
+        self, claim: Claim, expiration: int = 30
     ) -> Dict[str, str]:
         """
         Generates presigned URLs for uploading multiple files.
@@ -114,6 +114,7 @@ class StoreObjectRepository:
                         "Bucket": self.bucket_name,
                         "Key": object_name,
                         "ContentType": content_type,
+                        "ContentLength": claim.file_sizes[file],
                     },
                     ExpiresIn=expiration,
                 )
@@ -123,7 +124,7 @@ class StoreObjectRepository:
             raise Exception(f"Error generating presigned write URLs: {e}") from e
 
     def generate_presigned_read_url_for_claim(
-        self, claim: Claim, expiration: int = 120
+        self, claim: Claim, expiration: int = 60
     ) -> Claim:
         """
         Generates presigned read URLs for all multimedia items in a single Claim.
@@ -150,7 +151,7 @@ class StoreObjectRepository:
         return claim
 
     def generate_presigned_read_urls(
-        self, claims: List[Claim], expiration: int = 120
+        self, claims: List[Claim], expiration: int = 60
     ) -> List[Claim]:
         """
         Generates presigned read URLs for each Claim in a list.
@@ -198,6 +199,7 @@ class StoreObjectRepository:
             "image/webp",
             "video/mp4",
             "video/mpeg",
+            "video/quicktime",
         ]
 
     @staticmethod
