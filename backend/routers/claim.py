@@ -100,7 +100,7 @@ async def create_claim(
 ):
     try:
         with session.begin():
-            new_claim = claim_service.create_claim(claim_data)
+            new_claim = claim_service.create_claim(claim)
             url = store_object_service.generate_presigned_write_urls(new_claim)
         return {
             "new_claim": new_claim,
