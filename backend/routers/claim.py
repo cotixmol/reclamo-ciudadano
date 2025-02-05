@@ -2,7 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from service import ClaimService, StoreObjectService
 from typing import Optional
 from dependencies import get_claim_service, get_store_object_service
-from models import Claim, CreateClaimResponse, ReadClaimResponse, MultimediaRead
+from models import (
+    Claim,
+    CreateClaimResponse,
+    ReadClaimResponse,
+    MultimediaRead,
+    Claim,
+    ClaimCreateRequestSchema,
+    ClaimUpdateRequestSchema,
+)
 from uuid import UUID
 from typing import List
 from custom_types import AllClaimsRequest
@@ -85,14 +93,14 @@ async def delete_claim_by_public_id(
 
 @claim_router.post("/claim/", response_model=CreateClaimResponse)
 async def create_claim(
-    claim: Claim,
+    claim: ClaimCreateRequestSchema,
     session: Session = Depends(db_reporte_ciudadano.get_session),
     claim_service: ClaimService = Depends(get_claim_service),
     store_object_service: StoreObjectService = Depends(get_store_object_service),
 ):
     try:
-        with session.begin():  # TODO: Check if this block can be placed somewhere else. It's not a good practice to have it here.
-            new_claim = claim_service.create_claim(claim)
+        with session.begin():
+            new_claim = claim_service.create_claim(claim_data)
             url = store_object_service.generate_presigned_write_urls(new_claim)
         return {
             "new_claim": new_claim,
@@ -109,7 +117,7 @@ async def create_claim(
 
 @claim_router.put("/claim/{public_id}", response_model=Claim)
 async def update_claim_by_public_id(
-    claim: Claim,
+    claim: ClaimUpdateRequestSchema,
     public_id: UUID,
     claim_service: ClaimService = Depends(get_claim_service),
 ):

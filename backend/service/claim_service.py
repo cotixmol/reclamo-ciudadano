@@ -4,6 +4,7 @@ from errors import (
     ClaimNotCreatedError,
     ClaimNotUpdatedError,
 )
+from models import Claim
 from repository import ClaimRepository
 from repository import ClaimRepository
 from errors.claim_errors import ClaimNotCreatedError
@@ -33,7 +34,9 @@ class ClaimService:
 
     def create_claim(self, claim):
         try:
-            return self.repository.create_claim(claim)
+            claim_data = Claim(**{**claim.model_dump(), "file_sizes": claim.file_sizes})
+            new_claim = self.repository.create_claim(claim_data)
+            return new_claim
         except ClaimNotCreatedError:
             raise
 
