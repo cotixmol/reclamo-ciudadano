@@ -31,6 +31,7 @@ export interface ClaimCreateRequest {
   claim_location: ClaimLocation;
   priority: PriorityEnum;
   files: string[];
+  file_sizes: Record<string, number> | null;
 }
 
 export interface ClaimUpdateRequest {

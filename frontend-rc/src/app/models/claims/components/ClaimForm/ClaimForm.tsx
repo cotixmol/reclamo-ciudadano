@@ -61,6 +61,14 @@ export default function ClaimForm() {
     setIsSubmitting(true);
     setError(null);
 
+    const fileSizesByName = files.reduce(
+      (accumulator, file) => {
+        accumulator[file.name] = file.size;
+        return accumulator;
+      },
+      {} as Record<string, number>
+    );
+
     const claimData: ClaimCreateRequest = {
       title,
       description,
@@ -72,6 +80,7 @@ export default function ClaimForm() {
       },
       priority,
       files: fileNames,
+      file_sizes: fileSizesByName,
     };
 
     try {
