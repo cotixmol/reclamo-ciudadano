@@ -41,8 +41,12 @@ class ClaimRepository:
 
     def create_claim(self, claim: ClaimCreateRequestSchema):
         try:
+            # It has to comply with the db model -> Claim
+            claim_data = Claim(**claim.model_dump())
+            claim_data.file_sizes = claim.file_sizes
+
             for db in self.db_reporte_ciudadano.get_session_generator():
-                return self.claim_dao.create_claim(db, claim)
+                return self.claim_dao.create_claim(db, claim_data)
         except ClaimNotCreatedError as e:
             raise e
         except Exception as e:

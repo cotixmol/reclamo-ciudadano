@@ -34,9 +34,7 @@ class ClaimService:
 
     def create_claim(self, claim):
         try:
-            claim_data = Claim(**claim.model_dump())
-            claim_data.file_sizes = claim.file_sizes
-            new_claim = self.repository.create_claim(claim_data)
+            new_claim = self.repository.create_claim(claim)
             return new_claim
         except ClaimNotCreatedError:
             raise
