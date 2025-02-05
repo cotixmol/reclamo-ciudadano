@@ -6,12 +6,17 @@ function getStoredPublicIds(): string[] {
   return existing ? JSON.parse(existing) : [];
 }
 
-export async function fetchAllClaimsByPublicIds(): Promise<ClaimWithMultimediaResponse[]> {
+export async function fetchAllClaimsByPublicIds(): Promise<
+  ClaimWithMultimediaResponse[]
+> {
   const publicIds = getStoredPublicIds();
   try {
-    const response = await axios.post<ClaimWithMultimediaResponse[]>('/api/claims', {
-      public_ids: publicIds,
-    });
+    const response = await axios.post<ClaimWithMultimediaResponse[]>(
+      '/api/claims',
+      {
+        public_ids: publicIds,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error('Error fetching claims:', error);
@@ -28,7 +33,9 @@ export async function fetchClaimByPublicId(
   publicId: string
 ): Promise<ClaimWithMultimediaResponse> {
   try {
-    const response = await axios.get<ClaimWithMultimediaResponse>(`/api/claims/${publicId}`);
+    const response = await axios.get<ClaimWithMultimediaResponse>(
+      `/api/claims/${publicId}`
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

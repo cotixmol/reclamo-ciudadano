@@ -23,8 +23,14 @@ export async function POST(
 
     if (backendResponse.status !== 200) {
       const backendError = backendResponse.data;
-      const errorMessage = backendError.detail ?? backendError.error ?? 'Failed to mark claim as finished';
-      return NextResponse.json({ error: errorMessage }, { status: backendResponse.status });
+      const errorMessage =
+        backendError.detail ??
+        backendError.error ??
+        'Failed to mark claim as finished';
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: backendResponse.status }
+      );
     }
 
     return NextResponse.json(backendResponse.data, { status: 200 });
@@ -32,6 +38,9 @@ export async function POST(
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ error: 'Unexpected error occurred' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Unexpected error occurred' },
+      { status: 500 }
+    );
   }
 }

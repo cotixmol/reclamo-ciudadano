@@ -1,15 +1,15 @@
 {
-    "status": {
-        "Open": "Open",
-        "Close": "Closed"
-    },
-    "priority": {
-        "LOW": "Low Priority",
-        "MEDIUM": "Medium Priority",
-        "HIGH": "High Priority"
-    },
-    "title": "Title",
-    "description": "Description",
-    "updateClaim": "Update Claim",
-    "back": "Back"
+  "status": {
+    "Open": "Open",
+    "Close": "Closed"
+  },
+  "priority": {
+    "LOW": "Low Priority",
+    "MEDIUM": "Medium Priority",
+    "HIGH": "High Priority"
+  },
+  "title": "Title",
+  "description": "Description",
+  "updateClaim": "Update Claim",
+  "back": "Back"
 }

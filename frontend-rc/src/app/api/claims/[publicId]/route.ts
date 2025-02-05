@@ -18,12 +18,11 @@ export async function GET(
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    const backendResponse = await axios.get<ClaimWithMultimediaResponse | ClaimErrorResponse>(
-      `${process.env.API_URL}/claim/${publicId}`,
-      {
-        validateStatus: () => true,
-      }
-    );
+    const backendResponse = await axios.get<
+      ClaimWithMultimediaResponse | ClaimErrorResponse
+    >(`${process.env.API_URL}/claim/${publicId}`, {
+      validateStatus: () => true,
+    });
 
     if (backendResponse.status !== 200) {
       const backendError = backendResponse.data as ClaimErrorResponse;
@@ -35,12 +34,14 @@ export async function GET(
       );
     }
 
-    const transformedData = toCamelCase(backendResponse.data as ClaimWithMultimediaResponse);
-    return NextResponse.json(transformedData, { 
-      status: 200, 
-      headers: { 'Cache-Control': 'no-store' }
+    const transformedData = toCamelCase(
+      backendResponse.data as ClaimWithMultimediaResponse
+    );
+    return NextResponse.json(transformedData, {
+      status: 200,
+      headers: { 'Cache-Control': 'no-store' },
     });
-    } catch (error: unknown) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

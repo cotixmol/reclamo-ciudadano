@@ -1,10 +1,8 @@
-
-import { 
-  MultimediaMetadataRequest, 
-  MultimediaMetadataResponse 
+import {
+  MultimediaMetadataRequest,
+  MultimediaMetadataResponse,
 } from '@/app/models/claims/types/claim';
 import axios from 'axios';
-
 
 export const saveMetadata = async (
   id: number,

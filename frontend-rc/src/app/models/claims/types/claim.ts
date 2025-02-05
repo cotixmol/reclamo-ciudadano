@@ -72,7 +72,6 @@ export interface ClaimWithMultimediaResponse {
   multimedia: MultimediaMetadataResponse[];
 }
 
-
 /** Error Response Interface **/
 export interface ClaimErrorResponse {
   detail: string;

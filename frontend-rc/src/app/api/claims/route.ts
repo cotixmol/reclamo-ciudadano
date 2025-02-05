@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     const body: ApiPublicIdsRequest = await request.json();
 
     const backendResponse = await axios.post<
-    ClaimWithMultimediaResponse[] | ClaimErrorResponse
+      ClaimWithMultimediaResponse[] | ClaimErrorResponse
     >(`${process.env.API_URL}/claims`, body, {
       validateStatus: () => true,
     });
@@ -30,9 +30,9 @@ export async function POST(request: NextRequest) {
     const transformedData = toCamelCase(
       backendResponse.data as ClaimWithMultimediaResponse[]
     );
-    return NextResponse.json(transformedData, { 
-      status: 200, 
-      headers: { 'Cache-Control': 'no-store' }
+    return NextResponse.json(transformedData, {
+      status: 200,
+      headers: { 'Cache-Control': 'no-store' },
     });
   } catch (error) {
     if (error instanceof Error) {
