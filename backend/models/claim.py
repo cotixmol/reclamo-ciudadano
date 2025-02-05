@@ -15,6 +15,8 @@ from sqlalchemy import (
     Enum as SQLAlchemyEnum,
     ARRAY,
 )
+from pydantic import PrivateAttr
+from typing import Dict, Optional
 from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
 from geoalchemy2 import Geometry
@@ -25,11 +27,40 @@ if TYPE_CHECKING:
     from models import Multimedia
 
 
+class ClaimCreateRequestSchema(BaseModel):
+    title: str
+    description: str
+    type_category_id: Optional[int]  # Optional if not always provided
+    status: str  # 'Open', 'Close', or any string
+    claim_location: Union[GeometryPoint, dict]
+    priority: str  # Use an enum if you have one defined
+    files: List[str]
+    file_sizes: Optional[Dict[str, int]] = None
+
+    class Config:
+        from_attributes = True
+
+
+class ClaimUpdateRequestSchema(BaseModel):
+    title: Optional[str] = None
+    type_category_id: Optional[int] = None
+    description: Optional[str] = None
+    status: Optional[str] = None
+    claim_location: Optional[Union[GeometryPoint, dict]] = None
+    priority: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
 class Claim(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     public_id: UUID = Field(
         sa_column=Column(
-            PG_UUID(as_uuid=True), unique=True, index=True, nullable=False
+            String,  # or use PG_UUID if you prefer
+            unique=True,
+            index=True,
+            nullable=False,
         ),
         default_factory=uuid.uuid4,
     )
@@ -51,7 +82,7 @@ class Claim(SQLModel, table=True):
                 ClaimProcessingStateEnum, name="claim_processing_state_enum"
             ),
             nullable=False,
-            server_default=ClaimProcessingStateEnum.DRAFT,  # New claims start in DRAFT
+            server_default=ClaimProcessingStateEnum.DRAFT,
         ),
         default=ClaimProcessingStateEnum.DRAFT,
     )
@@ -98,6 +129,15 @@ class Claim(SQLModel, table=True):
         ),
     )
     multimedia: List["Multimedia"] = Relationship()
+    _file_sizes: Optional[Dict[str, int]] = PrivateAttr(default=None)
+
+    @property
+    def file_sizes(self) -> Optional[Dict[str, int]]:
+        return self._file_sizes
+
+    @file_sizes.setter
+    def file_sizes(self, value: Optional[Dict[str, int]]) -> None:
+        self._file_sizes = value
 
 
 class CreateClaimResponse(BaseModel):

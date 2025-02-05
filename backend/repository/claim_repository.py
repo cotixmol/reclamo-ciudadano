@@ -1,4 +1,4 @@
-from models import Claim
+from models import Claim, ClaimCreateRequestSchema, ClaimUpdateRequestSchema
 from sqlmodel import Session
 from typing import List
 from dao import ClaimDAO
@@ -39,7 +39,7 @@ class ClaimRepository:
         except Exception as e:
             raise e
 
-    def create_claim(self, claim: Claim):
+    def create_claim(self, claim: ClaimCreateRequestSchema):
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.create_claim(db, claim)
@@ -48,7 +48,7 @@ class ClaimRepository:
         except Exception as e:
             raise e
 
-    def update_claim_by_public_id(self, claim: Claim, public_id):
+    def update_claim_by_public_id(self, claim: ClaimUpdateRequestSchema, public_id):
         try:
             for db in self.db_reporte_ciudadano.get_session_generator():
                 return self.claim_dao.update_claim_by_public_id(db, claim, public_id)

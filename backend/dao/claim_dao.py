@@ -6,7 +6,7 @@ from datetime import datetime
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
-from models import Claim
+from models import Claim, ClaimCreateRequestSchema, ClaimUpdateRequestSchema
 from utils import (
     wkb_element_to_geometry_point,
     geometry_point_to_wkb_element,
@@ -38,12 +38,12 @@ class ClaimDAO(ABC):
         pass
 
     @abstractmethod
-    def create_claim(self, db: Session, claim: Claim) -> Claim:
+    def create_claim(self, db: Session, claim: ClaimCreateRequestSchema) -> Claim:
         pass
 
     @abstractmethod
     def update_claim_by_public_id(
-        self, db: Session, claim: Claim, public_id: UUID
+        self, db: Session, claim: ClaimUpdateRequestSchema, public_id: UUID
     ) -> Claim:
         pass
 
@@ -151,7 +151,7 @@ class ClaimSQLAlchemy(ClaimDAO):
                 claim_id=public_id,
             )
 
-    def create_claim(self, db: Session, claim: Claim) -> Claim:
+    def create_claim(self, db: Session, claim: ClaimCreateRequestSchema) -> Claim:
         """
         Create a new claim. By default, `deleted=False` ensures it is active.
         The `has_multimedia` field is automatically set based on whether `files` exist.
@@ -185,7 +185,7 @@ class ClaimSQLAlchemy(ClaimDAO):
             raise ClaimNotCreatedError(errors=e)
 
     def update_claim_by_public_id(
-        self, db: Session, claim: Claim, public_id: UUID
+        self, db: Session, claim: ClaimUpdateRequestSchema, public_id: UUID
     ) -> Claim:
         """
         Update only if the claim is not deleted (deleted == False).
