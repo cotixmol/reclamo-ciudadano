@@ -28,5 +28,7 @@
   "selectLocationTitle": "Select the Location",
   "selectLocationSubtitle": "Search for an address and drag the marker to set your location.",
   "priorityLabelTitle": "Priority",
-  "missingLocationTooltip": "A location must be selected in the map above."
+  "missingLocationTooltip": "A location must be selected in the map above.",
+  "filesLimitError": "You can upload up to 5 files",
+  "sizeLimitError": "is bigger than the 10MB limit."
 }

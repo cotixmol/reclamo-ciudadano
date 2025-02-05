@@ -28,5 +28,7 @@
   "selectLocationTitle": "Selecciona la ubicación",
   "selectLocationSubtitle": "Busca una dirección o arrastra el marcador para establecer tu ubicación",
   "priorityLabelTitle": "Prioridad",
-  "missingLocationTooltip": "Debe seleccionar una ubicación en el mapa superior."
+  "missingLocationTooltip": "Debe seleccionar una ubicación en el mapa superior.",
+  "filesLimitError": "Puedes subir hasta 5 archivos",
+  "sizeLimitError": "supera el limite de 10MB."
 }
