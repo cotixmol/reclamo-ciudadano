@@ -1,7 +1,7 @@
 stages:
   - build
-  # - migrate
   - deploy
+  - migrate
 
 build_front:
   stage: build
@@ -30,7 +30,7 @@ build_front:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "develop"
-    # - if: $CI_COMMIT_BRANCH == "devops"
+    #- if: $CI_COMMIT_BRANCH == "devops"
 
 build_back:
   image: docker:latest
@@ -60,29 +60,30 @@ build_back:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "develop"
-    # - if: $CI_COMMIT_BRANCH == "devops"
+    #- if: $CI_COMMIT_BRANCH == "devops"
 
-# migrate:
-#   stage: migrate
-#   image: python:3.12-slim-bookworm
-#   tags:
-#     - saas
-#   script:
-#     - |
-#       if [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
-#         mv .infra/.env_prod .env
-#       else
-#         mv .infra/.env_dev .env
-#       fi
-#     - chmod +x  .infra/.ansible/inject_secrets.sh 
-#     - .infra/.ansible/inject_secrets.sh
-#     - mv .env backend/.env && cd backend
-#     - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
-#     - alembic upgrade head
-#   rules:
-#     - if: $CI_COMMIT_BRANCH == "main"
-#     - if: $CI_COMMIT_BRANCH == "develop"
-#     - if: $CI_COMMIT_BRANCH == "devops"
+migrate:
+  stage: migrate
+  image: python:3.12-slim-bookworm
+  tags:
+    - saas
+  script:
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+        mv .infra/.env_prod .env
+      else
+        mv .infra/.env_dev .env
+      fi
+    - chmod +x  .infra/.ansible/inject_secrets.sh 
+    - .infra/.ansible/inject_secrets.sh
+    - mv .env backend/.env && cd backend
+    - sed -i  -e 's/postgres_gis/reclamos.reputacion.digital/g' .env 
+    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
+    - alembic upgrade head
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    #- if: $CI_COMMIT_BRANCH == "develop"
+    #- if: $CI_COMMIT_BRANCH == "devops"
 
 deploy:
   stage: deploy
@@ -98,6 +99,7 @@ deploy:
         target_server="prod"
         folder_name="reclamo_ciudadano"
         cat $ansible_credentials_yml >> .infra/.ansible/cred.yml
+        mv docker-compose.prod.yml docker-compose.yml
         mv .infra/.env_prod .env
       else
         echo "<<<< DEVELOPMENT DEPLOY >>>>"
@@ -115,5 +117,5 @@ deploy:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH == "develop"
-    # - if: $CI_COMMIT_BRANCH == "devops"
+    #- if: $CI_COMMIT_BRANCH == "devops"
 
