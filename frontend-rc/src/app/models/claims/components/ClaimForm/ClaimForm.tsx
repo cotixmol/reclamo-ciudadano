@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import '../../../../i18n';
 import LoadingScreen from '@/app/components/LoadingScreen';
+import ErrorPage from '@/app/components/ErrorPage';
 import { createClaim } from '@/app/services/claims/create';
 import {
   markClaimAsFailed,
@@ -45,6 +46,7 @@ export default function ClaimForm() {
   const [files, setFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [locationError, setLocationError] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const hasLocation = Boolean(latitude && longitude);
 
@@ -57,6 +59,7 @@ export default function ClaimForm() {
     }
     setLocationError(false);
     setIsSubmitting(true);
+    setError(null);
 
     const claimData: ClaimCreateRequest = {
       title,
@@ -97,15 +100,22 @@ export default function ClaimForm() {
 
       await markClaimAsFinished(publicId);
       router.push('/models/claims/pages');
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
+      setError(err as Error);
       setIsSubmitting(false);
     }
   };
 
-  return isSubmitting ? (
-    <LoadingScreen />
-  ) : (
+  if (isSubmitting) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return <ErrorPage message={error.message} />;
+  }
+
+  return (
     <div className="flex items-center justify-center p-6">
       <div className="w-full max-w-3xl">
         <h2 className="text-2xl font-semibold mb-6">{t('formTitle')}</h2>

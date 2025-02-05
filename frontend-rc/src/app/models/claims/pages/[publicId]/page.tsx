@@ -11,11 +11,7 @@ import ClaimNotFoundPage from '../../components/ClaimNotFound';
 import Carousel, { MediaFile } from '@/app/components/Carousel';
 import { fetchClaimByPublicId } from '@/app/services/claims/fetch';
 import { updateClaimByPublicId } from '@/app/services/claims/update';
-import {
-  ClaimWithMultimediaResponse,
-  ClaimStatusEnum,
-  PriorityEnum,
-} from '../../types/claim';
+import { ClaimWithMultimediaResponse } from '../../types/claim';
 import { getStatusColor, getPriorityColor } from '@/app/utils/claimColors';
 
 const ClaimUpdatePage: React.FC = () => {
@@ -28,7 +24,6 @@ const ClaimUpdatePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [formValues, setFormValues] = useState({ title: '', description: '' });
-  const [updateError, setUpdateError] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
@@ -75,7 +70,7 @@ const ClaimUpdatePage: React.FC = () => {
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsUpdating(true);
-    setUpdateError(null);
+    setError(null);
     try {
       await updateClaimByPublicId(claim.publicId, {
         title: formValues.title,
@@ -83,7 +78,7 @@ const ClaimUpdatePage: React.FC = () => {
       });
       router.push('/models/claims/pages');
     } catch (err) {
-      setUpdateError((err as Error).message);
+      setError(err as Error);
     } finally {
       setIsUpdating(false);
     }
@@ -171,9 +166,6 @@ const ClaimUpdatePage: React.FC = () => {
                   rows={4}
                 />
               </div>
-              {updateError && (
-                <p className="text-red-400 text-sm">{updateError}</p>
-              )}
               <button
                 type="submit"
                 disabled={isUpdating}
