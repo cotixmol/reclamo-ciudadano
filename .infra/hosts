@@ -2,5 +2,4 @@
 "{{ hulk.ip }}" ansible_connection=ssh ansible_ssh_user="{{ hulk.user }}" ansible_ssh_pass="{{ hulk.pswd }}"
 
 [prod]
-"{{ sam.ip }}" ansible_connection=ssh ansible_ssh_user="{{ sam.user }}" ansible_ssh_pass="{{ sam.pswd }}"
-"{{ piquin.ip }}" ansible_connection=ssh ansible_ssh_user="{{ piquin.user }}" ansible_ssh_pass="{{ piquin.pswd }}"
+"{{ reclamo01.ip }}" ansible_connection=ssh ansible_ssh_user="{{ reclamo01.user }}" ansible_ssh_pass="{{ reclamo01.pswd }}"
