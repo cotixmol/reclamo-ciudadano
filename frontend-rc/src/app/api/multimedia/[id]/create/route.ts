@@ -7,7 +7,7 @@ import {
   MultimediaErrorResponse,
 } from '@/app/models/claims/types/claim';
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body: MultimediaMetadataRequest = await request.json();
     const backendResponse = await axios.post<

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import axios from 'axios';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import {
@@ -10,7 +10,7 @@ import {
 
 export async function GET(
   request: Request,
-  context: { params: { publicId: string } }
+  context: any
 ): Promise<NextResponse> {
   try {
     const { publicId } = await context.params;
@@ -54,7 +54,7 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  context: { params: { publicId: string } }
+  context: any
 ): Promise<NextResponse> {
   try {
     const { publicId } = await context.params;
@@ -97,7 +97,7 @@ export async function DELETE(
 
 export async function PUT(
   request: Request,
-  context: { params: { publicId: string } }
+  context: any
 ): Promise<NextResponse> {
   try {
     const { publicId } = await context.params;

@@ -7,11 +7,11 @@ interface FinishedErrorResponse {
 }
 
 export async function POST(
-  request: NextRequest,
-  context: { params: { publicId: string } }
+  request: Request,
+  context: any
 ) {
   try {
-    const { publicId } = await context.params;
+    const { publicId } = await context.params
 
     const backendResponse = await axios.post<FinishedErrorResponse>(
       `${process.env.API_URL}/claim/${publicId}/finished`,

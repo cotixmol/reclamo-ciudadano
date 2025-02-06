@@ -7,7 +7,7 @@ import {
   ClaimErrorResponse,
 } from '@/app/models/claims/types/claim';
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body: ApiPublicIdsRequest = await request.json();
 
