@@ -18,7 +18,6 @@ services:
       - .env:/app/.env
     ports:
       - "3007:3000"
-    command: ["npm", "run", "dev"]
     labels:
       # Enable Traefik for reclamo_ciudadano service
       - traefik.enable=true
