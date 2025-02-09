@@ -27,7 +27,8 @@ dev_build_back:
     - |
       source VERSION
       tag="$CI_COMMIT_REF_SLUG$VERSION"
-      echo "DEV BACKEND BUILD -- tag='$tag' branch='$CI_COMMIT_BRANCH'"
+      target_server="dev"
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
     - cd backend
     - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
@@ -50,7 +51,8 @@ dev_build_front:
     - |
       source VERSION
       tag="$CI_COMMIT_REF_SLUG$VERSION"
-      echo "DEV FRONTEND BUILD -- tag='$tag' branch='$CI_COMMIT_BRANCH'"
+      target_server="dev"
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
     - cd frontend-rc
     - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
@@ -62,22 +64,19 @@ dev_deploy:
   image: "ieferrari/ansible:11.0.0"
   tags:
     - saas
-  # Wait for both dev_build_front & dev_build_back
   needs: [dev_build_front, dev_build_back]
-  # Runs only on 'develop'
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
     - source VERSION
     - |
-      tag="$CI_COMMIT_REF_SLUG$VERSION"
       echo "<<<< DEVELOPMENT DEPLOY >>>>"
+      tag="$CI_COMMIT_REF_SLUG$VERSION"
       target_server="dev"
       folder_name="reclamo_ciudadano_dev"
       cat $ansible_credentials_yml_dev >> .infra/.ansible/cred.yml
       mv .infra/.env_dev .env
-      mv docker-compose.yml docker-compose.yml.bak || true
-      mv docker-compose.yml docker-compose.yml || true
+
     - chmod +x .infra/.ansible/inject_secrets.sh
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
@@ -92,7 +91,6 @@ dev_migrate:
   tags:
     - saas
   needs: [dev_deploy]
-  # Runs only on 'develop'
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
