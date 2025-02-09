@@ -82,8 +82,8 @@ dev_deploy:
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
     - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
-    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml \
-        --extra-vars "server_name=$target_server folder_name=$folder_name"
+    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
+
 
 # Dev: Migrate
 dev_migrate:
@@ -154,8 +154,7 @@ main_deploy_back:
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
     - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
-    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml \
-        --extra-vars "server_name=$target_server folder_name=$folder_name"
+    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
 
 # 3) Build Front (Main)
 main_build_front:
@@ -207,8 +206,7 @@ main_deploy_front:
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
     - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
-    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml \
-        --extra-vars "server_name=$target_server folder_name=$folder_name"
+    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
 
 # 5) Migrate (Main)
 main_migrate:
