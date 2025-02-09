@@ -83,7 +83,6 @@ dev_deploy:
     - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
     - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
 
-
 # Dev: Migrate
 dev_migrate:
   stage: migrate
@@ -124,7 +123,8 @@ main_build_back:
     - |
       source VERSION
       tag="$VERSION"
-      echo "MAIN BACKEND BUILD -- tag='$tag'"
+      target_server="prod"
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
     - cd backend
     - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
@@ -140,9 +140,10 @@ main_deploy_back:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     - |
+      echo "<<<< PRODUCTION DEPLOY >>>>"
+
       source VERSION
       tag="$VERSION"
-      echo "<<<< PRODUCTION BACKEND DEPLOY >>>>"
       target_server="prod"
       folder_name="reclamo_ciudadano"
       cat $ansible_credentials_yml >> .infra/.ansible/cred.yml
@@ -162,7 +163,6 @@ main_build_front:
     - saas
   services:
     - docker:dind
-  # Wait for the backend to deploy first
   needs: [main_deploy_back]
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
@@ -172,13 +172,10 @@ main_build_front:
     - |
       source VERSION
       tag="$VERSION"
-      echo "MAIN FRONTEND BUILD -- tag='$tag'"
+      target_server="prod"
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
     - cd frontend-rc
-    - docker build \
-        --build-arg NODE_ENV=production \
-        -f Dockerfile \
-        --pull \
-        -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
+    - docker build --build-arg NODE_ENV=production -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
 
 # 4) Deploy Front (Main)
@@ -197,7 +194,6 @@ main_deploy_front:
       echo "<<<< PRODUCTION FRONTEND DEPLOY >>>>"
       target_server="prod"
       folder_name="reclamo_ciudadano"
-      # Re-use .infra/.env_prod if needed
       mv .infra/.env_prod .env
       cat $ansible_credentials_yml >> .infra/.ansible/cred.yml
     - chmod +x .infra/.ansible/inject_secrets.sh
