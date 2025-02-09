@@ -77,7 +77,7 @@ dev_deploy:
       cat $ansible_credentials_yml_dev >> .infra/.ansible/cred.yml
       mv .infra/.env_dev .env
       mv docker-compose.yml docker-compose.yml.bak || true
-      mv docker-compose.local.yml docker-compose.yml || true
+      mv docker-compose.yml docker-compose.yml || true
     - chmod +x .infra/.ansible/inject_secrets.sh
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
