@@ -1,41 +1,23 @@
 stages:
-  - build        # For both dev and main
-  - deploy       # For both dev and main
-  - migrate      # For both dev and main
+  - build-back
+  - deploy-back
+  - build-front
+  - deploy-front
+  - migrate
 
 ##########################
 #     DEV PIPELINE
 ##########################
 
-# 1) Build front for DEVELOP
-dev_build_front:
-  stage: build
-  image: docker:latest
-  tags:
-    - saas
-  services:
-    - docker:dind
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-  script:
-    - |
-      source VERSION
-      tag="$CI_COMMIT_REF_SLUG$VERSION"
-      echo "DEV FRONTEND BUILD -- tag='$tag' branch='$CI_COMMIT_BRANCH'"
-    - cd frontend-rc
-    - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
-    - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
-
-# 1) Build back for DEVELOP
+# Dev: Build Back
 dev_build_back:
-  stage: build
+  stage: build-back
   image: docker:latest
   tags:
     - saas
   services:
     - docker:dind
+  # Runs only on 'develop'
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   before_script:
@@ -50,15 +32,39 @@ dev_build_back:
     - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
 
-# 2) Deploy for DEVELOP
+# Dev: Build Front
+dev_build_front:
+  # Also in 'build-back' stage so it runs in parallel with dev_build_back
+  stage: build-back
+  image: docker:latest
+  tags:
+    - saas
+  services:
+    - docker:dind
+  # Runs only on 'develop'
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    - |
+      source VERSION
+      tag="$CI_COMMIT_REF_SLUG$VERSION"
+      echo "DEV FRONTEND BUILD -- tag='$tag' branch='$CI_COMMIT_BRANCH'"
+    - cd frontend-rc
+    - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
+    - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
+
+# Dev: Deploy
 dev_deploy:
-  stage: deploy
+  # Put dev deploy in 'deploy-back' stage
+  stage: deploy-back
   image: "ieferrari/ansible:11.0.0"
   tags:
     - saas
-  needs:
-    - dev_build_front
-    - dev_build_back
+  # Wait for both dev_build_front & dev_build_back
+  needs: [dev_build_front, dev_build_back]
+  # Runs only on 'develop'
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
@@ -71,7 +77,6 @@ dev_deploy:
       cat $ansible_credentials_yml_dev >> .infra/.ansible/cred.yml
       mv .infra/.env_dev .env
       mv docker-compose.yml docker-compose.yml.bak || true
-      # If you have a specific docker-compose for dev, rename here or revert
       mv docker-compose.local.yml docker-compose.yml || true
     - chmod +x .infra/.ansible/inject_secrets.sh
     - .infra/.ansible/inject_secrets.sh
@@ -80,14 +85,14 @@ dev_deploy:
     - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml \
         --extra-vars "server_name=$target_server folder_name=$folder_name"
 
-# 3) Migrate for DEVELOP
+# Dev: Migrate
 dev_migrate:
   stage: migrate
   image: python:3.12-slim-bookworm
   tags:
     - saas
-  needs:
-    - dev_deploy
+  needs: [dev_deploy]
+  # Runs only on 'develop'
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
@@ -104,9 +109,9 @@ dev_migrate:
 #    MAIN (PROD) PIPELINE
 ##########################
 
-# 1) Build back (main)
+# 1) Build Back (Main)
 main_build_back:
-  stage: build
+  stage: build-back
   image: docker:latest
   tags:
     - saas
@@ -126,14 +131,13 @@ main_build_back:
     - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
 
-# 2) Deploy back (main)
+# 2) Deploy Back (Main)
 main_deploy_back:
-  stage: deploy
+  stage: deploy-back
   image: "ieferrari/ansible:11.0.0"
   tags:
     - saas
-  needs:
-    - main_build_back
+  needs: [main_build_back]
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
@@ -153,17 +157,16 @@ main_deploy_back:
     - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml \
         --extra-vars "server_name=$target_server folder_name=$folder_name"
 
-# 3) Build front (main)
+# 3) Build Front (Main)
 main_build_front:
-  stage: build
+  stage: build-front
   image: docker:latest
   tags:
     - saas
   services:
     - docker:dind
   # Wait for the backend to deploy first
-  needs:
-    - main_deploy_back
+  needs: [main_deploy_back]
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   before_script:
@@ -181,14 +184,13 @@ main_build_front:
         -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
 
-# 4) Deploy front (main)
+# 4) Deploy Front (Main)
 main_deploy_front:
-  stage: deploy
+  stage: deploy-front
   image: "ieferrari/ansible:11.0.0"
   tags:
     - saas
-  needs:
-    - main_build_front
+  needs: [main_build_front]
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
@@ -208,14 +210,13 @@ main_deploy_front:
     - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml \
         --extra-vars "server_name=$target_server folder_name=$folder_name"
 
-# 5) Migrate (main)
+# 5) Migrate (Main)
 main_migrate:
   stage: migrate
   image: python:3.12-slim-bookworm
   tags:
     - saas
-  needs:
-    - main_deploy_front
+  needs: [main_deploy_front]
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
