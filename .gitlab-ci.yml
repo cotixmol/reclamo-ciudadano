@@ -140,8 +140,7 @@ main_deploy_back:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     - |
-      echo "<<<< PRODUCTION DEPLOY >>>>"
-
+      echo "<<<< PRODUCTION BACKEND DEPLOY >>>>"
       source VERSION
       tag="$VERSION"
       target_server="prod"
@@ -191,13 +190,14 @@ main_deploy_front:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     - |
+      echo "<<<< PRODUCTION FRONTEND DEPLOY >>>>"
       source VERSION
       tag="$VERSION"
-      echo "<<<< PRODUCTION FRONTEND DEPLOY >>>>"
       target_server="prod"
       folder_name="reclamo_ciudadano"
-      mv .infra/.env_prod .env
       cat $ansible_credentials_yml >> .infra/.ansible/cred.yml
+      mv docker-compose.prod.yml docker-compose.yml
+      mv .infra/.env_prod .env
     - chmod +x .infra/.ansible/inject_secrets.sh
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
