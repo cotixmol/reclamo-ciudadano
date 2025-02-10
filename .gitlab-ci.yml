@@ -1,9 +1,9 @@
 stages:
+  - migrate
   - build-back
   - deploy-back
   - build-front
   - deploy-front
-  - migrate
 
 ##########################
 #     DEV PIPELINE
@@ -175,6 +175,7 @@ main_build_front:
       target_server="prod"
       echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
     - cd frontend-rc
+    - echo "API_URL=http://reclamos.reputacion.digital:8007/api/v1" > .env
     - docker build --build-arg NODE_ENV=production -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
 
