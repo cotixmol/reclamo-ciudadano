@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { ClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes';
+import { RawClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes';
 
 export async function loadAllClaimsTypesAtBootstart(): Promise<
-  ClaimTypesResponse[]
+  RawClaimTypesResponse[]
 > {
   try {
-    const response = await axios.get<ClaimTypesResponse[]>(
+    const response = await axios.get<RawClaimTypesResponse[]>(
       `${process.env.API_URL}/claim_types`
     );
     return response.data;

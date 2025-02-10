@@ -4,7 +4,9 @@ const MAX_SIZE = 10 * 1024 * 1024;
 
 export const PutObjectInS3 = async (url: string, file: File): Promise<void> => {
   if (file.size > MAX_SIZE) {
-    throw new Error(`Failed to upload ${file.name}. File exceeds the 10MB limit.`);
+    throw new Error(
+      `Failed to upload ${file.name}. File exceeds the 10MB limit.`
+    );
   }
 
   try {
