@@ -89,7 +89,7 @@ dev_migrate:
   image: python:3.12-slim-bookworm
   tags:
     - saas
-  needs: [dev_deploy]
+  # needs: [dev_deploy]
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
@@ -209,7 +209,7 @@ main_migrate:
   image: python:3.12-slim-bookworm
   tags:
     - saas
-  needs: [main_deploy_front]
+  # needs: [main_deploy_front]
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
   script:
