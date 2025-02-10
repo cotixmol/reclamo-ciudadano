@@ -1,9 +1,9 @@
 'use client';
 import React, { createContext, useContext } from 'react';
-import { ClaimTypesResponse } from '../models/claimTypes/types/claimTypes';
+import { RawClaimTypesResponse } from '../models/claimTypes/types/claimTypes';
 
 type ClaimsContextType = {
-  claimTypes: ClaimTypesResponse[];
+  claimTypes: RawClaimTypesResponse[];
 };
 
 const ClaimsContext = createContext<ClaimsContextType | undefined>(undefined);
@@ -12,7 +12,7 @@ export function ClaimTypesProvider({
   claimTypes,
   children,
 }: {
-  claimTypes: ClaimTypesResponse[];
+  claimTypes: RawClaimTypesResponse[];
   children: React.ReactNode;
 }) {
   return (

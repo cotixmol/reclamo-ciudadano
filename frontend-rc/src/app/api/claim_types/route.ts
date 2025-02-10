@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { toCamelCase } from '@/app/utils/toCamelCase';
-import { ClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes';
+import { RawClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes';
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
-    const response = await axios.get<ClaimTypesResponse[]>(
+    const response = await axios.get<RawClaimTypesResponse[]>(
       `${process.env.API_URL}/claim_types`
     );
-    const transformedData: ClaimTypesResponse[] = toCamelCase(response.data);
+    const transformedData: RawClaimTypesResponse[] = toCamelCase(response.data);
     return NextResponse.json(transformedData, { status: 200 });
   } catch (error: unknown) {
     console.error('Error fetching types of claim:', error);
