@@ -152,6 +152,7 @@ main_deploy_back:
     - chmod +x .infra/.ansible/inject_secrets.sh
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/front:\${IMAGE_VERSION}/front:${PREV_VERSION}/g"  docker-compose.yml
+    - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
     - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
     - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
 
