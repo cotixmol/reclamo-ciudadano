@@ -1,0 +1,34 @@
+{
+  "formTitle": "Create a Claim",
+  "claimTitle": "Title",
+  "claimDescription": "Description",
+  "priorityDescription": "Select the priority level based on the urgency and impact of your claim.",
+  "claimType": "Claim Type",
+  "claimLatitude": "Latitude",
+  "claimLongitude": "Longitude",
+  "claimSubmitButton": "Submit",
+  "multimediaUpload": "Upload Multimedia",
+  "placeholder": {
+    "enterTitle": "Enter title",
+    "enterDescription": "Enter description",
+    "enterLatitude": "Enter latitude",
+    "enterLongitude": "Enter longitude",
+    "chooseAnOption": "Choose an option"
+  },
+  "priority": {
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High"
+  },
+  "selectFiles": "Click here to upload up to 5 images or videos (up to 10MB each).",
+  "200characters": "/200 characters",
+  "1000characters": "/1000 characters",
+  "chosenAddress": "Chosen Address",
+  "claimLocation": "Click the magnifying glass and enter the address of the claim",
+  "selectLocationTitle": "Select the Location",
+  "selectLocationSubtitle": "Search for an address and drag the marker to set your location.",
+  "priorityLabelTitle": "Priority",
+  "missingLocationTooltip": "A location must be selected in the map above.",
+  "filesLimitError": "You can upload up to 5 files",
+  "sizeLimitError": "is bigger than the 10MB limit."
+}

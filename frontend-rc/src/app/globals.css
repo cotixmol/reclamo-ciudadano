@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap');
+@import 'leaflet/dist/leaflet.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* globals.css */
+html,
+body {
+  font-family: 'Raleway', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 1.5;
+  background-color: #e4047d;
+  color: #554b4b;
+}
+
+/* Anchor tag styling reset */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Map input text */
+
+.leaflet-control-geocoder-form input {
+  color: #e4047d;
+}

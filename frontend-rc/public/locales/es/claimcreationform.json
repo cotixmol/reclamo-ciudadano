@@ -1,0 +1,34 @@
+{
+  "formTitle": "Crear un reclamo",
+  "claimTitle": "Título",
+  "claimDescription": "Descripción",
+  "priorityDescription": "Seleccione el nivel de prioridad en función de la urgencia y el impacto de su reclamo.",
+  "claimType": "Tipo de reclamo",
+  "claimLatitude": "Latitud",
+  "claimLongitude": "Longitud",
+  "claimSubmitButton": "Crear",
+  "multimediaUpload": "Subir multimedia",
+  "placeholder": {
+    "enterTitle": "Ingrese el título",
+    "enterDescription": "Ingrese la descripción",
+    "enterLatitude": "Ingrese la latitud",
+    "enterLongitude": "Ingrese la longitud",
+    "chooseAnOption": "Seleccione una opción"
+  },
+  "priority": {
+    "LOW": "Baja",
+    "MEDIUM": "Media",
+    "HIGH": "Alta"
+  },
+  "selectFiles": "  Click aqui para cargar hasta 5 imagenes o videos (hasta 10MB c/u)",
+  "200characters": "/200 caracteres",
+  "1000characters": "/1000 caracteres",
+  "chosenAddress": "Dirección elegida",
+  "claimLocation": "Pulsa la lupa y escribe la dirección del reclamo",
+  "selectLocationTitle": "Selecciona la ubicación",
+  "selectLocationSubtitle": "Busca una dirección o arrastra el marcador para establecer tu ubicación",
+  "priorityLabelTitle": "Prioridad",
+  "missingLocationTooltip": "Debe seleccionar una ubicación en el mapa superior.",
+  "filesLimitError": "Puedes subir hasta 5 archivos",
+  "sizeLimitError": "supera el limite de 10MB."
+}

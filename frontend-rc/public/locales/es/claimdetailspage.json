@@ -1,0 +1,15 @@
+{
+  "status": {
+    "Open": "Abierto",
+    "Close": "Cerrado"
+  },
+  "priority": {
+    "LOW": "Baja Prioridad",
+    "MEDIUM": "Prioridad Media",
+    "HIGH": "Alta Prioridad"
+  },
+  "title": "Titulo",
+  "description": "Descripción",
+  "updateClaim": "Actualizar Reclamo",
+  "back": "Volver"
+}

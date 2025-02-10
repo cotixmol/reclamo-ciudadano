@@ -1,0 +1,156 @@
+import uuid
+from typing import Optional, Union, List, TYPE_CHECKING
+from uuid import UUID
+from pydantic import BaseModel
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy import (
+    Column,
+    String,
+    DateTime,
+    func,
+    Integer,
+    ForeignKey,
+    Boolean,
+    text,
+    Enum as SQLAlchemyEnum,
+    ARRAY,
+)
+from pydantic import PrivateAttr
+from typing import Dict, Optional
+from sqlmodel import SQLModel, Field, Relationship
+from datetime import datetime
+from geoalchemy2 import Geometry
+from custom_types import GeometryPoint, PriorityEnum, ClaimProcessingStateEnum
+from models import MultimediaRead
+
+if TYPE_CHECKING:
+    from models import Multimedia
+
+
+class ClaimCreateRequestSchema(BaseModel):
+    title: str
+    description: str
+    type_category_id: Optional[int]  # Optional if not always provided
+    status: str  # 'Open', 'Close', or any string
+    claim_location: Union[GeometryPoint, dict]
+    priority: str  # Use an enum if you have one defined
+    files: List[str]
+    file_sizes: Optional[Dict[str, int]] = None
+
+    class Config:
+        from_attributes = True
+
+
+class ClaimUpdateRequestSchema(BaseModel):
+    title: Optional[str] = None
+    type_category_id: Optional[int] = None
+    description: Optional[str] = None
+    status: Optional[str] = None
+    claim_location: Optional[Union[GeometryPoint, dict]] = None
+    priority: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class Claim(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    public_id: UUID = Field(
+        sa_column=Column(
+            String,  # or use PG_UUID if you prefer
+            unique=True,
+            index=True,
+            nullable=False,
+        ),
+        default_factory=uuid.uuid4,
+    )
+    type_category_id: Optional[int] = Field(
+        sa_column=Column(Integer, ForeignKey("claimtypes.id"))
+    )
+    claim_location: Union[GeometryPoint, dict] = Field(
+        sa_column=Column(
+            Geometry(geometry_type="POINT", srid=4326, spatial_index=True),
+            nullable=False,
+        )
+    )
+    title: str = Field(sa_column=Column(String(255), nullable=False))
+    description: str = Field(sa_column=Column(String(1024), nullable=False))
+    status: str = Field(sa_column=Column(String(255), nullable=False))
+    processing_state: ClaimProcessingStateEnum = Field(
+        sa_column=Column(
+            SQLAlchemyEnum(
+                ClaimProcessingStateEnum, name="claim_processing_state_enum"
+            ),
+            nullable=False,
+            server_default=ClaimProcessingStateEnum.DRAFT,
+        ),
+        default=ClaimProcessingStateEnum.DRAFT,
+    )
+    priority: PriorityEnum = Field(
+        sa_column=Column(
+            SQLAlchemyEnum(PriorityEnum, name="priority_enum"),
+            nullable=False,
+            server_default="LOW",
+        ),
+        default=PriorityEnum.LOW,
+    )
+    has_multimedia: bool = Field(
+        default=False,
+        sa_column=Column(
+            Boolean,
+            nullable=False,
+            server_default=text("false"),
+        ),
+    )
+    files: List[str] = Field(
+        default_factory=list,
+        sa_column=Column(ARRAY(String), nullable=True),
+    )
+    created_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), default=func.now(), nullable=False)
+    )
+    updated_at: datetime = Field(
+        sa_column=Column(
+            DateTime(timezone=True),
+            default=func.now(),
+            onupdate=func.now(),
+            nullable=False,
+        )
+    )
+    deleted_at: Optional[datetime] = Field(
+        sa_column=Column(DateTime(timezone=True), nullable=True)
+    )
+    deleted: bool = Field(
+        default=False,
+        sa_column=Column(
+            Boolean,
+            nullable=False,
+            server_default=text("false"),
+        ),
+    )
+    multimedia: List["Multimedia"] = Relationship()
+    _file_sizes: Optional[Dict[str, int]] = PrivateAttr(default=None)
+
+    @property
+    def file_sizes(self) -> Optional[Dict[str, int]]:
+        return self._file_sizes
+
+    @file_sizes.setter
+    def file_sizes(self, value: Optional[Dict[str, int]]) -> None:
+        self._file_sizes = value
+
+
+class CreateClaimResponse(BaseModel):
+    new_claim: Claim
+    presigned_url: Optional[object] = None
+
+    class Config:
+        from_attributes = True
+
+
+class ReadClaimResponse(BaseModel):
+    claim: Claim
+    multimedia: List[MultimediaRead] = []
+
+    class Config:
+        from_attributes = True

@@ -1,0 +1,26 @@
+{
+  "name": "Reclamo Ciudadano",
+  "short_name": "Reclamo",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#e4047d",
+  "description": "Reporta problemas en tu ciudad y sigue el estado de los reclamos.",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "/icon-180.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    }
+  ]
+}

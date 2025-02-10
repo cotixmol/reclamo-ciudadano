@@ -1,0 +1,24 @@
+{
+  "hero": {
+    "title": "Welcome to Reclamo Ciudadano",
+    "subtitle": "Empowering citizens to report and resolve issues in their communities. Together, we can create better neighborhoods.",
+    "button": "View your Claims"
+  },
+  "features": {
+    "reportIssues": {
+      "title": "Report Issues Easily",
+      "description": "Submit reports about issues in your community with just a few clicks. From potholes to streetlights, your voice matters."
+    },
+    "trackProgress": {
+      "title": "Track Progress",
+      "description": "Stay informed about the status of your claims and see how they are being resolved step by step."
+    },
+    "makeDifference": {
+      "title": "Make a Difference",
+      "description": "Join a community of proactive citizens working together to improve their surroundings."
+    }
+  },
+  "footer": {
+    "text": "Made with ♥ by Reputación Digital"
+  }
+}

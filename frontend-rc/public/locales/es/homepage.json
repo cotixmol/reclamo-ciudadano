@@ -1,0 +1,24 @@
+{
+  "hero": {
+    "title": "Bienvenido a Reclamo Ciudadano",
+    "subtitle": "Empoderando a los ciudadanos para reportar y resolver problemas en sus comunidades. Juntos, podemos crear mejores barrios.",
+    "button": "Ver tus Reclamos"
+  },
+  "features": {
+    "reportIssues": {
+      "title": "Reporta Problemas Fácilmente",
+      "description": "Envía reportes sobre problemas en tu comunidad con solo unos clics. Desde baches hasta farolas, tu voz importa."
+    },
+    "trackProgress": {
+      "title": "Sigue el Progreso",
+      "description": "Mantente informado sobre el estado de tus reclamos y observa cómo se resuelven paso a paso."
+    },
+    "makeDifference": {
+      "title": "Marca la Diferencia",
+      "description": "Únete a una comunidad de ciudadanos proactivos que trabajan juntos para mejorar su entorno."
+    }
+  },
+  "footer": {
+    "text": "Hecho con ♥ por Reputación Digital"
+  }
+}
