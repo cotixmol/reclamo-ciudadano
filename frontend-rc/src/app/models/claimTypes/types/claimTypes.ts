@@ -1,6 +1,8 @@
 /** API Response Interfaces **/
-export interface ClaimTypesResponse {
-  description: string;
+export interface RawClaimTypesResponse {
   id: number;
-  category: string;
+  category_en: string;
+  description_en: string;
+  category_es: string;
+  description_es: string;
 }
