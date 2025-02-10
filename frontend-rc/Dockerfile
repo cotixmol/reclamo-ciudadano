@@ -1,27 +1,26 @@
-# Use Node.js LTS as the base image
 FROM node:18-alpine
 
-# Build argument that controls dev vs. prod
+# Set build argument (default to development)
 ARG NODE_ENV=development
 ENV NODE_ENV=$NODE_ENV
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock)
+# Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies with NODE_ENV set to development to include devDependencies
+RUN NODE_ENV=development npm install
 
-# Copy the entire application
+# Copy the rest of the application
 COPY . .
 
-# If in production mode, create the optimized build
+# If in production mode, run the optimized build
 RUN if [ "$NODE_ENV" = "production" ]; then npm run build; fi
 
-# Expose default Next.js or React port
+# Expose the default port
 EXPOSE 3000
 
-# If production, run `npm run start`; else fallback to `npm run dev`
+# Start the application: production uses "npm run start", otherwise "npm run dev"
 CMD ["sh", "-c", "if [ \"$NODE_ENV\" = \"production\" ]; then npm run start; else npm run dev; fi"]
