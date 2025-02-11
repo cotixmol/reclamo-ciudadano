@@ -17,7 +17,6 @@ dev_build_back:
     - saas
   services:
     - docker:dind
-  # Runs only on 'develop'
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   before_script:
@@ -59,7 +58,6 @@ dev_build_front:
 
 # Dev: Deploy
 dev_deploy:
-  # Put dev deploy in 'deploy-back' stage
   stage: deploy-back
   image: "ieferrari/ansible:11.0.0"
   tags:
@@ -76,7 +74,6 @@ dev_deploy:
       folder_name="reclamo_ciudadano_dev"
       cat $ansible_credentials_yml_dev >> .infra/.ansible/cred.yml
       mv .infra/.env_dev .env
-
     - chmod +x .infra/.ansible/inject_secrets.sh
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
@@ -175,8 +172,10 @@ main_build_front:
       target_server="prod"
       echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
     - cd frontend-rc
-    - echo "API_URL=http://reclamos.reputacion.digital:8007/api/v1" > .env.production
-    - echo "NEXT_PUBLIC_VERSION=$VERSION" >> .env.production
+    - cp ../.infra/.env_prod .env
+    - chmod +x ../.infra/.ansible/inject_secrets.sh
+    - ../.infra/.ansible/inject_secrets.sh
+    - source .env
     - docker build --build-arg NODE_ENV=production -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
 
