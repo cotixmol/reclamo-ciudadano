@@ -1,22 +1,34 @@
-# Variables
-COMPOSE_FILE=docker-compose.local.yml
+COMPOSE_FILE ?= docker-compose.local.yml
+DOCKER_COMPOSE = docker-compose -f $(COMPOSE_FILE)
 
-# Targets
-docker-build:
-	docker-compose -f $(COMPOSE_FILE) build
+.PHONY: help build up down restart logs ps
 
-docker-up:
-	docker-compose -f $(COMPOSE_FILE) up
+help:
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "Targets:"
+	@echo "  build    Build Docker images."
+	@echo "  up       Start containers (detached)."
+	@echo "  down     Stop and remove containers."
+	@echo "  restart  Restart containers."
+	@echo "  logs     Tail container logs."
+	@echo "  ps       List running containers."
 
-docker-down:
-	docker-compose -f $(COMPOSE_FILE) down
+build:   ## Build Docker images
+	$(DOCKER_COMPOSE) build
 
-docker-restart:
-	docker-compose -f $(COMPOSE_FILE) down
-	docker-compose -f $(COMPOSE_FILE) up
+up:      ## Start containers in detached mode
+	$(DOCKER_COMPOSE) up -d
 
-docker-logs:
-	docker-compose -f $(COMPOSE_FILE) logs -f
+down:    ## Stop and remove containers
+	$(DOCKER_COMPOSE) down
 
-docker-ps:
-	docker-compose -f $(COMPOSE_FILE) ps
+restart: ## Restart containers
+	$(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) up -d
+
+logs:    ## Tail logs of all containers
+	$(DOCKER_COMPOSE) logs -f
+
+ps:      ## List running containers
+	$(DOCKER_COMPOSE) ps
