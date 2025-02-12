@@ -39,6 +39,11 @@ command = [
     "./dev_utils/central-america-latest.osm.pbf",
 ]
 
+confirm = input("This will start the osm2pgsql import. Type 'yes' to proceed: ")
+if confirm.lower() != "yes":
+    logging.info("Import aborted by user.")
+    exit(0)
+
 logging.info("Starting osm2pgsql import...")
 
 process = subprocess.Popen(
