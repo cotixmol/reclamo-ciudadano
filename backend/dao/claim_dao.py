@@ -129,7 +129,7 @@ class ClaimSQLAlchemy(ClaimDAO):
                 claim.deleted_at = datetime.utcnow()
 
                 db.add(claim)
-                db.flush()
+                db.commit()
                 db.refresh(claim)
 
                 # Convert location if needed
@@ -214,9 +214,7 @@ class ClaimSQLAlchemy(ClaimDAO):
                     },
                 )
 
-                if updated_data.get("claim_location") and updated_data[
-                    "claim_location"
-                ].get("coordinates"):
+                if updated_data.get("claim_location", {}).get("coordinates"):
                     updated_data["claim_location"] = (
                         update_claim_request_element_to_geometry_point(
                             updated_data["claim_location"]["coordinates"]
@@ -226,9 +224,9 @@ class ClaimSQLAlchemy(ClaimDAO):
                 for key, value in updated_data.items():
                     setattr(claim_to_update, key, value)
 
-                if updated_data.get("claim_location"):
-                    updated_data.claim_location = geometry_point_to_wkb_element(
-                        updated_data.claim_location
+                if updated_data.get("claim_location", {}):
+                    claim_to_update.claim_location = geometry_point_to_wkb_element(
+                        updated_data["claim_location"]
                     )
 
                 db.add(claim_to_update)
