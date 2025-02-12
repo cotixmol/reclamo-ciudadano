@@ -78,6 +78,7 @@ export default function ClaimForm() {
         type: 'Point',
         coordinates: [parseFloat(longitude), parseFloat(latitude)],
       },
+      address: locationName,
       priority,
       files: fileNames,
       file_sizes: fileSizesByName,

@@ -30,10 +30,11 @@ if TYPE_CHECKING:
 class ClaimCreateRequestSchema(BaseModel):
     title: str
     description: str
-    type_category_id: Optional[int]  # Optional if not always provided
-    status: str  # 'Open', 'Close', or any string
+    type_category_id: Optional[int]
+    status: str  # TODO: Add enums
     claim_location: Union[GeometryPoint, dict]
-    priority: str  # Use an enum if you have one defined
+    address: str  # New field added
+    priority: str  # TODO: Add enums
     files: List[str]
     file_sizes: Optional[Dict[str, int]] = None
 
@@ -47,6 +48,7 @@ class ClaimUpdateRequestSchema(BaseModel):
     description: Optional[str] = None
     status: Optional[str] = None
     claim_location: Optional[Union[GeometryPoint, dict]] = None
+    address: Optional[str] = None
     priority: Optional[str] = None
 
     class Config:
@@ -73,6 +75,7 @@ class Claim(SQLModel, table=True):
             nullable=False,
         )
     )
+    address: str = Field(sa_column=Column(String(255), nullable=True))
     title: str = Field(sa_column=Column(String(255), nullable=False))
     description: str = Field(sa_column=Column(String(1024), nullable=False))
     status: str = Field(sa_column=Column(String(255), nullable=False))
