@@ -2,7 +2,7 @@ from shapely import wkb
 
 
 def main():
-    wkb_hex = "0101000020E61000005BF2A8BBA54C41C010B19E2E08324DC0"
+    wkb_hex = "0101000020E61000002203530B24524EC0F04CD90C2F7A40C0"
 
     wkb_bytes = bytes.fromhex(wkb_hex)
 

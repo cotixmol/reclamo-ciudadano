@@ -76,7 +76,7 @@ export default function ClaimForm() {
       type_category_id: selectedClaimTypeId ?? 1,
       claim_location: {
         type: 'Point',
-        coordinates: [parseFloat(latitude), parseFloat(longitude)],
+        coordinates: [parseFloat(longitude), parseFloat(latitude)],
       },
       priority,
       files: fileNames,
