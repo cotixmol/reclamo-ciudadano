@@ -6,3 +6,5 @@ __pycache__
 
 .ansible/cred.yml
 .infra/cred.yml
+
+*.osm.pbf
