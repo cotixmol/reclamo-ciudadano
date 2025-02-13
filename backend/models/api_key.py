@@ -1,10 +1,20 @@
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
-from sqlalchemy import Column, String, DateTime, func, Boolean, text, ForeignKey
-
-if TYPE_CHECKING:
-    from models.clients import Client
+from sqlalchemy import (
+    Column,
+    String,
+    DateTime,
+    func,
+    Boolean,
+    text,
+    ForeignKey,
+    Enum as SQLAlchemyEnum,
+)
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+import uuid
+from .clients import Client
+from custom_types import ApiKeyRole
 
 
 class ApiKey(SQLModel, table=True):
@@ -29,4 +39,9 @@ class ApiKey(SQLModel, table=True):
     active: bool = Field(
         default=True,
         sa_column=Column(Boolean, nullable=False, server_default=text("true")),
+    )
+    role: ApiKeyRole = Field(
+        sa_column=Column(
+            SQLAlchemyEnum(ApiKeyRole), nullable=False, server_default=ApiKeyRole.client
+        )
     )

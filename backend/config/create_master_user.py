@@ -2,12 +2,12 @@ import secrets
 from sqlalchemy import select
 from sqlmodel import Session
 from config import db_reporte_ciudadano
-from models.clients import Client
-from models.api_key import ApiKey
+from models import Client, ApiKey
+from custom_types import ApiKeyRole
 
 
 def seed_data(session: Session):
-    client_name = "Reputación Digital"
+    client_name = "Reputación Digital Master"
     existing_client = session.exec(
         select(Client).where(Client.name == client_name)
     ).first()
@@ -19,13 +19,15 @@ def seed_data(session: Session):
     session.add(client)
     session.commit()
     session.refresh(client)
+
     key = secrets.token_hex(32)
-    api_key_record = ApiKey(client_id=client.id, key=key)
+    # Create the API key with the SUPERADMIN role
+    api_key_record = ApiKey(client_id=client.id, key=key, role=ApiKeyRole.superadmin)
     session.add(api_key_record)
     session.commit()
     session.refresh(api_key_record)
 
-    print("Successfully seeded client and API key. Store the key securely!")
+    print("Successfully seeded client and SUPERADMIN API key. Store the key securely!")
 
 
 if __name__ == "__main__":
