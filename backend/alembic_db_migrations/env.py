@@ -27,15 +27,11 @@ target_metadata = SQLModel.metadata
 
 
 def custom_include_object(object_, name, type_, reflected, compare_to):
-    """
-    Custom function to exclude certain tables from Alembic autogenerate,
-    while still deferring to GeoAlchemy2's helper for PostGIS columns.
-    """
-    # If it's a table that we want to exclude, skip it:
+    # Skip entire tables in EXCLUDE_TABLES
     if type_ == "table" and name in EXCLUDE_TABLES:
         return False
 
-    # Otherwise, let the geoalchemy2 default logic decide
+    # Let the GeoAlchemy2 logic handle geometry columns
     return alembic_helpers.include_object(object_, name, type_, reflected, compare_to)
 
 

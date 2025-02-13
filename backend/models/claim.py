@@ -1,4 +1,5 @@
 import uuid
+from sqlalchemy import Index
 from typing import Optional, Union, List, TYPE_CHECKING
 from uuid import UUID
 from pydantic import BaseModel
@@ -56,10 +57,17 @@ class ClaimUpdateRequestSchema(BaseModel):
 
 
 class Claim(SQLModel, table=True):
+    __tablename__ = "claim"
+
+    # Explicitly define the GiST index in table args
+    __table_args__ = (
+        Index("idx_claim_location", "claim_location", postgresql_using="gist"),
+    )
+
     id: Optional[int] = Field(default=None, primary_key=True)
     public_id: UUID = Field(
         sa_column=Column(
-            String,  # or use PG_UUID if you prefer
+            PG_UUID(as_uuid=True),
             unique=True,
             index=True,
             nullable=False,
