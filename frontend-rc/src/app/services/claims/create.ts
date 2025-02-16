@@ -27,7 +27,7 @@ export async function createClaim(
     console.error('Error creating claim:', error);
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
-      throw new Error(data?.error || 'Failed to create claim');
+      throw new Error(typeof data === 'object' ? JSON.stringify(data) : data || 'Failed to create claim');
     }
     throw new Error('An unknown error occurred while creating claim');
   }

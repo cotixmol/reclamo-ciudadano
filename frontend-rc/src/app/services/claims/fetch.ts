@@ -23,7 +23,7 @@ export async function fetchAllClaimsByPublicIds(): Promise<
 
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
-      throw new Error(data?.error || 'Failed to fetch claims');
+      throw new Error(typeof data === 'object' ? JSON.stringify(data) : data || 'Failed to fetch claims');
     }
     throw new Error('An unknown error occurred');
   }
@@ -40,7 +40,7 @@ export async function fetchClaimByPublicId(
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
-      throw new Error(data?.error || 'Failed to fetch claim');
+      throw new Error(typeof data === 'object' ? JSON.stringify(data) : data || 'Failed to fetch claim');
     }
     throw new Error('An unknown error occurred while fetching claim');
   }

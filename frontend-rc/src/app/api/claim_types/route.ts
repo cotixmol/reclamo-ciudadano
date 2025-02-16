@@ -1,13 +1,12 @@
+// src/app/api/route.ts
 import { NextResponse } from 'next/server';
-import axios from 'axios';
+import apiClient from '@/app/middleware/apiClients';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import { RawClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes';
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
-    const response = await axios.get<RawClaimTypesResponse[]>(
-      `${process.env.API_URL}/claim_types`
-    );
+    const response = await apiClient.get<RawClaimTypesResponse[]>('/claim_types');
     const transformedData: RawClaimTypesResponse[] = toCamelCase(response.data);
     return NextResponse.json(transformedData, { status: 200 });
   } catch (error: unknown) {
