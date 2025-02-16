@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from service import MultimediaService
+from dependencies import validate_api_key_and_client
 from errors import MultimediaNotCreatedError
 from dependencies import get_multimedia_service
 from models import Multimedia, MultimediaCreateRequest
 
-multimedia_router = APIRouter()
+multimedia_router = APIRouter(dependencies=[Depends(validate_api_key_and_client)])
 
 
 @multimedia_router.post("/multimedia_metadata", response_model=List[Multimedia])

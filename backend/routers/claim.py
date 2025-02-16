@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from service import ClaimService, StoreObjectService
 from typing import Optional
-from dependencies import get_claim_service, get_store_object_service
+from dependencies import (
+    get_claim_service,
+    get_store_object_service,
+    validate_api_key_and_client,
+)
 from models import (
     Claim,
     CreateClaimResponse,
@@ -24,7 +28,7 @@ from config.db import db_reporte_ciudadano
 from sqlmodel import Session
 
 
-claim_router = APIRouter()
+claim_router = APIRouter(dependencies=[Depends(validate_api_key_and_client)])
 
 
 @claim_router.post("/claims/", response_model=List[ReadClaimResponse])

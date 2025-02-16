@@ -1,7 +1,10 @@
 from datetime import datetime
-from typing import Optional
-from sqlmodel import SQLModel, Field
+from typing import Optional, List, TYPE_CHECKING
+from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import Column, DateTime, func, Boolean, text
+
+if TYPE_CHECKING:
+    from .api_key import ApiKey
 
 
 class Client(SQLModel, table=True):
@@ -27,3 +30,5 @@ class Client(SQLModel, table=True):
         default=False,
         sa_column=Column(Boolean, nullable=False, server_default=text("false")),
     )
+
+    api_keys: List["ApiKey"] = Relationship(back_populates="client")

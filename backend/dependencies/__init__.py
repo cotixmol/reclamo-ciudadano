@@ -2,3 +2,4 @@ from .claim_dependency import get_claim_service
 from .claim_types_dependency import get_claim_types_service
 from .store_object_dependency import get_store_object_service
 from .multimedia_dependency import get_multimedia_service
+from .auth_dependency import get_auth_service, validate_api_key_and_client

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from datetime import datetime
 from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import (
@@ -12,9 +12,11 @@ from sqlalchemy import (
     Enum as SQLAlchemyEnum,
 )
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
-import uuid
-from .clients import Client
 from custom_types import ApiKeyRole
+
+
+if TYPE_CHECKING:
+    from .clients import Client
 
 
 class ApiKey(SQLModel, table=True):
@@ -45,3 +47,5 @@ class ApiKey(SQLModel, table=True):
             SQLAlchemyEnum(ApiKeyRole), nullable=False, server_default=ApiKeyRole.client
         )
     )
+
+    client: Optional["Client"] = Relationship(back_populates="api_keys")
