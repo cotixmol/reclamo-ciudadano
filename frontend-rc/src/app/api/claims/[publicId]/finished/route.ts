@@ -15,6 +15,10 @@ export async function POST(request: Request, context: any) {
       null,
       {
         validateStatus: () => true,
+        headers: {
+          'x-api-key': process.env.API_KEY || '',
+          'x-client-name': process.env.API_CLIENT_NAME || '',
+        },
       }
     );
 

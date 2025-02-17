@@ -8,6 +8,11 @@ import {
   ClaimErrorResponse,
 } from '@/app/models/claims/types/claim';
 
+const headersConfig = {
+  'x-api-key': process.env.API_KEY || '',
+  'x-client-name': process.env.API_CLIENT_NAME || '',
+};
+
 export async function GET(
   request: Request,
   context: any
@@ -22,6 +27,7 @@ export async function GET(
       ClaimWithMultimediaResponse | ClaimErrorResponse
     >(`${process.env.API_URL}/claim/${publicId}`, {
       validateStatus: () => true,
+      headers: headersConfig,
     });
 
     if (backendResponse.status !== 200) {
@@ -67,6 +73,7 @@ export async function DELETE(
       ClaimResponse | ClaimErrorResponse
     >(`${process.env.API_URL}/claim/${publicId}`, {
       validateStatus: () => true,
+      headers: headersConfig,
     });
 
     if (backendResponse.status !== 200) {
@@ -111,6 +118,7 @@ export async function PUT(
       body,
       {
         validateStatus: () => true,
+        headers: headersConfig,
       }
     );
 

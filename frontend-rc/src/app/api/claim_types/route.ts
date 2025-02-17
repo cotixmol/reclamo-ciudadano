@@ -6,7 +6,13 @@ import { RawClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes'
 export async function GET(request: Request): Promise<NextResponse> {
   try {
     const response = await axios.get<RawClaimTypesResponse[]>(
-      `${process.env.API_URL}/claim_types`
+      `${process.env.API_URL}/claim_types`,
+      {
+        headers: {
+          'x-api-key': process.env.API_KEY || '',
+          'x-client-name': process.env.API_CLIENT_NAME || '',
+        },
+      }
     );
     const transformedData: RawClaimTypesResponse[] = toCamelCase(response.data);
     return NextResponse.json(transformedData, { status: 200 });

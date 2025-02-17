@@ -14,6 +14,10 @@ export async function POST(request: Request) {
       MultimediaMetadataResponse | MultimediaErrorResponse
     >(`${process.env.API_URL}/multimedia_metadata`, body, {
       validateStatus: () => true,
+      headers: {
+        'x-api-key': process.env.API_KEY || '',
+        'x-client-name': process.env.API_CLIENT_NAME || '',
+      },
     });
     if (backendResponse.status !== 200) {
       const backendError = backendResponse.data as MultimediaErrorResponse;

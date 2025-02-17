@@ -15,6 +15,10 @@ export async function POST(request: Request) {
       ClaimWithMultimediaResponse[] | ClaimErrorResponse
     >(`${process.env.API_URL}/claims`, body, {
       validateStatus: () => true,
+      headers: {
+        'x-api-key': process.env.API_KEY || '',
+        'x-client-name': process.env.API_CLIENT_NAME || '',
+      },
     });
 
     if (backendResponse.status !== 200) {
