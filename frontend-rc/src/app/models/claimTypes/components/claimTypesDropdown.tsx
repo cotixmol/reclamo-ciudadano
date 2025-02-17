@@ -59,13 +59,13 @@ export default function ClaimTypesDropdown({
             {/* Use the current language to decide which fields to display */}
             <span className="font-semibold">
               {i18n.language === 'es'
-                ? selectedType.category_es
-                : selectedType.category_en}
+                ? selectedType.categoryEs
+                : selectedType.categoryEn}
             </span>
             <span className="ml-2 text-sm">
               {i18n.language === 'es'
-                ? selectedType.description_es
-                : selectedType.description_en}
+                ? selectedType.descriptionEs
+                : selectedType.descriptionEn}
             </span>
           </>
         ) : (
@@ -83,9 +83,9 @@ export default function ClaimTypesDropdown({
           {claimTypes.map((ct) => {
             const isSelected = selectedClaimTypeId === ct.id;
             const displayCategory =
-              i18n.language === 'es' ? ct.category_es : ct.category_en;
+              i18n.language === 'es' ? ct.categoryEs : ct.categoryEn;
             const displayDescription =
-              i18n.language === 'es' ? ct.description_es : ct.description_en;
+              i18n.language === 'es' ? ct.descriptionEs : ct.descriptionEn;
             return (
               <div
                 key={ct.id}

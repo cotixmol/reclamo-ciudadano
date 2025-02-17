@@ -1,3 +1,4 @@
+// src/app/services/claims/delete.ts
 import axios from 'axios';
 import { ClaimResponse } from '@/app/models/claims/types/claim';
 
@@ -13,16 +14,18 @@ export async function deleteClaimByPublicId(
 ): Promise<ClaimResponse> {
   try {
     const response = await axios.delete<ClaimResponse>(
-      `/api/claims/${publicId}`
+      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/claims/${publicId}`
     );
     removePublicId(publicId);
     return response.data;
   } catch (error) {
-    console.error('Error deleting claim by public ID:', error);
     if (axios.isAxiosError(error) && error.response) {
-      // The route sends back { error: ... }
       const { data } = error.response;
-      throw new Error(data?.error || 'Failed to delete claim');
+      throw new Error(
+        typeof data === 'object'
+          ? JSON.stringify(data)
+          : data || 'Failed to delete claim'
+      );
     }
     throw new Error('An unknown error occurred while deleting claim');
   }

@@ -23,14 +23,17 @@ export const saveMetadata = async (
     });
 
     await axios.post<MultimediaMetadataResponse[]>(
-      `/api/multimedia/${id}/create`,
+      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/multimedia/${id}/create`,
       fileMetadataArray
     );
   } catch (error) {
-    console.error('Error saving metadata:', error);
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
-      throw new Error(data?.error || 'Failed to save metadata');
+      throw new Error(
+        typeof data === 'object'
+          ? JSON.stringify(data)
+          : data?.error || 'Failed to save metadata'
+      );
     }
     throw new Error('An unknown error occurred while saving metadata');
   }

@@ -17,17 +17,20 @@ export async function createClaim(
 ): Promise<CreateNewClaimResponse> {
   try {
     const response = await axios.post<CreateNewClaimResponse>(
-      '/api/claims/create',
+      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/claims/create`,
       data
     );
     const { publicId } = response.data.newClaim;
     savePublicId(publicId);
     return response.data;
   } catch (error) {
-    console.error('Error creating claim:', error);
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
-      throw new Error(data?.error || 'Failed to create claim');
+      throw new Error(
+        typeof data === 'object'
+          ? JSON.stringify(data)
+          : data || 'Failed to create claim'
+      );
     }
     throw new Error('An unknown error occurred while creating claim');
   }
