@@ -20,8 +20,9 @@ export async function deleteClaimByPublicId(
   } catch (error) {
     console.error('Error deleting claim by public ID:', error);
     if (axios.isAxiosError(error) && error.response) {
+      // The route sends back { error: ... }
       const { data } = error.response;
-      throw new Error(typeof data === 'object' ? JSON.stringify(data) : data || 'Failed to delete claim');
+      throw new Error(data?.error || 'Failed to delete claim');
     }
     throw new Error('An unknown error occurred while deleting claim');
   }

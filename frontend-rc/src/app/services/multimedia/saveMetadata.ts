@@ -30,7 +30,7 @@ export const saveMetadata = async (
     console.error('Error saving metadata:', error);
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
-      throw new Error(typeof data === 'object' ? JSON.stringify(data) : data || 'Failed to save metadata');
+      throw new Error(data?.error || 'Failed to save metadata');
     }
     throw new Error('An unknown error occurred while saving metadata');
   }
