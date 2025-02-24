@@ -98,13 +98,13 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
 
         {/* Button to Open Camera */}
         <div
-          className={`flex items-center bg-RCColors-700 rounded p-2 focus-within:ring-2 focus-within:ring-primary ${
+          className={`flex items-center justify-center bg-primary rounded p-2 focus-within:ring-2 focus-within:ring-primary ${
             isMobile ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
           }`}
           onClick={openCamera}
         >
-          <FiCamera className="text-RCColors-400 mr-2" />
-          <span className="text-RCColors-400">{t('openCamera')}</span>
+          <FiCamera className="mr-2" />
+          <span>{t('openCamera')}</span>
           <input
             type="file"
             ref={cameraInputRef}

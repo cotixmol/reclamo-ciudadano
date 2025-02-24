@@ -20,7 +20,7 @@
     "MEDIUM": "Medium",
     "HIGH": "High"
   },
-  "selectFiles": "Click here to upload up to 5 images or videos (up to 10MB each).",
+  "selectFiles": "Upload up to 5 images or videos",
   "200characters": "/200 characters",
   "1000characters": "/1000 characters",
   "chosenAddress": "Chosen Address",

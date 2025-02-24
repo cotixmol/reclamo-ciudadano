@@ -150,8 +150,7 @@ export default function MapSelector({
         type="button"
         onClick={handleGetCurrentLocation}
         disabled={isLocating}
-        className="absolute z-[999] right-3 top-3 bg-RCColors-700 text-white px-3 py-1
-                   rounded hover:bg-RCColors-600 shadow flex items-center space-x-2"
+        className="absolute z-[999] text-sm left-3 top-12 bg-RCColors-700 text-white px-3 py-1 rounded hover:bg-RCColors-600 shadow flex items-center space-x-2"
       >
         {isLocating ? (
           <>
