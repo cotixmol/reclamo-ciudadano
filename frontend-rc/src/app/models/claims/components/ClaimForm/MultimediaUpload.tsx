@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { FiPaperclip, FiTrash2 } from 'react-icons/fi';
+import { FiPaperclip, FiTrash2, FiCamera } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 
 interface MultimediaUploadProps {
@@ -17,14 +17,18 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
 }) => {
   const { t } = useTranslation('claimcreationform');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const cameraInputRef = useRef<HTMLInputElement | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const MAX_SIZE = 10 * 1024 * 1024; //10MB
+
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrorMessage(null);
     if (!e.target.files) return;
-    const selectedFiles = Array.from(e.target.files);
 
+    const selectedFiles = Array.from(e.target.files);
     if (files.length + selectedFiles.length > 5) {
       setErrorMessage(t('filesLimitError'));
       return;
@@ -38,8 +42,8 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
       return true;
     });
 
-    setFiles([...files, ...validFiles]);
-    setFileNames([...fileNames, ...validFiles.map((file) => file.name)]);
+    setFiles((prev) => [...prev, ...validFiles]);
+    setFileNames((prev) => [...prev, ...validFiles.map((f) => f.name)]);
   };
 
   const handleDelete = (index: number) => {
@@ -51,31 +55,62 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
     setFileNames(newFileNames);
   };
 
-  const handleClick = () => {
+  const openFileBrowser = () => {
     fileInputRef.current?.click();
+  };
+
+  const openCamera = () => {
+    // Only trigger camera if isMobile is true
+    if (!isMobile) return;
+    cameraInputRef.current?.click();
   };
 
   return (
     <div>
-      {/* Display error message above the input fields */}
       {errorMessage && (
         <div className="mb-2 text-red-500 text-sm">{errorMessage}</div>
       )}
       <label className="block mb-1">{t('multimediaUpload')}</label>
-      <div
-        className="flex items-center bg-RCColors-700 rounded p-2 focus-within:ring-2 focus-within:ring-primary cursor-pointer"
-        onClick={handleClick}
-      >
-        <FiPaperclip className="text-RCColors-400 mr-2" />
-        <span className="text-RCColors-400">{t('selectFiles')}</span>
-        <input
-          type="file"
-          ref={fileInputRef}
-          multiple
-          accept="image/*,video/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
+
+      <div className="flex space-x-2">
+        {/* Button to Select Files */}
+        <div
+          className="flex flex-1 items-center bg-RCColors-700 rounded p-2 
+                     focus-within:ring-2 focus-within:ring-primary 
+                     cursor-pointer"
+          onClick={openFileBrowser}
+        >
+          <FiPaperclip className="text-RCColors-400 mr-2" />
+          <span className="text-RCColors-400">{t('selectFiles')}</span>
+          <input
+            type="file"
+            ref={fileInputRef}
+            multiple
+            accept="image/*,video/*"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        </div>
+
+        {/* Button to Open Camera */}
+        <div
+          className={`flex items-center bg-RCColors-700 rounded p-2 focus-within:ring-2 focus-within:ring-primary ${
+            isMobile ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+          }`}
+          onClick={openCamera}
+        >
+          <FiCamera className="text-RCColors-400 mr-2" />
+          <span className="text-RCColors-400">{t('openCamera')}</span>
+          <input
+            type="file"
+            ref={cameraInputRef}
+            accept="image/*"
+            capture="environment"
+            onChange={handleFileChange}
+            className="hidden"
+            disabled={!isMobile}
+          />
+        </div>
       </div>
 
       {/* Display Selected Files */}
@@ -90,7 +125,7 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
               <button
                 type="button"
                 onClick={() => handleDelete(index)}
-                className="text-primary hover:text- RCPink-hover"
+                className="text-primary hover:text-RCPink-hover"
                 aria-label={`Delete ${name}`}
               >
                 <FiTrash2 className="w-5 h-5" />

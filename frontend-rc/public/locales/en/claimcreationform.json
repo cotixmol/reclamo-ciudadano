@@ -30,5 +30,6 @@
   "priorityLabelTitle": "Priority",
   "missingLocationTooltip": "A location must be selected in the map above.",
   "filesLimitError": "You can upload up to 5 files",
-  "sizeLimitError": "is bigger than the 10MB limit."
+  "sizeLimitError": "is bigger than the 10MB limit.",
+  "openCamera": "Open Camera"
 }
