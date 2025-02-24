@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FiPaperclip, FiTrash2, FiCamera } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 
@@ -19,11 +19,15 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
-  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
+  useEffect(() => {
+    if (typeof navigator !== 'undefined') {
+      setIsMobile(/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
+    }
+  }, []);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrorMessage(null);
     if (!e.target.files) return;

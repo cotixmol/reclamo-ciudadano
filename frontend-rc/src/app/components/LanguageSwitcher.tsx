@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiChevronDown } from 'react-icons/fi'; // Import Chevron icon from React Icons

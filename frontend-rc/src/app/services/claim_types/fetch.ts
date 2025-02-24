@@ -1,15 +1,21 @@
 import axios from 'axios';
 import { RawClaimTypesResponse } from '@/app/models/claimTypes/types/claimTypes';
-import { headers } from 'next/headers';
+import { toCamelCase } from '@/app/utils/toCamelCase';
 
-export async function loadAllClaimsTypesAtBootstart(): Promise<
-  RawClaimTypesResponse[]
-> {
+export async function loadAllClaimsTypesAtBootstart(): Promise<RawClaimTypesResponse[]> {
   try {
-    const response = await axios.get<RawClaimTypesResponse[]>(
-      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/claim_types`
-    );
-    return response.data;
+    const endpoint = `${process.env.API_URL}/claim_types`;
+
+    const response = await axios.get<RawClaimTypesResponse[]>(endpoint, {
+      headers: {
+        'x-api-key': process.env.API_KEY || '',
+        'x-client-name': process.env.API_CLIENT_NAME || '',
+      },
+    });
+
+    const transformedData = toCamelCase(response.data) as RawClaimTypesResponse[];
+
+    return transformedData;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;

@@ -15,17 +15,20 @@ import { ClaimCreateRequest, PriorityEnum } from '../../types/claim';
 import dynamic from 'next/dynamic';
 import TitleInput from './TitleInput';
 import DescriptionInput from './DescriptionInput';
-import MultimediaUpload from './MultimediaUpload';
-import PrioritySection from './PrioritySection';
 import SubmitButton from './SubmitButton';
 import ClaimTypesDropdown from '@/app/models/claimTypes/components/claimTypesDropdown';
 import LoadingMap from './Map/LoadingMap';
 import { PutObjectInS3 } from '@/app/services/s3/putObject';
 import { saveMetadata } from '@/app/services/multimedia/saveMetadata';
+import PrioritySection from './PrioritySection';
 
 const MapSelector = dynamic(() => import('./Map/MapSelector'), {
   ssr: false,
   loading: () => <LoadingMap />,
+});
+
+const MultimediaUpload = dynamic(() => import('./MultimediaUpload'), {
+  ssr: false,
 });
 
 export default function ClaimForm() {

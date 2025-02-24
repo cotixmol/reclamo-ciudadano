@@ -8,11 +8,7 @@ import { validate as isUUID } from 'uuid';
 
 import '../../../i18n';
 import { deleteClaimByPublicId } from '@/app/services/claims/delete';
-import {
-  ClaimWithMultimediaResponse,
-  ClaimStatusEnum,
-  PriorityEnum,
-} from '../types/claim';
+import { ClaimWithMultimediaResponse } from '../types/claim';
 import DeleteClaimConfirmationPopUp from './DeleteClaimConfirmationPopUp';
 import Carousel, { MediaFile } from '@/app/components/Carousel';
 import { getStatusColor, getPriorityColor } from '@/app/utils/claimColors';
