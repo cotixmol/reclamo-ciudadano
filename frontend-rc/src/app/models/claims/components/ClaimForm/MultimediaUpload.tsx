@@ -63,11 +63,11 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
       )}
       <label className="block mb-1">{t('multimediaUpload')}</label>
       <div
-        className="flex items-center bg-gray-700 rounded p-2 focus-within:ring-2 focus-within:ring-primary cursor-pointer"
+        className="flex items-center bg-RCColors-700 rounded p-2 focus-within:ring-2 focus-within:ring-primary cursor-pointer"
         onClick={handleClick}
       >
-        <FiPaperclip className="text-gray-400 mr-2" />
-        <span className="text-gray-400">{t('selectFiles')}</span>
+        <FiPaperclip className="text-RCColors-400 mr-2" />
+        <span className="text-RCColors-400">{t('selectFiles')}</span>
         <input
           type="file"
           ref={fileInputRef}
@@ -84,13 +84,13 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
           {fileNames.map((name, index) => (
             <li
               key={index}
-              className="flex items-center justify-between bg-gray-800 p-2 rounded mb-1"
+              className="flex items-center justify-between bg-RCColors-800 p-2 rounded mb-1"
             >
               <span>{name}</span>
               <button
                 type="button"
                 onClick={() => handleDelete(index)}
-                className="text-primary hover:text-primary-hover"
+                className="text-primary hover:text- RCPink-hover"
                 aria-label={`Delete ${name}`}
               >
                 <FiTrash2 className="w-5 h-5" />

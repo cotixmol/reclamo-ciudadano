@@ -36,7 +36,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="relative min-h-screen bg-gray-900 text-gray-200">
+      <body className="relative min-h-screen bg-RCColors-900 text-RCColors-200">
         <ClaimTypesProvider claimTypes={claimTypes}>
           <div className="pb-28">{children}</div>
           <BottomNavBar />

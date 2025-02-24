@@ -105,7 +105,7 @@ export default function MapSelector({
 
   return (
     <MapContainer
-      className="w-full h-64 border-2 border-gray-700 rounded-lg shadow-lg relative"
+      className="w-full h-64 border-2 border-RCColors-700 rounded-lg shadow-lg relative"
       center={center}
       zoom={16}
       scrollWheelZoom

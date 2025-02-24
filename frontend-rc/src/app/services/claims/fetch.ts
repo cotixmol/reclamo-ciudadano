@@ -6,7 +6,9 @@ function getStoredPublicIds(): string[] {
   return existing ? JSON.parse(existing) : [];
 }
 
-export async function fetchAllClaimsByPublicIds(): Promise<ClaimWithMultimediaResponse[]> {
+export async function fetchAllClaimsByPublicIds(): Promise<
+  ClaimWithMultimediaResponse[]
+> {
   const publicIds = getStoredPublicIds();
   try {
     const response = await axios.post<ClaimWithMultimediaResponse[]>(
@@ -20,12 +22,15 @@ export async function fetchAllClaimsByPublicIds(): Promise<ClaimWithMultimediaRe
     console.error('Error fetching claims:', error);
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
-      throw new Error(typeof data === 'object' ? JSON.stringify(data) : data || 'Failed to fetch claim');
+      throw new Error(
+        typeof data === 'object'
+          ? JSON.stringify(data)
+          : data || 'Failed to fetch claim'
+      );
     }
     throw new Error('An unknown error occurred');
   }
 }
-
 
 export async function fetchClaimByPublicId(
   publicId: string

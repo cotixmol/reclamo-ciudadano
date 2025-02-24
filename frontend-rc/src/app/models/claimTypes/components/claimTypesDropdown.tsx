@@ -52,7 +52,7 @@ export default function ClaimTypesDropdown({
       <button
         type="button"
         onClick={handleToggle}
-        className="w-full p-2 bg-gray-700 rounded flex justify-between items-center text-left focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full p-2 bg-RCColors-700 rounded flex justify-between items-center text-left focus:outline-none focus:ring-2 focus:ring-primary"
       >
         {selectedType ? (
           <>
@@ -77,7 +77,7 @@ export default function ClaimTypesDropdown({
       </button>
       {isOpen && (
         <div
-          className="absolute z-50 mt-1 w-full bg-gray-800 rounded shadow-lg border-2 border-gray-500 max-h-28 overflow-y-auto"
+          className="absolute z-50 mt-1 w-full bg-RCColors-800 rounded shadow-lg border-2 border-RCColors-500 max-h-28 overflow-y-auto"
           style={{ maxHeight: '200px' }}
         >
           {claimTypes.map((ct) => {
@@ -90,7 +90,7 @@ export default function ClaimTypesDropdown({
               <div
                 key={ct.id}
                 onClick={() => handleSelect(ct.id)}
-                className={`cursor-pointer px-3 py-2 hover:bg-gray-700 ${isSelected ? 'text-primary font-semibold' : ''}`}
+                className={`cursor-pointer px-3 py-2 hover:bg-RCColors-700 ${isSelected ? 'text-primary font-semibold' : ''}`}
               >
                 <div>{displayCategory}</div>
                 <div className="text-sm">{displayDescription}</div>

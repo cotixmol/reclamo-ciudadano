@@ -9,10 +9,10 @@ export default function HomePage() {
   const { t } = useTranslation('homepage'); // Use 'homepage' namespace
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-5 relative">
+    <div className="min-h-screen bg-RCColors-900 text-RCColors-100 p-5 relative">
       {/* Version Info at Top-Left */}
       <div className="flex justify-between items-center">
-        <div className="text-xs text-gray-400 flex self-start">
+        <div className="text-xs text-RCColors-400 flex self-start">
           v.{process.env.NEXT_PUBLIC_VERSION}
         </div>
 
@@ -24,16 +24,16 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <div className="max-w-4xl mx-auto text-center py-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#e4047d] mb-6">
+        <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
           {t('hero.title')}
         </h1>
-        <p className="text-lg md:text-xl text-gray-300 mb-8">
+        <p className="text-lg md:text-xl text-RCColors-300 mb-8">
           {t('hero.subtitle')}
         </p>
         <Link href="/models/claims/pages" passHref>
           <button
             type="button"
-            className="px-6 py-3 bg-primary text-lg font-semibold rounded-lg shadow-lg hover:bg-primary-hover transition-all duration-300"
+            className="px-6 py-3 bg-primary text-lg font-semibold rounded-lg shadow-lg hover:bg- RCPink-hover transition-all duration-300"
           >
             {t('hero.button')}
           </button>
@@ -42,36 +42,36 @@ export default function HomePage() {
 
       {/* Features Section */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-100 mb-4">
+        <div className="bg-RCColors-800 rounded-lg shadow-lg p-6">
+          <h2 className="text-xl font-semibold text-RCColors-100 mb-4">
             {t('features.reportIssues.title')}
           </h2>
-          <p className="text-gray-300 text-sm leading-relaxed">
+          <p className="text-RCColors-300 text-sm leading-relaxed">
             {t('features.reportIssues.description')}
           </p>
         </div>
 
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-100 mb-4">
+        <div className="bg-RCColors-800 rounded-lg shadow-lg p-6">
+          <h2 className="text-xl font-semibold text-RCColors-100 mb-4">
             {t('features.trackProgress.title')}
           </h2>
-          <p className="text-gray-300 text-sm leading-relaxed">
+          <p className="text-RCColors-300 text-sm leading-relaxed">
             {t('features.trackProgress.description')}
           </p>
         </div>
 
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-100 mb-4">
+        <div className="bg-RCColors-800 rounded-lg shadow-lg p-6">
+          <h2 className="text-xl font-semibold text-RCColors-100 mb-4">
             {t('features.makeDifference.title')}
           </h2>
-          <p className="text-gray-300 text-sm leading-relaxed">
+          <p className="text-RCColors-300 text-sm leading-relaxed">
             {t('features.makeDifference.description')}
           </p>
         </div>
       </div>
 
       {/* Footer Section */}
-      <footer className="my-16 text-center text-sm text-gray-500">
+      <footer className="my-16 text-center text-sm text-RCColors-500">
         <p>{t('footer.text')}</p>
       </footer>
     </div>

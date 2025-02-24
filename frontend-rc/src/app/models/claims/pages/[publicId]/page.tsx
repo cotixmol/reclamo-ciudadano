@@ -85,7 +85,7 @@ const ClaimUpdatePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-5 bg-gray-900">
+    <div className="min-h-screen p-5 bg-RCColors-900">
       <div className="max-w-3xl mx-auto">
         {/* Back Button */}
         <div className="mb-6">
@@ -98,7 +98,7 @@ const ClaimUpdatePage: React.FC = () => {
           </button>
         </div>
 
-        <div className="border-2 border-gray-700 bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+        <div className="border-2 border-RCColors-700 bg-RCColors-800 rounded-lg overflow-hidden shadow-lg">
           {/* Carousel Section */}
           {mediaFiles.length > 0 && (
             <Carousel
@@ -114,30 +114,30 @@ const ClaimUpdatePage: React.FC = () => {
               <span
                 className={`text-xs font-semibold px-2 py-1 rounded ${getStatusColor(
                   claim.status
-                )} text-gray-900`}
+                )} text-RCColors-900`}
               >
                 {t(`status.${claim.status}`)}
               </span>
               <span
                 className={`text-xs font-semibold px-2 py-1 rounded ${getPriorityColor(
                   claim.priority
-                )} text-gray-900`}
+                )} text-RCColors-900`}
               >
                 {t(`priority.${claim.priority}`)}
               </span>
             </div>
 
-            <h1 className="text-2xl font-semibold text-gray-100 mb-2">
+            <h1 className="text-2xl font-semibold text-RCColors-100 mb-2">
               {claim.title}
             </h1>
-            <p className="text-gray-300 mb-4">{claim.description}</p>
+            <p className="text-RCColors-300 mb-4">{claim.description}</p>
 
             {/* Update Form */}
             <form onSubmit={handleUpdate} className="space-y-4">
               <div>
                 <label
                   htmlFor="title"
-                  className="block text-sm font-medium text-gray-200"
+                  className="block text-sm font-medium text-RCColors-200"
                 >
                   {t('title')}
                 </label>
@@ -147,13 +147,13 @@ const ClaimUpdatePage: React.FC = () => {
                   name="title"
                   value={formValues.title}
                   onChange={handleInputChange}
-                  className="mt-1 p-2 w-full bg-gray-700 border border-gray-600 rounded-md"
+                  className="mt-1 p-2 w-full bg-RCColors-700 border border-RCColors-600 rounded-md"
                 />
               </div>
               <div>
                 <label
                   htmlFor="description"
-                  className="block text-sm font-medium text-gray-200"
+                  className="block text-sm font-medium text-RCColors-200"
                 >
                   {t('description')}
                 </label>
@@ -162,14 +162,14 @@ const ClaimUpdatePage: React.FC = () => {
                   name="description"
                   value={formValues.description}
                   onChange={handleInputChange}
-                  className="mt-1 p-2 w-full bg-gray-700 border border-gray-600 rounded-md"
+                  className="mt-1 p-2 w-full bg-RCColors-700 border border-RCColors-600 rounded-md"
                   rows={4}
                 />
               </div>
               <button
                 type="submit"
                 disabled={isUpdating}
-                className="w-full py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200"
+                className="w-full py-2 bg-blue-600   font-semibold rounded-md hover:bg-blue-700 transition duration-200"
               >
                 {isUpdating ? t('updating') : t('updateClaim')}
               </button>

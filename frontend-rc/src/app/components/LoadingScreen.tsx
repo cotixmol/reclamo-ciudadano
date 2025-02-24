@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const LoadingScreen: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-RCColors-900">
       <div className="animate-bounceSmooth w-auto h-auto max-w-[200px] max-h-[200px]">
         <Image
           src="/logo_RD_new_blanco.png"

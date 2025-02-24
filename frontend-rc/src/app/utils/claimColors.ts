@@ -21,6 +21,6 @@ export const getPriorityColor = (priority: PriorityEnum): string => {
     case PriorityEnum.HIGH:
       return 'bg-red-400';
     default:
-      return 'bg-gray-400';
+      return 'bg-RCColors-400';
   }
 };

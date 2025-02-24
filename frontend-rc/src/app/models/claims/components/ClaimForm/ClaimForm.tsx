@@ -149,7 +149,7 @@ export default function ClaimForm() {
           <div className="w-full rounded overflow-hidden relative z-0">
             <div className="mb-4">
               <h3 className="block mb-1">{t('selectLocationTitle')}</h3>
-              <p className="text-gray-400 mt-1">
+              <p className="text-RCColors-400 mt-1">
                 {t('selectLocationSubtitle')}
               </p>
             </div>
@@ -169,7 +169,7 @@ export default function ClaimForm() {
           {hasLocation && locationName && (
             <p className="text-sm mt-2">
               <span className="font-semibold">{t('chosenAddress')}:</span>{' '}
-              <span className="text-gray-400">{locationName}</span>
+              <span className="text-RCColors-400">{locationName}</span>
             </p>
           )}
           <SubmitButton

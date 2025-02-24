@@ -10,17 +10,15 @@ import {
 export async function POST(request: Request) {
   try {
     const body: ClaimCreateRequest = await request.json();
-    const backendResponse = await axios.post<ClaimResponse | ClaimErrorResponse>(
-      `${process.env.API_URL}/claim`,
-      body,
-      {
-        validateStatus: () => true,
-        headers: {
-          'x-api-key': process.env.API_KEY || '',
-          'x-client-name': process.env.API_CLIENT_NAME || '',
-        },
-      }
-    );
+    const backendResponse = await axios.post<
+      ClaimResponse | ClaimErrorResponse
+    >(`${process.env.API_URL}/claim`, body, {
+      validateStatus: () => true,
+      headers: {
+        'x-api-key': process.env.API_KEY || '',
+        'x-client-name': process.env.API_CLIENT_NAME || '',
+      },
+    });
     if (backendResponse.status !== 200) {
       const backendError = backendResponse.data as ClaimErrorResponse;
       return NextResponse.json(

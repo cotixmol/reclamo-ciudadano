@@ -3,7 +3,7 @@ import React from 'react';
 
 const LoadingMap: React.FC = () => {
   return (
-    <div className="relative w-full h-full bg-gray-800 rounded-lg overflow-hidden">
+    <div className="relative w-full h-full bg-RCColors-800 rounded-lg overflow-hidden">
       {/* Blurred Map Image */}
       <img
         src="/blurmap.png"
