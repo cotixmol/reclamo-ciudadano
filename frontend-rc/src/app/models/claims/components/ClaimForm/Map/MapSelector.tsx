@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
@@ -29,6 +28,25 @@ export default function MapSelector({
   const markerRef = useRef<any>(null);
   const mapRef = useRef<any>(null);
 
+  // Wrap the reverseGeocodeAndUpdate function in useCallback
+  const reverseGeocodeAndUpdate = useCallback(
+    (lat: number, lng: number) => {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          const address = data.display_name || '';
+          onLocationChangeAction(lat.toString(), lng.toString(), address);
+          setCenter([lat, lng]); // recenter the map
+          if (mapRef.current) {
+            mapRef.current.setView([lat, lng], mapRef.current.getZoom());
+          }
+        })
+        .catch((err) => console.error('Error during reverse geocoding:', err));
+    },
+    [onLocationChangeAction]
+  );
+
   const eventHandlers = React.useMemo(
     () => ({
       dragend() {
@@ -39,23 +57,8 @@ export default function MapSelector({
         }
       },
     }),
-    []
+    [reverseGeocodeAndUpdate]
   );
-
-  function reverseGeocodeAndUpdate(lat: number, lng: number) {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        const address = data.display_name || '';
-        onLocationChangeAction(lat.toString(), lng.toString(), address);
-        setCenter([lat, lng]); // recenter the map
-        if (mapRef.current) {
-          mapRef.current.setView([lat, lng], mapRef.current.getZoom());
-        }
-      })
-      .catch((err) => console.error('Error during reverse geocoding:', err));
-  }
 
   const handleGetCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -135,7 +138,7 @@ export default function MapSelector({
           geocoderControlRef.current = null;
         }
       };
-    }, [map]);
+    }, [map, onLocationChangeAction]);
 
     return null;
   }
