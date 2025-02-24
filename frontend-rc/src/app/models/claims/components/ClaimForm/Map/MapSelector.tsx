@@ -24,9 +24,9 @@ export default function MapSelector({
     parseFloat(latitude) || -34.6,
     parseFloat(longitude) || -58.4,
   ]);
+  const [isLocating, setIsLocating] = useState(false);
 
   const { t } = useTranslation('claimcreationform');
-
   const markerRef = useRef<any>(null);
   const mapRef = useRef<any>(null);
 
@@ -64,12 +64,15 @@ export default function MapSelector({
       return;
     }
 
+    setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        setIsLocating(false);
         const { latitude: lat, longitude: lng } = position.coords;
         reverseGeocodeAndUpdate(lat, lng);
       },
       (error) => {
+        setIsLocating(false);
         console.error('Geolocation Error:', error);
       },
       { enableHighAccuracy: true }
@@ -119,7 +122,6 @@ export default function MapSelector({
       }
 
       return () => {
-        // Clean up geocoder if needed
         if (geocoderControlRef.current) {
           geocoderControlRef.current.remove();
           geocoderControlRef.current = null;
@@ -138,8 +140,9 @@ export default function MapSelector({
         onClick={handleGetCurrentLocation}
         className="absolute z-[9999] right-3 top-3 bg-RCColors-700 text-white px-3 py-1 
                rounded hover:bg-RCColors-600 shadow"
+        disabled={isLocating}
       >
-        {t('useMyLocation')}
+        {isLocating ? t('locating') : t('useMyLocation')}
       </button>
 
       <MapContainer
@@ -154,12 +157,7 @@ export default function MapSelector({
         <Marker
           draggable={true}
           eventHandlers={eventHandlers}
-          position={
-            [
-              parseFloat(latitude) || center[0],
-              parseFloat(longitude) || center[1],
-            ] as LatLngExpression
-          }
+          position={[center[0], center[1]] as LatLngExpression}
           icon={customMapIcon('e4047d')}
           ref={markerRef}
         />

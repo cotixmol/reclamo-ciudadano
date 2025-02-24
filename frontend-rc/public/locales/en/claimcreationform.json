@@ -32,5 +32,6 @@
   "filesLimitError": "You can upload up to 5 files",
   "sizeLimitError": "is bigger than the 10MB limit.",
   "openCamera": "Open Camera",
-  "useMyLocation": "Use My Location"
+  "useMyLocation": "Use My Location",
+  "locating": "Locating..."
 }
