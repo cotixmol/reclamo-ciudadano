@@ -19,7 +19,6 @@ export default function MapSelector({
   longitude,
   onLocationChangeAction,
 }: MapSelectorProps) {
-  // Local center to display the map
   const [center, setCenter] = useState<[number, number]>([
     parseFloat(latitude) || -34.6,
     parseFloat(longitude) || -58.4,
@@ -65,14 +64,23 @@ export default function MapSelector({
     }
 
     setIsLocating(true);
+    const startTime = Date.now();
+    const MIN_SPINNER_TIME = 500;
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setIsLocating(false);
         const { latitude: lat, longitude: lng } = position.coords;
         reverseGeocodeAndUpdate(lat, lng);
+
+        // Force the spinner to display for at least MIN_SPINNER_TIME
+        const elapsed = Date.now() - startTime;
+        const remaining = MIN_SPINNER_TIME - elapsed;
+        if (remaining > 0) {
+          setTimeout(() => setIsLocating(false), remaining);
+        } else {
+          setIsLocating(false);
+        }
       },
       (error) => {
-        setIsLocating(false);
         console.error('Geolocation Error:', error);
       },
       { enableHighAccuracy: true }
@@ -138,11 +146,22 @@ export default function MapSelector({
       <button
         type="button"
         onClick={handleGetCurrentLocation}
-        className="absolute z-[9999] right-3 top-3 bg-RCColors-700 text-white px-3 py-1 
-               rounded hover:bg-RCColors-600 shadow"
         disabled={isLocating}
+        className="absolute z-[999] right-3 top-3 bg-RCColors-700 text-white px-3 py-1
+                   rounded hover:bg-RCColors-600 shadow flex items-center space-x-2"
       >
-        {isLocating ? t('locating') : t('useMyLocation')}
+        {isLocating ? (
+          <>
+            {/* A simple spinner */}
+            <span
+              className="inline-block h-4 w-4 border-2 border-white border-t-transparent 
+                             rounded-full animate-spin"
+            />
+            <span>{t('locating')}</span>
+          </>
+        ) : (
+          t('useMyLocation')
+        )}
       </button>
 
       <MapContainer
@@ -155,7 +174,7 @@ export default function MapSelector({
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <GeocoderAndEvents />
         <Marker
-          draggable={true}
+          draggable
           eventHandlers={eventHandlers}
           position={[center[0], center[1]] as LatLngExpression}
           icon={customMapIcon('e4047d')}
