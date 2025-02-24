@@ -31,5 +31,6 @@
   "missingLocationTooltip": "Debe seleccionar una ubicación en el mapa superior.",
   "filesLimitError": "Puedes subir hasta 5 archivos",
   "sizeLimitError": "supera el limite de 10MB.",
-  "openCamera": "Abrir cámara"
+  "openCamera": "Abrir cámara",
+  "useMyLocation": "Usar mi ubicación"
 }
