@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse,  } from 'next/server';
 import axios from 'axios';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import {
@@ -11,14 +11,22 @@ export async function POST(request: Request) {
   try {
     const body: ApiPublicIdsRequest = await request.json();
 
+    console.log('Request body:', JSON.stringify(body));
+    console.log('API URL: ', process.env.API_URL)
+
     const backendResponse = await axios.post<
       ClaimWithMultimediaResponse[] | ClaimErrorResponse
     >(`${process.env.API_URL}/claims`, body, {
       validateStatus: () => true,
+      headers: {
+        'x-api-key': process.env.API_KEY || '',
+        'x-client-name': process.env.API_CLIENT_NAME || '',
+      },
     });
 
     if (backendResponse.status !== 200) {
       const backendError = backendResponse.data as ClaimErrorResponse;
+      console.log('backend error: ', backendError)
       return NextResponse.json(
         {
           error: backendError.detail ?? 'Failed to fetch claims',
@@ -36,6 +44,7 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     if (error instanceof Error) {
+      console.log('Catching error in api nextjs request. ', error)
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json({ error: 'Unexpected error' }, { status: 500 });

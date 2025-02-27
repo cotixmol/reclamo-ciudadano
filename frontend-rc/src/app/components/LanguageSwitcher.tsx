@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiChevronDown } from 'react-icons/fi'; // Import Chevron icon from React Icons
@@ -37,7 +38,7 @@ export default function LanguageSwitcher() {
       {/* Toggle Button */}
       <button
         onClick={toggleDropdown}
-        className="inline-flex items-center px-4 py-2 hover:bg-gray-700 text-xs font-medium rounded-md"
+        className="inline-flex items-center px-4 py-2 hover:bg-RCColors-700 text-xs font-medium rounded-md"
       >
         <div className="flex items-center gap-2">
           <span className="">{getFlag(currentLang)}</span>
@@ -48,11 +49,11 @@ export default function LanguageSwitcher() {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 font-medium rounded-md bg-gray-800 z-10">
+        <div className="absolute right-0 mt-2 font-medium rounded-md bg-RCColors-800 z-10">
           <ul>
             <li
               onClick={() => handleLanguageChange('en')}
-              className={`block px-4 py-2 text-xs rounded-t-md cursor-pointer hover:bg-gray-700 ${
+              className={`block px-4 py-2 text-xs rounded-t-md cursor-pointer hover:bg-RCColors-700 ${
                 currentLang === 'en' ? 'bg-primary' : ''
               }`}
             >
@@ -63,7 +64,7 @@ export default function LanguageSwitcher() {
             </li>
             <li
               onClick={() => handleLanguageChange('es')}
-              className={`block px-4 py-2 text-xs rounded-b-md cursor-pointer hover:bg-gray-700 ${
+              className={`block px-4 py-2 text-xs rounded-b-md cursor-pointer hover:bg-RCColors-700 ${
                 currentLang === 'es' ? 'bg-primary' : ''
               }`}
             >

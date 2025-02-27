@@ -39,4 +39,9 @@ EXCLUDE_TABLES = {
     "layer",
     "featnames",
     "zip_lookup_base",
+    "planet_osm_line",
+    "planet_osm_point",
+    "planet_osm_polygon",
+    "planet_osm_roads",
+    "osm2pgsql_properties",
 }

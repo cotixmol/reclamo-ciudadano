@@ -1,5 +1,5 @@
-'use client'; // or place this inside a client-side component
-
+'use client';
+import React from 'react';
 import L from 'leaflet';
 import ReactDOMServer from 'react-dom/server';
 import { FaMapMarkerAlt } from 'react-icons/fa';

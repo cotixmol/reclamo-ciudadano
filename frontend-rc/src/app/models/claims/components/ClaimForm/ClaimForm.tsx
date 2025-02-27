@@ -15,17 +15,20 @@ import { ClaimCreateRequest, PriorityEnum } from '../../types/claim';
 import dynamic from 'next/dynamic';
 import TitleInput from './TitleInput';
 import DescriptionInput from './DescriptionInput';
-import MultimediaUpload from './MultimediaUpload';
-import PrioritySection from './PrioritySection';
 import SubmitButton from './SubmitButton';
 import ClaimTypesDropdown from '@/app/models/claimTypes/components/claimTypesDropdown';
 import LoadingMap from './Map/LoadingMap';
 import { PutObjectInS3 } from '@/app/services/s3/putObject';
 import { saveMetadata } from '@/app/services/multimedia/saveMetadata';
+import PrioritySection from './PrioritySection';
 
 const MapSelector = dynamic(() => import('./Map/MapSelector'), {
   ssr: false,
   loading: () => <LoadingMap />,
+});
+
+const MultimediaUpload = dynamic(() => import('./MultimediaUpload'), {
+  ssr: false,
 });
 
 export default function ClaimForm() {
@@ -76,8 +79,9 @@ export default function ClaimForm() {
       type_category_id: selectedClaimTypeId ?? 1,
       claim_location: {
         type: 'Point',
-        coordinates: [parseFloat(latitude), parseFloat(longitude)],
+        coordinates: [parseFloat(longitude), parseFloat(latitude)],
       },
+      address: locationName,
       priority,
       files: fileNames,
       file_sizes: fileSizesByName,
@@ -148,7 +152,7 @@ export default function ClaimForm() {
           <div className="w-full rounded overflow-hidden relative z-0">
             <div className="mb-4">
               <h3 className="block mb-1">{t('selectLocationTitle')}</h3>
-              <p className="text-gray-400 mt-1">
+              <p className="text-RCColors-400 mt-1">
                 {t('selectLocationSubtitle')}
               </p>
             </div>
@@ -168,7 +172,7 @@ export default function ClaimForm() {
           {hasLocation && locationName && (
             <p className="text-sm mt-2">
               <span className="font-semibold">{t('chosenAddress')}:</span>{' '}
-              <span className="text-gray-400">{locationName}</span>
+              <span className="text-RCColors-400">{locationName}</span>
             </p>
           )}
           <SubmitButton

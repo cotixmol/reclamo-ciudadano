@@ -25,8 +25,8 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
         disabled={disabled}
         className={`w-full py-2 rounded transition ${
           disabled
-            ? 'bg-gray-700 cursor-not-allowed'
-            : 'bg-primary hover:bg-primary-hover'
+            ? 'bg-RCColors-700 cursor-not-allowed'
+            : 'bg-primary hover:bg- RCPink-hover'
         }`}
       >
         {t('claimSubmitButton')}

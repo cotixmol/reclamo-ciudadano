@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from service import ClaimService, StoreObjectService
 from typing import Optional
-from dependencies import get_claim_service, get_store_object_service
+from dependencies import (
+    get_claim_service,
+    get_store_object_service,
+    validate_api_key_and_client,
+)
 from models import (
     Claim,
     CreateClaimResponse,
@@ -24,7 +28,7 @@ from config.db import db_reporte_ciudadano
 from sqlmodel import Session
 
 
-claim_router = APIRouter()
+claim_router = APIRouter(dependencies=[Depends(validate_api_key_and_client)])
 
 
 @claim_router.post("/claims/", response_model=List[ReadClaimResponse])
@@ -33,6 +37,7 @@ async def read_all_claims_by_public_ids(
     claim_service: ClaimService = Depends(get_claim_service),
     store_object_service: StoreObjectService = Depends(get_store_object_service),
 ):
+    print("Requesting claims for client")
     try:
         claims = claim_service.read_all_claims_by_public_ids(request.public_ids)
         updated_claims = store_object_service.generate_presigned_read_urls(claims)
@@ -44,6 +49,7 @@ async def read_all_claims_by_public_ids(
             for c in updated_claims
         ]
     except Exception as e:
+        print("Error getting claims")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred: {e}",

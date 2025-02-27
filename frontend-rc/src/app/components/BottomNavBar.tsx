@@ -15,7 +15,7 @@ const BottomNavBar = () => {
   const plusActive = isActive('/models/claims/pages/create');
 
   return (
-    <nav className="fixed z-10 bottom-0 left-0 w-full bg-gray-900 text-gray-200 shadow-lg shadow-black/30 border-t border-primary">
+    <nav className="fixed z-10 bottom-0 left-0 w-full bg-RCColors-900 text-RCColors-200 shadow-lg shadow-black/30 border-t border-primary">
       <div className="grid grid-cols-3 items-center py-5">
         {/* Left: Home */}
         <Link
@@ -26,7 +26,7 @@ const BottomNavBar = () => {
         >
           <FiHome
             className={`w-6 h-6 ${
-              isActive('/') ? 'text-primary' : 'text-gray-400'
+              isActive('/') ? 'text-primary' : 'text-RCColors-400'
             }`}
           />
           <span className={`text-sm ${isActive('/') ? 'text-primary' : ''}`}>
@@ -39,13 +39,11 @@ const BottomNavBar = () => {
           href="/models/claims/pages/create"
           className={`flex items-center mx-auto rounded-full p-4 transition-colors duration-200 ${
             plusActive
-              ? 'bg-gray-900 border-2 border-primary'
-              : 'bg-primary border-2 hover:bg-primary-hover'
+              ? 'bg-RCColors-900 border-2 border-primary'
+              : 'bg-primary border-2 hover:bg- RCPink-hover'
           }`}
         >
-          <IoAdd
-            className={`w-8 h-8 ${plusActive ? 'text-primary' : 'text-white'}`}
-          />
+          <IoAdd className={`w-8 h-8 ${plusActive ? 'text-primary' : ''}`} />
         </Link>
 
         {/* Right: My Claims */}
@@ -59,7 +57,7 @@ const BottomNavBar = () => {
             className={`w-6 h-6 ${
               isActive('/models/claims/pages')
                 ? 'text-primary'
-                : 'text-gray-400'
+                : 'text-RCColors-400'
             }`}
           />
           <span

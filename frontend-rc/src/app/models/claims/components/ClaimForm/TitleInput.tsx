@@ -16,7 +16,7 @@ const TitleInput: React.FC<TitleInputProps> = ({ title, setTitle }) => {
       <label htmlFor="title" className="block mb-1">
         {t('claimTitle')}
       </label>
-      <div className="flex items-start bg-gray-700 rounded focus-within:ring-2 focus-within:ring-primary">
+      <div className="flex items-start bg-RCColors-700 rounded focus-within:ring-2 focus-within:ring-primary">
         <input
           id="title"
           type="text"
@@ -24,18 +24,18 @@ const TitleInput: React.FC<TitleInputProps> = ({ title, setTitle }) => {
           onChange={(e) => setTitle(e.target.value)}
           required
           maxLength={200}
-          className="flex-grow p-2 bg-transparent text-white focus:outline-none"
+          className="flex-grow p-2 bg-transparent   focus:outline-none"
         />
         <button
           type="button"
           onClick={() => setTitle('')}
-          className="px-2 py-2 text-sm hover:text-white"
+          className="px-2 py-2 text-sm hover: "
           aria-label="Clear Title"
         >
           <TiDelete className="w-6 h-6" />
         </button>
       </div>
-      <p className="text-xs text-gray-500 mt-1">
+      <p className="text-xs text-RCColors-500 mt-1">
         {title.length} {t('200characters')}
       </p>
     </div>

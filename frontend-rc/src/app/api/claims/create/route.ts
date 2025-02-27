@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import axios from 'axios';
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import {
@@ -14,6 +14,10 @@ export async function POST(request: Request) {
       ClaimResponse | ClaimErrorResponse
     >(`${process.env.API_URL}/claim`, body, {
       validateStatus: () => true,
+      headers: {
+        'x-api-key': process.env.API_KEY || '',
+        'x-client-name': process.env.API_CLIENT_NAME || '',
+      },
     });
     if (backendResponse.status !== 200) {
       const backendError = backendResponse.data as ClaimErrorResponse;

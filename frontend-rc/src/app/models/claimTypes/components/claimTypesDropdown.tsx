@@ -52,20 +52,20 @@ export default function ClaimTypesDropdown({
       <button
         type="button"
         onClick={handleToggle}
-        className="w-full p-2 bg-gray-700 rounded flex justify-between items-center text-left focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full p-2 bg-RCColors-700 rounded flex justify-between items-center text-left focus:outline-none focus:ring-2 focus:ring-primary"
       >
         {selectedType ? (
           <>
             {/* Use the current language to decide which fields to display */}
             <span className="font-semibold">
               {i18n.language === 'es'
-                ? selectedType.category_es
-                : selectedType.category_en}
+                ? selectedType.categoryEs
+                : selectedType.categoryEn}
             </span>
             <span className="ml-2 text-sm">
               {i18n.language === 'es'
-                ? selectedType.description_es
-                : selectedType.description_en}
+                ? selectedType.descriptionEs
+                : selectedType.descriptionEn}
             </span>
           </>
         ) : (
@@ -77,20 +77,20 @@ export default function ClaimTypesDropdown({
       </button>
       {isOpen && (
         <div
-          className="absolute z-50 mt-1 w-full bg-gray-800 rounded shadow-lg border-2 border-gray-500 max-h-28 overflow-y-auto"
+          className="absolute z-50 mt-1 w-full bg-RCColors-800 rounded shadow-lg border-2 border-RCColors-500 max-h-28 overflow-y-auto"
           style={{ maxHeight: '200px' }}
         >
           {claimTypes.map((ct) => {
             const isSelected = selectedClaimTypeId === ct.id;
             const displayCategory =
-              i18n.language === 'es' ? ct.category_es : ct.category_en;
+              i18n.language === 'es' ? ct.categoryEs : ct.categoryEn;
             const displayDescription =
-              i18n.language === 'es' ? ct.description_es : ct.description_en;
+              i18n.language === 'es' ? ct.descriptionEs : ct.descriptionEn;
             return (
               <div
                 key={ct.id}
                 onClick={() => handleSelect(ct.id)}
-                className={`cursor-pointer px-3 py-2 hover:bg-gray-700 ${isSelected ? 'text-primary font-semibold' : ''}`}
+                className={`cursor-pointer px-3 py-2 hover:bg-RCColors-700 ${isSelected ? 'text-primary font-semibold' : ''}`}
               >
                 <div>{displayCategory}</div>
                 <div className="text-sm">{displayDescription}</div>

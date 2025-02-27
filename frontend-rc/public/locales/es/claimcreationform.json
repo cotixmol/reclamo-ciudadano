@@ -20,7 +20,7 @@
     "MEDIUM": "Media",
     "HIGH": "Alta"
   },
-  "selectFiles": "  Click aqui para cargar hasta 5 imagenes o videos (hasta 10MB c/u)",
+  "selectFiles": "Carga hasta 5 imagenes o videos",
   "200characters": "/200 caracteres",
   "1000characters": "/1000 caracteres",
   "chosenAddress": "Dirección elegida",
@@ -30,5 +30,8 @@
   "priorityLabelTitle": "Prioridad",
   "missingLocationTooltip": "Debe seleccionar una ubicación en el mapa superior.",
   "filesLimitError": "Puedes subir hasta 5 archivos",
-  "sizeLimitError": "supera el limite de 10MB."
+  "sizeLimitError": "supera el limite de 10MB.",
+  "openCamera": "Abrir cámara",
+  "useMyLocation": "Usar mi ubicación",
+  "locating": "Localizando..."
 }

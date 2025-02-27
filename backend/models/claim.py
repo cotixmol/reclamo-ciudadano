@@ -1,4 +1,5 @@
 import uuid
+from sqlalchemy import Index
 from typing import Optional, Union, List, TYPE_CHECKING
 from uuid import UUID
 from pydantic import BaseModel
@@ -30,10 +31,11 @@ if TYPE_CHECKING:
 class ClaimCreateRequestSchema(BaseModel):
     title: str
     description: str
-    type_category_id: Optional[int]  # Optional if not always provided
-    status: str  # 'Open', 'Close', or any string
+    type_category_id: Optional[int]
+    status: str  # TODO: Add enums
     claim_location: Union[GeometryPoint, dict]
-    priority: str  # Use an enum if you have one defined
+    address: str  # New field added
+    priority: str  # TODO: Add enums
     files: List[str]
     file_sizes: Optional[Dict[str, int]] = None
 
@@ -47,6 +49,7 @@ class ClaimUpdateRequestSchema(BaseModel):
     description: Optional[str] = None
     status: Optional[str] = None
     claim_location: Optional[Union[GeometryPoint, dict]] = None
+    address: Optional[str] = None
     priority: Optional[str] = None
 
     class Config:
@@ -54,10 +57,17 @@ class ClaimUpdateRequestSchema(BaseModel):
 
 
 class Claim(SQLModel, table=True):
+    __tablename__ = "claim"
+
+    # Explicitly define the GiST index in table args
+    __table_args__ = (
+        Index("idx_claim_location", "claim_location", postgresql_using="gist"),
+    )
+
     id: Optional[int] = Field(default=None, primary_key=True)
     public_id: UUID = Field(
         sa_column=Column(
-            String,  # or use PG_UUID if you prefer
+            PG_UUID(as_uuid=True),
             unique=True,
             index=True,
             nullable=False,
@@ -73,6 +83,7 @@ class Claim(SQLModel, table=True):
             nullable=False,
         )
     )
+    address: str = Field(sa_column=Column(String(255), nullable=True))
     title: str = Field(sa_column=Column(String(255), nullable=False))
     description: str = Field(sa_column=Column(String(1024), nullable=False))
     status: str = Field(sa_column=Column(String(255), nullable=False))

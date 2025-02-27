@@ -20,7 +20,9 @@ const PrioritySection: React.FC<PrioritySectionProps> = ({
       <label htmlFor="priority" className="block mb-1">
         {t('priorityLabelTitle')}
       </label>
-      <p className="text-sm text-gray-500 mt-1">{t('priorityDescription')}</p>
+      <p className="text-sm text-RCColors-500 mt-1">
+        {t('priorityDescription')}
+      </p>
       <PrioritySlider
         selectedPriority={priority}
         onPriorityChange={setPriority}

@@ -29,6 +29,7 @@ export interface ClaimCreateRequest {
   type_category_id: number;
   status: 'Open' | 'Close' | string;
   claim_location: ClaimLocation;
+  address: string;
   priority: PriorityEnum;
   files: string[];
   file_sizes: Record<string, number> | null;

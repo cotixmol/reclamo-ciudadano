@@ -5,6 +5,7 @@ import BottomNavBar from './components/BottomNavBar';
 import { ClaimTypesProvider } from './context/ClaimTypesContext';
 import { loadAllClaimsTypesAtBootstart } from './services/claim_types/fetch';
 import PreloadMapSelector from './models/claims/components/ClaimForm/Map/PreloadMapSelector';
+import { RawClaimTypesResponse } from './models/claimTypes/types/claimTypes';
 
 export const metadata: Metadata = {
   title: 'Reclamo Ciudadano',
@@ -32,11 +33,17 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const claimTypes = await loadAllClaimsTypesAtBootstart();
+  let claimTypes: RawClaimTypesResponse[] = [];
+  try {
+    claimTypes = await loadAllClaimsTypesAtBootstart();
+  } catch (error) {
+    console.error('Failed to fetch claim types:', error);
+    claimTypes = [];
+  }
 
   return (
     <html lang="en">
-      <body className="relative min-h-screen bg-gray-900 text-gray-200">
+      <body className="relative min-h-screen bg-RCColors-900 text-RCColors-200">
         <ClaimTypesProvider claimTypes={claimTypes}>
           <div className="pb-28">{children}</div>
           <BottomNavBar />

@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import Image from 'next/image';
 
 export interface MediaFile {
   url: string;
@@ -65,13 +64,13 @@ const Carousel: React.FC<CarouselProps> = ({
         <>
           <button
             onClick={handlePrev}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded z-20 text-2xl"
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 px-2 py-1 rounded z-20 text-2xl"
           >
             ‹
           </button>
           <button
             onClick={handleNext}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded z-20 text-2xl"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 px-2 py-1 rounded z-20 text-2xl"
           >
             ›
           </button>

@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from service import ClaimTypesService
-from typing import Optional
+from dependencies import validate_api_key_and_client
 from dependencies import get_claim_types_service
 from models import ClaimTypes
 from typing import List
 from errors import ClaimTypesNotFoundError
 
-claim_types_router = APIRouter()
+claim_types_router = APIRouter(dependencies=[Depends(validate_api_key_and_client)])
 
 
 @claim_types_router.get("/claim_types", response_model=List[ClaimTypes])

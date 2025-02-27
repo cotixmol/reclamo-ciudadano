@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  frontend:
+    env_file:
+      - ./frontend-rc/.env
+    build:
+      context: ./frontend-rc
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+
+  backend:
+    env_file:
+      - ./backend/.env
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
