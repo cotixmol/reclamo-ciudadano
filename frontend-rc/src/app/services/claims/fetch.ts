@@ -11,6 +11,7 @@ export async function fetchAllClaimsByPublicIds(): Promise<
 > {
   const publicIds = getStoredPublicIds();
   try {
+    console.log(`Requesting claims to ${process.env.NEXT_PUBLIC_INTERNAL_API_URL}`)
     const response = await axios.post<ClaimWithMultimediaResponse[]>(
       `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/claims`,
       {

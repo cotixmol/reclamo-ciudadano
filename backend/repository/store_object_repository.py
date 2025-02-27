@@ -25,8 +25,8 @@ class StoreObjectRepository:
         and ensures that the specified bucket exists.
         """
         self.endpoint_url = endpoint_url or os.getenv("S3_URL")
-        self.access_key = access_key or os.getenv("SECRET_S3_ACCESS_KEY")
-        self.secret_key = secret_key or os.getenv("SECRET_S3_SECRET_KEY")
+        self.access_key = access_key or os.getenv("S3_ACCESS_KEY")
+        self.secret_key = secret_key or os.getenv("S3_SECRET_KEY")
         self.bucket_name = bucket_name or os.getenv("S3_BUCKET")
         self.region_name = region_name
 

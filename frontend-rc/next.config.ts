@@ -11,9 +11,9 @@ const nextConfig = {
     ],
   },
 
-  env: {
-    API_URL: process.env.API_URL,
-  },
+  // env: {
+  //   API_URL: process.env.NEXT_PUBLIC_BACKEND_API_URL,
+  // },
 };
 
 const nextPWACustom = require('next-pwa')({
