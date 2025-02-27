@@ -8,6 +8,7 @@ def add_cors_middleware(app):
         "http://localhost:3000",
         "http://dev.reclamo-ciudadano.reputacion.digital:3007",
         "https://dev.reclamo-ciudadano.reputacion.digital:3007",
+        "*reputacion.digital",
     ]
 
     app.add_middleware(

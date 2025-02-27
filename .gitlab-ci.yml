@@ -1,84 +1,11 @@
 stages:
-  - migrate
+  - build-full
+  - deploy-full
   - build-back
   - deploy-back
+  - migrate
   - build-front
   - deploy-front
-
-##########################
-#     DEV PIPELINE
-##########################
-
-# Dev: Build Back
-dev_build_back:
-  stage: build-back
-  image: docker:latest
-  tags:
-    - saas
-  services:
-    - docker:dind
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-  before_script:
-    - unset DOCKER_HOST
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-  script:
-    - |
-      source VERSION
-      tag="$CI_COMMIT_REF_SLUG$VERSION"
-      target_server="dev"
-      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
-    - cd backend
-    - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
-    - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
-
-# Dev: Build Front
-dev_build_front:
-  # Also in 'build-back' stage so it runs in parallel with dev_build_back
-  stage: build-back
-  image: docker:latest
-  tags:
-    - saas
-  services:
-    - docker:dind
-  # Runs only on 'develop'
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-  script:
-    - |
-      source VERSION
-      tag="$CI_COMMIT_REF_SLUG$VERSION"
-      target_server="dev"
-      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
-    - cd frontend-rc
-    - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
-    - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
-
-# Dev: Deploy
-dev_deploy:
-  stage: deploy-back
-  image: "ieferrari/ansible:11.0.0"
-  tags:
-    - saas
-  needs: [dev_build_front, dev_build_back]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-  script:
-    - source VERSION
-    - |
-      echo "<<<< DEVELOPMENT DEPLOY >>>>"
-      tag="$CI_COMMIT_REF_SLUG$VERSION"
-      target_server="dev"
-      folder_name="reclamo_ciudadano_dev"
-      cat $ansible_credentials_yml_dev >> .infra/.ansible/cred.yml
-      mv .infra/.env_dev .env
-    - chmod +x .infra/.ansible/inject_secrets.sh
-    - .infra/.ansible/inject_secrets.sh
-    - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
-    - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
-    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
 
 # Dev: Migrate
 dev_migrate:
@@ -86,9 +13,6 @@ dev_migrate:
   image: python:3.12-slim-bookworm
   tags:
     - saas
-  # needs: [dev_deploy]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
     - |
       echo "Running dev migration..."
@@ -98,12 +22,98 @@ dev_migrate:
     - mv .env backend/.env && cd backend
     - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
     - alembic upgrade head
+    - python -m config.create_master_user
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
 
-##########################
-#    MAIN (PROD) PIPELINE
-##########################
+# Main: Migrate
+main_migrate:
+  stage: migrate
+  image: python:3.12-slim-bookworm
+  tags:
+    - saas
+  script:
+    - |
+      echo "Running production migration..."
+      mv .infra/.env_prod_back .env
+    - chmod +x .infra/.ansible/inject_secrets.sh
+    - .infra/.ansible/inject_secrets.sh
+    - mv .env backend/.env && cd backend
+    - sed -i  -e 's/postgres_gis/reclamos.reputacion.digital/g' .env
+    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
+    - alembic upgrade head
+    - python -m config.create_master_user
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
 
-# 1) Build Back (Main)
+# Dev: Build Back
+dev_build_back:
+  stage: build-full
+  image: docker:latest
+  tags:
+    - saas
+  services:
+    - docker:dind
+  before_script:
+    - unset DOCKER_HOST
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    - |
+      source VERSION
+      tag="$CI_COMMIT_REF_SLUG$VERSION"
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag'"
+    - cd backend
+    - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
+    - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+
+# Dev: Build Front
+dev_build_front:
+  stage: build-full
+  image: docker:latest
+  tags:
+    - saas
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    - |
+      source VERSION
+      tag="$CI_COMMIT_REF_SLUG$VERSION"
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag'"
+    - cd frontend-rc
+    - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
+    - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+
+# Dev: Deploy
+dev_deploy:
+  stage: deploy-full
+  image: "ieferrari/ansible:11.0.0"
+  tags:
+    - saas
+  script:
+    - source VERSION
+    - |
+      echo "<<<< DEVELOPMENT DEPLOY >>>>"
+      tag="$CI_COMMIT_REF_SLUG$VERSION"
+      target_server="dev"
+      folder_name="reclamo_ciudadano_dev"
+      cat $ansible_credentials_yml_dev >> .infra/.ansible/cred.yml
+      mv .infra/.env_dev .env
+      mv docker-compose.dev.yml docker-compose.yml
+    - chmod +x .infra/.ansible/inject_secrets.sh
+    - .infra/.ansible/inject_secrets.sh
+    - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
+    - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
+    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+
+# Main: Build Back
 main_build_back:
   stage: build-back
   image: docker:latest
@@ -111,8 +121,6 @@ main_build_back:
     - saas
   services:
     - docker:dind
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
   before_script:
     - unset DOCKER_HOST
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
@@ -120,39 +128,37 @@ main_build_back:
     - |
       source VERSION
       tag="$VERSION"
-      target_server="prod"
-      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag'"
     - cd backend
     - docker build -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_back:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_back:$tag"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
 
-# 2) Deploy Back (Main)
-main_deploy_back:
+main_back_deploy:
   stage: deploy-back
   image: "ieferrari/ansible:11.0.0"
   tags:
     - saas
-  needs: [main_build_back]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
   script:
+    - source VERSION
     - |
       echo "<<<< PRODUCTION BACKEND DEPLOY >>>>"
-      source VERSION
       tag="$VERSION"
       target_server="prod"
-      folder_name="reclamo_ciudadano"
+      folder_name="reclamo_ciudadano_back"
       cat $ansible_credentials_yml >> .infra/.ansible/cred.yml
-      mv docker-compose.prod.yml docker-compose.yml
-      mv .infra/.env_prod .env
-    - chmod +x .infra/.ansible/inject_secrets.sh
+      mv docker-compose.prod.back.yml docker-compose.yml
+      mv .infra/.env_prod_back .env
+    - chmod +x  .infra/.ansible/inject_secrets.sh 
     - .infra/.ansible/inject_secrets.sh
-    - sed -i "s/front:\${IMAGE_VERSION}/front:${PREV_VERSION}/g"  docker-compose.yml
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
-    - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
-    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
+    - export  ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
+    - |
+      ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "{\"server_name\": \"${target_server}\", \"folder_name\": \"${folder_name}\", \"services_list\": [\"backend\", \"traefik\", \"postgres_gis\"]}"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
 
-# 3) Build Front (Main)
 main_build_front:
   stage: build-front
   image: docker:latest
@@ -160,66 +166,44 @@ main_build_front:
     - saas
   services:
     - docker:dind
-  needs: [main_deploy_back]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
     - |
       source VERSION
       tag="$VERSION"
-      target_server="prod"
-      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag', target_server = '$target_server'"
+      echo "Running on branch '$CI_COMMIT_BRANCH' -- tag = '$tag'"
     - cd frontend-rc
-    - cp ../.infra/.env_prod .env
-    - chmod +x ../.infra/.ansible/inject_secrets.sh
-    - ../.infra/.ansible/inject_secrets.sh
-    - source .env
+    - cp ../.infra/.env_prod_front .env
+    - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
+    - sed -i "s/backend:8000/reclamos.reputacion.digital:8007/" .env
+    - sed -i "s/SECRET_PROD_FRONTEND_API_KEY/$SECRET_PROD_FRONTEND_API_KEY/" .env
+    - sed -i "s/SECRET_PROD_FRONTEND_API_CLIENT/$SECRET_PROD_FRONTEND_API_CLIENT/" .env
     - docker build --build-arg NODE_ENV=production -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
 
-# 4) Deploy Front (Main)
-main_deploy_front:
+main_front_deploy:
   stage: deploy-front
   image: "ieferrari/ansible:11.0.0"
   tags:
     - saas
-  needs: [main_build_front]
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
   script:
+    - source VERSION
     - |
-      echo "<<<< PRODUCTION FRONTEND DEPLOY >>>>"
-      source VERSION
+      echo "<<<< PRODUCTION BACKEND DEPLOY >>>>"
       tag="$VERSION"
       target_server="prod"
-      folder_name="reclamo_ciudadano"
+      folder_name="reclamo_ciudadano_front"
       cat $ansible_credentials_yml >> .infra/.ansible/cred.yml
-      mv docker-compose.prod.yml docker-compose.yml
-      mv .infra/.env_prod .env
-    - chmod +x .infra/.ansible/inject_secrets.sh
+      mv docker-compose.prod.front.yml docker-compose.yml
+      mv .infra/.env_prod_front .env
+    - chmod +x  .infra/.ansible/inject_secrets.sh 
     - .infra/.ansible/inject_secrets.sh
     - sed -i "s/IMAGE_VERSION=0*/IMAGE_VERSION=\"$tag\"/" .env
-    - export ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
-    - ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "server_name=$target_server folder_name=$folder_name"
-
-# 5) Migrate (Main)
-main_migrate:
-  stage: migrate
-  image: python:3.12-slim-bookworm
-  tags:
-    - saas
-  # needs: [main_deploy_front]
+    - export  ANSIBLE_CONFIG=$(pwd)/.infra/.ansible/ansible.cfg
+    - |
+      ansible-playbook -i .infra/hosts .infra/.ansible/docker_remote_launch.yml --extra-vars "{\"server_name\": \"${target_server}\", \"folder_name\": \"${folder_name}\"}"
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-  script:
-    - |
-      echo "Running production migration..."
-      mv .infra/.env_prod .env
-    - chmod +x .infra/.ansible/inject_secrets.sh
-    - .infra/.ansible/inject_secrets.sh
-    - mv .env backend/.env && cd backend
-    - sed -i  -e 's/postgres_gis/reclamos.reputacion.digital/g' .env 
-    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
-    - alembic upgrade head

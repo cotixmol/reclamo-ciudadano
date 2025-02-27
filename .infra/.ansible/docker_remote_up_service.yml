@@ -1,0 +1,12 @@
+---
+- hosts: "{{ server_name }}"
+  vars_files:
+    - cred.yml
+
+  tasks:
+    - name: start services
+      community.docker.docker_compose_v2:
+        project_src: /opt/deploy/{{ folder_name }}/
+        pull: always
+        services: "{{ services_list | default(omit) }}"
+      register: output
