@@ -11,5 +11,6 @@
   "title": "Title",
   "description": "Description",
   "updateClaim": "Update Claim",
-  "back": "Back"
+  "back": "Back",
+  "updating": "Updating..."
 }
