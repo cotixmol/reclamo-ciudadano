@@ -17,7 +17,7 @@ services:
       - traefik.docker.network=traefik-public
       # Make Traefik use this domain in HTTPS
       - traefik.http.routers.api_reclamos-https.entrypoints=https
-      - traefik.http.routers.api_reclamos-https.rule=Host(`${SERVER_PREFIX:-}api.reclamo.reputacion.digital`)
+      - traefik.http.routers.api_reclamos-https.rule=Host(`${SERVER_PREFIX:-}api.reclamos.reputacion.digital`)
       - traefik.http.routers.api_reclamos-https.tls=true
       # Use the "le" (Let's Encrypt) resolver
       - traefik.http.routers.api_reclamos-https.tls.certresolver=le
@@ -42,12 +42,12 @@ services:
       - traefik.http.services.reclamo_ciudadano.loadbalancer.server.port=3000
       # http for this container
       - traefik.http.routers.reclamo_ciudadano-http.entrypoints=http
-      - traefik.http.routers.reclamo_ciudadano-http.rule=Host(`${SERVER_PREFIX:-}reclamo.reputacion.digital`)
+      - traefik.http.routers.reclamo_ciudadano-http.rule=Host(`${SERVER_PREFIX:-}reclamos.reputacion.digital`)
       # Connect to network (must be already created whith: docker)
       - traefik.docker.network=traefik-public
       # Make Traefik use this domain in HTTPS
       - traefik.http.routers.reclamo_ciudadano-https.entrypoints=https
-      - traefik.http.routers.reclamo_ciudadano-https.rule=Host(`${SERVER_PREFIX:-}reclamo.reputacion.digital`)
+      - traefik.http.routers.reclamo_ciudadano-https.rule=Host(`${SERVER_PREFIX:-}reclamos.reputacion.digital`)
       - traefik.http.routers.reclamo_ciudadano-https.tls=true
       # Use the "le" (Let's Encrypt) resolver
       - traefik.http.routers.reclamo_ciudadano-https.tls.certresolver=le
