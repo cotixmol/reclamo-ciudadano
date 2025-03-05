@@ -1,15 +1,16 @@
 stages:
   - build-full
+  - migrate_dev
   - deploy-full
   - build-back
   - deploy-back
-  - migrate
+  - migrate_main
   - build-front
   - deploy-front
 
 # Dev: Migrate
 dev_migrate:
-  stage: migrate
+  stage: migrate_dev
   image: python:3.12-slim-bookworm
   tags:
     - saas
@@ -28,7 +29,7 @@ dev_migrate:
 
 # Main: Migrate
 main_migrate:
-  stage: migrate
+  stage: migrate_main
   image: python:3.12-slim-bookworm
   tags:
     - saas

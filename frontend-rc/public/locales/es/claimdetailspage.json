@@ -11,5 +11,6 @@
   "title": "Titulo",
   "description": "Descripción",
   "updateClaim": "Actualizar Reclamo",
-  "back": "Volver"
+  "back": "Volver",
+  "updating": "Actualizando..."
 }

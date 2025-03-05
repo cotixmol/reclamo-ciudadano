@@ -1,6 +1,6 @@
 {
   "name": "Reclamo Ciudadano",
-  "short_name": "Reclamo",
+  "short_name": "Reclamo Ciudadano",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
