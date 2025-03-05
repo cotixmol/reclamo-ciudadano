@@ -23,6 +23,7 @@ export default function MapSelector({
     parseFloat(longitude) || -58.4,
   ]);
   const [isLocating, setIsLocating] = useState(false);
+  const [locationError, setLocationError] = useState(false);
 
   const { t } = useTranslation('claimcreationform');
   const markerRef = useRef<any>(null);
@@ -61,8 +62,10 @@ export default function MapSelector({
   );
 
   const handleGetCurrentLocation = () => {
+    setLocationError(false);
     if (!navigator.geolocation) {
       alert('Geolocation not supported by this browser.');
+      setLocationError(true);
       return;
     }
 
@@ -85,6 +88,8 @@ export default function MapSelector({
       },
       (error) => {
         console.error('Geolocation Error:', error);
+        setLocationError(true);
+        setIsLocating(false);
       },
       { enableHighAccuracy: true }
     );
@@ -154,13 +159,14 @@ export default function MapSelector({
       >
         {isLocating ? (
           <>
-            {/* A simple spinner */}
             <span
               className="inline-block h-4 w-4 border-2 border-white border-t-transparent 
                              rounded-full animate-spin"
             />
             <span>{t('locating')}</span>
           </>
+        ) : locationError ? (
+          <span>{t('locationError')}</span>
         ) : (
           t('useMyLocation')
         )}
