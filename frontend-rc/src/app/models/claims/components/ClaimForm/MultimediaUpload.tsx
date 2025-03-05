@@ -28,6 +28,7 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
       setIsMobile(/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
     }
   }, []);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setErrorMessage(null);
     if (!e.target.files) return;
@@ -46,8 +47,17 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
       return true;
     });
 
-    setFiles((prev) => [...prev, ...validFiles]);
-    setFileNames((prev) => [...prev, ...validFiles.map((f) => f.name)]);
+    const validFilesWithUniqueNames = validFiles.map((file) => {
+      const ext = file.name.split('.').pop() || 'jpg';
+      const uniqueName = `${Date.now()}.${ext}`;
+      return new File([file], uniqueName, { type: file.type });
+    });
+
+    setFiles((prev) => [...prev, ...validFilesWithUniqueNames]);
+    setFileNames((prev) => [
+      ...prev,
+      ...validFilesWithUniqueNames.map((f) => f.name),
+    ]);
   };
 
   const handleDelete = (index: number) => {
