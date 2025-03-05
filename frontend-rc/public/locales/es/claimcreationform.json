@@ -33,5 +33,6 @@
   "sizeLimitError": "supera el limite de 10MB.",
   "openCamera": "Abrir cámara",
   "useMyLocation": "Usar mi ubicación",
-  "locating": "Localizando..."
+  "locating": "Localizando...",
+  "locationError": "No disponible. Intente manualmente"
 }
