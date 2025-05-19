@@ -1,14 +1,14 @@
 'use client';
-
+import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import { ClaimWithMultimediaResponse } from '../../models/claims/types/claim';
-import ClaimCard from '../../models/claims/components/ClaimCard';
+import { ClaimWithMultimediaResponse } from '../../../models/claims/types/claim';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
-import ClaimNotFoundPage from '../../models/claims/components/ClaimNotFound';
-import { fetchAllClaimsByPublicIds } from '@/app/services/claims/fetch';
+import ClaimNotFoundPage from '../../../models/claims/components/ClaimNotFound';
+import { fetchAllClaimsByClientId } from '@/app/services/admin/claims/fetch';
 
 export default function AdminPage() {
+  const params = useParams() as { clientPublicId: string };
   const [claims, setClaims] = useState<ClaimWithMultimediaResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -17,7 +17,9 @@ export default function AdminPage() {
     const loadClaims = async () => {
       setIsLoading(true);
       try {
-        const claimsData = await fetchAllClaimsByPublicIds();
+        const claimsData = await fetchAllClaimsByClientId(
+          params.clientPublicId
+        );
         setClaims(claimsData.reverse());
       } catch (err) {
         setError(err as Error);

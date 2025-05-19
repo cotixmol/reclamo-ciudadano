@@ -14,11 +14,17 @@ export default function ClaimsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  const getStoredPublicIds = (): string[] => {
+    const existing = localStorage.getItem('publicIds');
+    return existing ? JSON.parse(existing) : [];
+  };
+
   useEffect(() => {
     const loadClaims = async () => {
       setIsLoading(true);
       try {
-        const claimsData = await fetchAllClaimsByPublicIds();
+        const publicIds = getStoredPublicIds();
+        const claimsData = await fetchAllClaimsByPublicIds(publicIds);
         setClaims(claimsData.reverse());
       } catch (err) {
         setError(err as Error);
