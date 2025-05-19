@@ -12,7 +12,7 @@ const BottomNavBar = () => {
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
-  const plusActive = isActive('/models/claims/pages/create');
+  const plusActive = isActive('/pages/claims/create');
 
   return (
     <nav className="fixed z-10 bottom-0 left-0 w-full bg-RCColors-900 text-RCColors-200 shadow-lg shadow-black/30 border-t border-primary">
@@ -36,7 +36,7 @@ const BottomNavBar = () => {
 
         {/* Center: Plus */}
         <Link
-          href="/models/claims/pages/create"
+          href="/pages/claims/create"
           className={`flex items-center mx-auto rounded-full p-4 transition-colors duration-200 ${
             plusActive
               ? 'bg-RCColors-900 border-2 border-primary'
@@ -48,21 +48,19 @@ const BottomNavBar = () => {
 
         {/* Right: My Claims */}
         <Link
-          href="/models/claims/pages"
+          href="/pages/claims"
           className={`flex flex-col items-center space-y-1 ${
-            isActive('/models/claims/pages') ? 'scale-110' : 'scale-100'
+            isActive('/pages/claims') ? 'scale-110' : 'scale-100'
           } transition-transform duration-200`}
         >
           <FiList
             className={`w-6 h-6 ${
-              isActive('/models/claims/pages')
-                ? 'text-primary'
-                : 'text-RCColors-400'
+              isActive('/pages/claims') ? 'text-primary' : 'text-RCColors-400'
             }`}
           />
           <span
             className={`text-sm ${
-              isActive('/models/claims/pages') ? 'text-primary' : ''
+              isActive('/pages/claims') ? 'text-primary' : ''
             }`}
           >
             {t('myClaimsButton')}

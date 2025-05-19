@@ -30,7 +30,7 @@ export default function HomePage() {
         <p className="text-lg md:text-xl text-RCColors-300 mb-8">
           {t('hero.subtitle')}
         </p>
-        <Link href="/models/claims/pages" passHref>
+        <Link href="/pages/claims" passHref>
           <button
             type="button"
             className="px-6 py-3 bg-primary text-lg font-semibold rounded-lg shadow-lg hover:bg- RCPink-hover transition-all duration-300"

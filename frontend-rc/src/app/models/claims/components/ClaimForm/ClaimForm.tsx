@@ -112,7 +112,7 @@ export default function ClaimForm() {
       }
 
       await markClaimAsFinished(publicId);
-      router.push('/models/claims/pages');
+      router.push('/pages/claims');
     } catch (err) {
       console.error(err);
       setError(err as Error);
