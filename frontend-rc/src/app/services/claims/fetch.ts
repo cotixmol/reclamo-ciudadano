@@ -11,7 +11,6 @@ export async function fetchAllClaimsByPublicIds(): Promise<
 > {
   const publicIds = getStoredPublicIds();
   try {
-    console.log(`Requesting claims to ${process.env.NEXT_PUBLIC_INTERNAL_API_URL}`)
     const response = await axios.post<ClaimWithMultimediaResponse[]>(
       `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/claims`,
       {
@@ -49,3 +48,21 @@ export async function fetchClaimByPublicId(
     throw new Error('An unknown error occurred while fetching claim');
   }
 }
+
+export async function fetchClaimByAdmin(
+  publicId: string
+): Promise<ClaimWithMultimediaResponse> {
+  try {
+    const response = await axios.get<ClaimWithMultimediaResponse>(
+      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/claims/${publicId}`
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const { data } = error.response;
+      throw new Error(data?.error || 'Failed to fetch claim');
+    }
+    throw new Error('An unknown error occurred while fetching claim');
+  }
+}
+
