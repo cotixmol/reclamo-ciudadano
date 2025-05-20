@@ -7,6 +7,8 @@ import ErrorPage from '@/app/components/ErrorPage';
 import ClaimNotFoundPage from '../../../models/claims/components/ClaimNotFound';
 import { fetchAllClaimsByClientId } from '@/app/services/admin/claims/fetch';
 
+// This page needs changes. Is not definitive.
+
 export default function AdminPage() {
   const params = useParams() as { clientPublicId: string };
   const [claims, setClaims] = useState<ClaimWithMultimediaResponse[]>([]);
