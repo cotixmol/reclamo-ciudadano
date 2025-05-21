@@ -24,7 +24,6 @@ export async function createClaim(
     savePublicId(publicId);
     return response.data;
   } catch (error) {
-    console.log('Error creating claim:', error);
     if (axios.isAxiosError(error) && error.response) {
       const { data } = error.response;
       throw new Error(
