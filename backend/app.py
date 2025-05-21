@@ -1,5 +1,11 @@
 from fastapi import FastAPI
-from routers import claim_router, claim_types_router, multimedia_router
+from routers import (
+    claim_router,
+    claim_types_router,
+    multimedia_router,
+    admin_claim_router,
+)
+
 import uvicorn
 from middleware.cors import add_cors_middleware
 
@@ -9,6 +15,7 @@ add_cors_middleware(app)
 app.include_router(claim_router, prefix=prefix)
 app.include_router(claim_types_router, prefix=prefix)
 app.include_router(multimedia_router, prefix=prefix)
+app.include_router(admin_claim_router, prefix=prefix)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from service import ClaimService, StoreObjectService
-from typing import Optional
+from service import StoreObjectService
+from typing import List
 from dependencies import (
     get_store_object_service,
     validate_api_key_and_client,
@@ -20,7 +20,9 @@ admin_claim_router = APIRouter(
 )
 
 
-@admin_claim_router.get("/claim/{client_public_id}", response_model=ReadClaimResponse)
+@admin_claim_router.get(
+    "/claim/{client_public_id}", response_model=List[ReadClaimResponse]
+)
 async def read_all_claims_by_client_id(
     client_public_id: UUID,
     admin_claim_service: AdminClaimService = Depends(get_admin_claim_service),
