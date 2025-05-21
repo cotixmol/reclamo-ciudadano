@@ -26,6 +26,9 @@ from errors.claim_errors import (
 )
 from config.db import db_reporte_ciudadano
 from sqlmodel import Session
+from fastapi import Depends, HTTPException, status
+from utils import get_current_client
+from models import Client
 
 
 claim_router = APIRouter(dependencies=[Depends(validate_api_key_and_client)])
@@ -101,12 +104,13 @@ async def delete_claim_by_public_id(
 async def create_claim(
     claim: ClaimCreateRequestSchema,
     session: Session = Depends(db_reporte_ciudadano.get_session),
+    current_client: Client = Depends(get_current_client),
     claim_service: ClaimService = Depends(get_claim_service),
     store_object_service: StoreObjectService = Depends(get_store_object_service),
 ):
     try:
         with session.begin():
-            new_claim = claim_service.create_claim(claim)
+            new_claim = claim_service.create_claim(claim, current_client.id)
             url = store_object_service.generate_presigned_write_urls(new_claim)
         return {
             "new_claim": new_claim,

@@ -26,6 +26,7 @@ from models import MultimediaRead
 
 if TYPE_CHECKING:
     from models import Multimedia
+    from models import Client
 
 
 class ClaimCreateRequestSchema(BaseModel):
@@ -139,6 +140,10 @@ class Claim(SQLModel, table=True):
             server_default=text("false"),
         ),
     )
+    client_id: int = Field(
+        sa_column=Column(ForeignKey("clients.id"), nullable=False, index=True)
+    )
+    client: Optional["Client"] = Relationship()
     multimedia: List["Multimedia"] = Relationship()
     _file_sizes: Optional[Dict[str, int]] = PrivateAttr(default=None)
 

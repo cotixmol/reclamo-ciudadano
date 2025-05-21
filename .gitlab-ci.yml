@@ -22,8 +22,8 @@ dev_migrate:
     - .infra/.ansible/inject_secrets.sh
     - mv .env backend/.env && cd backend
     - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
-    - alembic upgrade head
     - python -m config.create_master_user
+    - alembic upgrade head
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
 
@@ -42,8 +42,8 @@ main_migrate:
     - mv .env backend/.env && cd backend
     - sed -i  -e 's/postgres_gis/reclamos.reputacion.digital/g' .env
     - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
-    - alembic upgrade head
     - python -m config.create_master_user
+    - alembic upgrade head
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
 
