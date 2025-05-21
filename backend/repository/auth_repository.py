@@ -18,7 +18,7 @@ class AuthRepository:
             pass
         return unicodedata.normalize("NFC", text)
 
-    def validate_api_key_and_client(self, api_key: str, client_name: str) -> ApiKey:
+    def validate_api_key_and_client(self, api_key: str, client_name: str) -> int:
         for db in self.db_reporte_ciudadano.get_session_generator():
             api_key_record = self.auth_dao.get_api_key(db, api_key)
             if not api_key_record:
@@ -33,4 +33,5 @@ class AuthRepository:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden"
                 )
-            return api_key_record
+
+            return api_key_record.client_id
