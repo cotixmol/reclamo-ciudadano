@@ -23,7 +23,7 @@ export async function GET(
 
     const backendResponse = await axios.get<
       ClaimWithMultimediaResponse[] | ClaimErrorResponse
-    >(`${process.env.API_URL}/admin/claims/${clientPublicId}`, {
+    >(`${process.env.API_URL}/admin/claim/${clientPublicId}`, {
       validateStatus: () => true,
       headers: headersConfig,
     });
