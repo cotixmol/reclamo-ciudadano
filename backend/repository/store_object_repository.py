@@ -124,7 +124,7 @@ class StoreObjectRepository:
             raise Exception(f"Error generating presigned write URLs: {e}") from e
 
     def generate_presigned_read_url_for_claim(
-        self, claim: Claim, expiration: int = 60
+        self, claim: Claim, expiration: int = 3600
     ) -> Claim:
         """
         Generates presigned read URLs for all multimedia items in a single Claim.
