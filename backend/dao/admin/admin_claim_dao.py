@@ -42,7 +42,7 @@ class AdminClaimSQLAlchemy(AdminClaimDAO):
         try:
             results = db.exec(statement).all()
             if not results:
-                raise ClaimsNotFoundByClientError(client_public_id=client_public_id)
+                return []
             for claim in results:
                 if claim.claim_location:
                     claim.claim_location = wkb_element_to_geometry_point(

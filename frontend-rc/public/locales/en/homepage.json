@@ -20,5 +20,8 @@
   },
   "footer": {
     "text": "Made with ♥ by Reputación Digital"
+  },
+  "admin": {
+    "button": "Admin Panel"
   }
 }

@@ -20,5 +20,8 @@
   },
   "footer": {
     "text": "Hecho con ♥ por Reputación Digital"
+  },
+  "admin": {
+    "button": "Administrador"
   }
 }
