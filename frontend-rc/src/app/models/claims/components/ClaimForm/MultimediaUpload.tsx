@@ -47,9 +47,10 @@ const MultimediaUpload: React.FC<MultimediaUploadProps> = ({
       return true;
     });
 
-    const validFilesWithUniqueNames = validFiles.map((file) => {
+    const validFilesWithUniqueNames = validFiles.map((file, idx) => {
       const ext = file.name.split('.').pop() || 'jpg';
-      const uniqueName = `${Date.now()}.${ext}`;
+      const uniqueSuffix = `${Date.now()}-${idx}`;
+      const uniqueName = `${uniqueSuffix}.${ext}`;
       return new File([file], uniqueName, { type: file.type });
     });
 
