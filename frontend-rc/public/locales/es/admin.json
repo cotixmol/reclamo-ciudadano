@@ -1,0 +1,9 @@
+{
+    "title": "Acceso a la administración",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "login": "Iniciar sesión",
+    "errors": {
+        "invalidCredentials": "Correo electrónico o contraseña incorrectos"
+    }
+}

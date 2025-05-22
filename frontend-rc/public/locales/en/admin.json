@@ -1,0 +1,9 @@
+{
+    "title": "Access to the administration panel",
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "errors": {
+        "invalidCredentials": "Invalid email or password"
+    }
+}
