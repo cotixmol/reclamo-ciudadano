@@ -83,5 +83,20 @@
   "pagination.last": "Última página",
   "noClaimsFoundWithFilters": "No hay reclamos que coincidan con los filtros.",
   "noClaimsYet": "Aún no hay reclamos para este cliente.",
-  "goBack": "Regresar"
+  "goBack": "Regresar",
+  "graphs.title": "Tablero de control de reclamos",
+  "noClaimsFoundTitle": "Aún no hay reclamos",
+  "graphs.type": "Tipos de reclamo",
+  "graphs.priority": "Prioridad",
+  "graphs.totalClaims": "Total de reclamos",
+  "graphs.claimsWithStatusOpen": "Total en progreso",
+  "graphs.claimsWithStatusCritical": "Total críticos",
+  "graphs.status": "Estados de los reclamos",
+  "graphs.timelineTitle": "Línea de tiempo acumulada por tipo de reclamo",
+  "graphs.noDataForTypes": "Sin datos de tipos",
+  "graphs.noDataForPriority": "Sin datos de prioridad",
+  "graphs.noDataForStatus": "Sin datos para estados",
+  "graphs.noDataForTimeline": "Sin datos para la línea de tiempo",
+  "warning": "Advertencia:",
+  "errorLoadingData": "Ocurrió un error al cargar los datos."
 }

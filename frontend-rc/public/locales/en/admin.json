@@ -83,5 +83,20 @@
   "pagination.last": "Last page",
   "noClaimsFoundWithFilters": "No claims match the applied filters.",
   "noClaimsYet": "No claims for this client yet.",
-  "goBack": "Go back"
+  "goBack": "Go back",
+  "graphs.title": "Claims dashboard",
+  "noClaimsFoundTitle": "No claims yet",
+  "graphs.type": "Claim types",
+  "graphs.priority": "Priority",
+  "graphs.totalClaims": "Total claims",
+  "graphs.claimsWithStatusOpen": "Total in Progress",
+  "graphs.claimsWithStatusCritical": "Total critical",
+  "graphs.status": "Claim statuses",
+  "graphs.timelineTitle": "Cumulative claims timeline by type",
+  "graphs.noDataForTypes": "No data for types",
+  "graphs.noDataForPriority": "No data for priority",
+  "graphs.noDataForStatus": "No data for statuses",
+  "graphs.noDataForTimeline": "No data for timeline",
+  "warning": "Warning:",
+  "errorLoadingData": "An error occurred while loading data."
 }
