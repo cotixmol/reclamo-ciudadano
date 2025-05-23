@@ -1,4 +1,40 @@
-# config/create_master_user.py  (or wherever the script lives)
+#!/usr/bin/env python3
+"""
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ PLATFORM SEEDER – CREATES MASTER TENANT & SUPERADMIN KEY                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+• Purpose
+  Idempotently ensure that two baseline tenants exist:
+
+    1. "Reputación Digital Master"  – the software provider (super-admin).
+    2. "Legacy Client"              – demo / migration sandbox.
+
+  It also guarantees **exactly one** ACTIVE API-key with role=superadmin
+  attached to the Master tenant. If a key already exists, it is re-used.
+
+• Future state
+  In the future this logic will migrate into either:
+    • a dedicated `/superadmin/tenants` & `/superadmin/api-keys` endpoint
+      implemented via SuperAdminTenantService + SuperAdminApiKeyService.
+
+  Until then, run this script after `alembic upgrade head` on every new
+  environment.
+
+• How to run  (project root)
+    python -m config.superadmin_scripts.seed_initial_data
+
+  Safe to execute multiple times; it **will not** create duplicates.
+
+• Output
+      Seeded:
+       • Master client id  = 1
+       • Legacy client id  = 2
+  If a new SUPERADMIN key was generated the script prints a note, but *never*
+  echoes the key value to stdout (avoid log leaks).
+
+"""
+
 import secrets
 from sqlmodel import Session, select
 from config import db_reporte_ciudadano

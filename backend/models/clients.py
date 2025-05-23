@@ -7,6 +7,7 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 if TYPE_CHECKING:
     from .api_key import ApiKey
+    from .admin import AdminUser
 
 
 class Client(SQLModel, table=True):
@@ -43,3 +44,4 @@ class Client(SQLModel, table=True):
     )
 
     api_keys: List["ApiKey"] = Relationship(back_populates="client")
+    users: list["AdminUser"] = Relationship(back_populates="client")

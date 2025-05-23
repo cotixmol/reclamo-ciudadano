@@ -1,1 +1,2 @@
 from .admin_claim_repository import AdminClaimRepository
+from .admin_user_repository import AdminUserRepository

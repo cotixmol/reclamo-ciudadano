@@ -21,11 +21,7 @@ export default function HomePage() {
           <LanguageSwitcher />
 
           {/* desktop-only Admin button */}
-          <Link
-            href="/pages/admin/login"
-            passHref
-            className="hidden md:inline-flex"
-          >
+          <Link href="/admin/login" passHref className="hidden md:inline-flex">
             <button
               type="button"
               className="ml-4 px-4 py-2 text-primary text-xs font-semibold hover:text-primary-hover rounded-lg hover:bg-RCColors-700"
