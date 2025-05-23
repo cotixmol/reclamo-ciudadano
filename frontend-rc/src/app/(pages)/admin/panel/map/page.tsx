@@ -139,6 +139,9 @@ export default function AdminMapTabPage() {
         {!isLoading && !error && claims.length === 0 && (
           <div className="h-full flex flex-col items-center justify-center bg-RCColors-800 rounded-lg p-8 text-center">
             <FiMapPin className="w-16 h-16 text-RCColors-600 mb-4" />
+            <h2 className="text-2xl font-semibold mb-3 text-RCColors-200">
+              {t('admin:noClaimsFoundTitle', 'Aún no hay reclamos')}
+            </h2>
             <p className="text-RCColors-300 text-lg">
               {t(
                 'admin:map.noClaimsFoundMap',
