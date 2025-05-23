@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ClaimWithMultimediaResponse } from '../../models/claims/types/claim';
-import ClaimCard from '../../models/claims/components/ClaimCard';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
-import ClaimNotFoundPage from '../../models/claims/components/ClaimNotFound';
 import { fetchAllClaimsByPublicIds } from '@/app/services/claims/fetch';
+import { ClaimWithMultimediaResponse } from '@/app/models/claims/types/claim';
+import ClaimNotFoundPage from '@/app/models/claims/components/ClaimNotFound';
+import ClaimCard from '@/app/models/claims/components/ClaimCard';
 
 export default function ClaimsPage() {
   const [claims, setClaims] = useState<ClaimWithMultimediaResponse[]>([]);

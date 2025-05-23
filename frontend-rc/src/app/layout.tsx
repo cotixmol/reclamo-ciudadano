@@ -1,7 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
 import './globals.css';
-import BottomNavBar from './components/BottomNavBar';
 import { ClaimTypesProvider } from './context/ClaimTypesContext';
 import { loadAllClaimsTypesAtBootstart } from './services/claim_types/fetch';
 import PreloadMapSelector from './models/claims/components/ClaimForm/Map/PreloadMapSelector';
@@ -45,8 +44,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className="relative min-h-screen bg-RCColors-900 text-RCColors-200">
         <ClaimTypesProvider claimTypes={claimTypes}>
-          <div className="pb-28">{children}</div>
-          <BottomNavBar />
+          {children}
           <PreloadMapSelector />
         </ClaimTypesProvider>
       </body>

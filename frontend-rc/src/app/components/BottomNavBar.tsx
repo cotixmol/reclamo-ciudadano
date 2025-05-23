@@ -12,7 +12,7 @@ const BottomNavBar = () => {
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
-  const plusActive = isActive('/pages/claims/create');
+  const plusActive = isActive('/claims/create');
 
   return (
     <nav className="fixed z-10 bottom-0 left-0 w-full bg-RCColors-900 text-RCColors-200 shadow-lg shadow-black/30 border-t border-primary">
@@ -36,7 +36,7 @@ const BottomNavBar = () => {
 
         {/* Center: Plus */}
         <Link
-          href="/pages/claims/create"
+          href="/claims/create"
           className={`flex items-center mx-auto rounded-full p-4 transition-colors duration-200 ${
             plusActive
               ? 'bg-RCColors-900 border-2 border-primary'
@@ -48,20 +48,18 @@ const BottomNavBar = () => {
 
         {/* Right: My Claims */}
         <Link
-          href="/pages/claims"
+          href="/claims"
           className={`flex flex-col items-center space-y-1 ${
-            isActive('/pages/claims') ? 'scale-110' : 'scale-100'
+            isActive('/claims') ? 'scale-110' : 'scale-100'
           } transition-transform duration-200`}
         >
           <FiList
             className={`w-6 h-6 ${
-              isActive('/pages/claims') ? 'text-primary' : 'text-RCColors-400'
+              isActive('/claims') ? 'text-primary' : 'text-RCColors-400'
             }`}
           />
           <span
-            className={`text-sm ${
-              isActive('/pages/claims') ? 'text-primary' : ''
-            }`}
+            className={`text-sm ${isActive('/claims') ? 'text-primary' : ''}`}
           >
             {t('myClaimsButton')}
           </span>
