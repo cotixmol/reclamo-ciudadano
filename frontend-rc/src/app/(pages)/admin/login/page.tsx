@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 import { AdminLogin } from '@/app/services/admin/login/login';
 
-const PUBLIC_CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID;
 export default function AdminLoginPage() {
   const { t } = useTranslation('admin');
   const router = useRouter();
@@ -23,7 +22,7 @@ export default function AdminLoginPage() {
       await AdminLogin(email, password);
       setEmail('');
       setPassword('');
-      router.push(`/admin/client/${PUBLIC_CLIENT_ID}`);
+      router.push(`/admin/${process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID}`);
     } catch (err: any) {
       setError(t('errors.invalidCredentials'));
     }

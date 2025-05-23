@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from jose import jwt
 from repository.admin import AdminUserRepository
 
@@ -17,6 +17,6 @@ class AdminAuthService:
             "sub": str(user.public_id),
             "client": client_id,
             "role": "admin",
-            "exp": datetime.now() + timedelta(minutes=JWT_EXPIRY_MIN),
+            "exp": datetime.now(timezone.utc) + timedelta(minutes=JWT_EXPIRY_MIN),
         }
         return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
