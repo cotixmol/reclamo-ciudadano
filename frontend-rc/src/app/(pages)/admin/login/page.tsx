@@ -1,11 +1,12 @@
 'use client';
-import axios from 'axios';
+import { FaArrowLeft } from 'react-icons/fa';
 import '../../../i18n';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
 import { AdminLogin } from '@/app/services/admin/login/login';
 
+const PUBLIC_CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID;
 export default function AdminLoginPage() {
   const { t } = useTranslation('admin');
   const router = useRouter();
@@ -22,14 +23,23 @@ export default function AdminLoginPage() {
       await AdminLogin(email, password);
       setEmail('');
       setPassword('');
-      router.push(''); // Replace with Mati router.
+      router.push(`/admin/client/${PUBLIC_CLIENT_ID}`);
     } catch (err: any) {
-      setError(t('errors.invalidCredentials')); // i18n-ready message
+      setError(t('errors.invalidCredentials'));
     }
   };
 
   return (
-    <div className="min-h-screen bg-RCColors-900 flex items-center justify-center p-5">
+    <div className="relative min-h-screen bg-RCColors-900 flex items-center justify-center p-5">
+      {/* ← Back to home */}
+      <button
+        onClick={() => router.push('/')}
+        aria-label={t('goBack')}
+        className="absolute top-4 left-4 flex items-center space-x-3 text-white hover:text-gray-300 transition"
+      >
+        <FaArrowLeft size={24} />
+        <span className="text-sm">{t('goBack')}</span>
+      </button>
       <form
         onSubmit={handleLogin}
         className="bg-RCColors-800 w-full max-w-sm p-8 rounded-lg shadow-lg"

@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-export async function AdminLogin(email: string, password: string): Promise<void> {
+const BASE_URL = process.env.NEXT_PUBLIC_INTERNAL_API_URL!
+
+export async function AdminLogin(email: string, password: string) {
   try {
     if (!email || !password) {
       throw new Error('Credentials are required');
     }
-    await axios.post(
-      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/admin/login`,
-      { email, password }
-    );
+    const url = `${BASE_URL}/admin/login`
+    await axios.post(url, { email, password })
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       throw new Error('Credentials are invalid');
@@ -16,3 +16,5 @@ export async function AdminLogin(email: string, password: string): Promise<void>
     throw new Error('An error occurred during login');
   }
 }
+
+
