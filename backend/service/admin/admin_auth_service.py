@@ -4,7 +4,7 @@ from jose import jwt
 from repository.admin import AdminUserRepository
 
 JWT_SECRET = os.getenv("JWT_SECRET")
-JWT_EXPIRY_MIN = 60
+JWT_EXPIRY_MIN = int(os.getenv("JWT_EXPIRY_MIN"))
 
 
 class AdminAuthService:
