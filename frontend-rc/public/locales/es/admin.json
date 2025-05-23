@@ -82,5 +82,6 @@
   "pagination.next": "Página siguiente",
   "pagination.last": "Última página",
   "noClaimsFoundWithFilters": "No hay reclamos que coincidan con los filtros.",
-  "noClaimsYet": "Aún no hay reclamos para este cliente."
+  "noClaimsYet": "Aún no hay reclamos para este cliente.",
+  "goBack": "Regresar"
 }

@@ -82,5 +82,6 @@
   "pagination.next": "Next page",
   "pagination.last": "Last page",
   "noClaimsFoundWithFilters": "No claims match the applied filters.",
-  "noClaimsYet": "No claims for this client yet."
+  "noClaimsYet": "No claims for this client yet.",
+  "goBack": "Go back"
 }
