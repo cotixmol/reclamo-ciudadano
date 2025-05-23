@@ -35,7 +35,7 @@ export default function AdminLoginPage() {
         className="bg-RCColors-800 w-full max-w-sm p-8 rounded-lg shadow-lg"
       >
         <h1 className="text-2xl font-bold text-primary mb-6 text-center">
-          {t('title')}
+          {t('loginTitle')}
         </h1>
 
         {/* email */}
