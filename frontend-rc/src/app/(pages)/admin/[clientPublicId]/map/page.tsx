@@ -26,27 +26,28 @@ const ClaimsDisplayMapWithNoSSR = dynamic(
 export default function AdminMapTabPage() {
   const { t, i18n } = useTranslation(['admin', 'claim', 'claimcreationform']);
 
+  // Naming for clarity
   const [claims, setClaims] = useState<ClaimWithMultimediaResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedClaimForModal, setSelectedClaimForModal] =
+  const [selectedClaim, setSelectedClaim] =
     useState<ClaimWithMultimediaResponse | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
-  const allClaimTypesFromContext = useClaimTypes();
+  const claimTypesContext = useClaimTypes();
 
   const clientPublicId = process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID;
 
-  const claimTypesForMap = useMemo(() => {
-    return (allClaimTypesFromContext || []).map(
-      (ct: RawClaimTypesResponse) => ({
-        value: ct.id,
-        label: i18n.language === 'es' ? ct.categoryEs : ct.categoryEn,
-      })
-    );
-  }, [allClaimTypesFromContext, i18n.language]);
+  // Naming for clarity
+  const claimTypeOptions = useMemo(() => {
+    return (claimTypesContext || []).map((ct: RawClaimTypesResponse) => ({
+      value: ct.id,
+      label: i18n.language === 'es' ? ct.categoryEs : ct.categoryEn,
+    }));
+  }, [claimTypesContext, i18n.language]);
 
-  const loadClaims = useCallback(async () => {
+  // Naming for clarity and error typing
+  const fetchClaims = useCallback(async () => {
     if (!clientPublicId) {
       setError(
         t(
@@ -56,6 +57,8 @@ export default function AdminMapTabPage() {
       );
       setIsLoading(false);
       setClaims([]);
+      // Optionally log for debugging
+      console.warn('Missing NEXT_PUBLIC_CLIENT_PUBLIC_ID');
       return;
     }
     setIsLoading(true);
@@ -63,12 +66,18 @@ export default function AdminMapTabPage() {
     try {
       const claimsData = await fetchAllClaimsByClientId(clientPublicId);
       setClaims(claimsData);
-    } catch (err: any) {
-      console.error('Error fetching claims for map:', err);
-      setError(
-        err.message ||
+    } catch (err: unknown) {
+      console.error('Error fetching claims for map');
+      if (err instanceof Error) {
+        setError(
+          err.message ||
+            t('admin:errorFetchingClaims', 'Error al obtener los reclamos.')
+        );
+      } else {
+        setError(
           t('admin:errorFetchingClaims', 'Error al obtener los reclamos.')
-      );
+        );
+      }
       setClaims([]);
     } finally {
       setIsLoading(false);
@@ -76,14 +85,16 @@ export default function AdminMapTabPage() {
   }, [clientPublicId, t]);
 
   useEffect(() => {
-    loadClaims();
-  }, [loadClaims]);
+    fetchClaims();
+  }, [fetchClaims]);
 
+  // Naming for clarity
   const handleMarkerClick = (claimData: ClaimWithMultimediaResponse) => {
-    setSelectedClaimForModal(claimData);
+    setSelectedClaim(claimData);
     setIsDetailsModalOpen(true);
   };
 
+  // Naming for clarity
   const initialMapCenter: [number, number] = useMemo(() => {
     const DEFAULT_CENTER: [number, number] = [-34.6037, -58.3816];
 
@@ -160,18 +171,18 @@ export default function AdminMapTabPage() {
             claims={claims}
             onMarkerClick={handleMarkerClick}
             mapCenter={initialMapCenter}
-            allClaimTypes={claimTypesForMap}
+            allClaimTypes={claimTypeOptions}
           />
         )}
       </div>
 
-      {isDetailsModalOpen && selectedClaimForModal && (
+      {isDetailsModalOpen && selectedClaim && (
         <ClaimDetailsModal
           isOpen={isDetailsModalOpen}
           onClose={() => setIsDetailsModalOpen(false)}
           initialClaimData={{
-            publicId: selectedClaimForModal.claim.publicId,
-            title: selectedClaimForModal.claim.title,
+            publicId: selectedClaim.claim.publicId,
+            title: selectedClaim.claim.title,
           }}
         />
       )}

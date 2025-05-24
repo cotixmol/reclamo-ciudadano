@@ -35,11 +35,11 @@ interface ChartData {
   };
 }
 
+// Utility: get all dates in range as YYYY-MM-DD
 const getDatesInRange = (startDate: Date, endDate: Date): string[] => {
   const dates: string[] = [];
-  let currentDate = new Date(startDate.toISOString().split('T')[0]); // Normalize to YYYYY-MM-DD
+  let currentDate = new Date(startDate.toISOString().split('T')[0]);
   const lastDate = new Date(endDate.toISOString().split('T')[0]);
-
   while (currentDate <= lastDate) {
     dates.push(currentDate.toISOString().split('T')[0]);
     currentDate.setDate(currentDate.getDate() + 1);
@@ -53,21 +53,23 @@ export default function AdminChartsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const allClaimTypesFromContext = useClaimTypes();
+  const claimTypesContext = useClaimTypes();
   const clientPublicId = process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID;
 
+  // Memoized function for claim type name
   const getClaimTypeName = useMemo(
     () => (typeId: number) => {
-      const typeObj = allClaimTypesFromContext.find((ct) => ct.id === typeId);
+      const typeObj = claimTypesContext.find((ct) => ct.id === typeId);
       return typeObj
         ? i18n.language === 'es'
           ? typeObj.categoryEs
           : typeObj.categoryEn
         : t('admin:unknown');
     },
-    [allClaimTypesFromContext, i18n.language, t]
+    [claimTypesContext, i18n.language, t]
   );
 
+  // Pie: claim types
   const processClaimTypes = (claims: ClaimWithMultimediaResponse[]) => {
     const counts: { [key: string]: number } = {};
     claims.forEach((c) => {
@@ -77,6 +79,7 @@ export default function AdminChartsPage() {
     return Object.entries(counts).map(([name, value]) => ({ name, value }));
   };
 
+  // Pie: priorities
   const processPriorities = (claims: ClaimWithMultimediaResponse[]) => {
     const counts: { [key: string]: number } = {};
     const priorityMap = {
@@ -91,14 +94,14 @@ export default function AdminChartsPage() {
     return Object.entries(counts).map(([name, value]) => ({ name, value }));
   };
 
+  // Key values
   const processTotals = (claims: ClaimWithMultimediaResponse[]) => ({
     total: claims.length,
-    inProgress: claims.filter((c) => c.claim.status === ClaimStatusEnum.Open)
-      .length,
-    critical: claims.filter((c) => c.claim.priority === PriorityEnum.HIGH)
-      .length,
+    inProgress: claims.filter((c) => c.claim.status === ClaimStatusEnum.Open).length,
+    critical: claims.filter((c) => c.claim.priority === PriorityEnum.HIGH).length,
   });
 
+  // Bar: statuses
   const processStatuses = (claims: ClaimWithMultimediaResponse[]) => {
     const counts: { [key: string]: number } = {};
     const statusOrder = [ClaimStatusEnum.Open, ClaimStatusEnum.Close];
@@ -120,18 +123,16 @@ export default function AdminChartsPage() {
     return { xAxis, series };
   };
 
+  // Timeline: cumulative by type
   const processTimelineData = (claims: ClaimWithMultimediaResponse[]) => {
     if (claims.length === 0) {
       return { xAxis: [], series: [], legend: [] };
     }
-
-    // Order claims by date
     claims.sort(
       (a, b) =>
         new Date(a.claim.createdAt).getTime() -
         new Date(b.claim.createdAt).getTime()
     );
-
     const startDate = new Date(claims[0].claim.createdAt);
     const endDate = new Date(claims[claims.length - 1].claim.createdAt);
     const dateRange = getDatesInRange(startDate, endDate);
@@ -142,7 +143,6 @@ export default function AdminChartsPage() {
     claims.forEach((c) => {
       const typeName = getClaimTypeName(c.claim.typeCategoryId);
       const claimDate = new Date(c.claim.createdAt).toISOString().split('T')[0];
-
       if (!typesMap[typeName]) {
         typesMap[typeName] = {};
         legendData.push(typeName);
@@ -150,25 +150,22 @@ export default function AdminChartsPage() {
       typesMap[typeName][claimDate] = (typesMap[typeName][claimDate] || 0) + 1;
     });
 
-    const seriesData: echarts.LineSeriesOption[] = legendData.map(
-      (typeName) => {
-        let cumulativeCount = 0;
-        const dataPoints: number[] = dateRange.map((date) => {
-          cumulativeCount += typesMap[typeName][date] || 0;
-          return cumulativeCount;
-        });
-
-        return {
-          name: typeName,
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          emphasis: { focus: 'series' },
-          data: dataPoints,
-          smooth: true,
-        };
-      }
-    );
+    const seriesData: echarts.LineSeriesOption[] = legendData.map((typeName) => {
+      let cumulativeCount = 0;
+      const dataPoints: number[] = dateRange.map((date) => {
+        cumulativeCount += typesMap[typeName][date] || 0;
+        return cumulativeCount;
+      });
+      return {
+        name: typeName,
+        type: 'line',
+        stack: 'Total',
+        areaStyle: {},
+        emphasis: { focus: 'series' },
+        data: dataPoints,
+        smooth: true,
+      };
+    });
 
     return { xAxis: dateRange, series: seriesData, legend: legendData };
   };
@@ -178,14 +175,12 @@ export default function AdminChartsPage() {
       setIsLoading(true);
       setError(null);
       if (!clientPublicId) {
-        setError(t('admin:missingClientPublicIdConfig'));
+        setError(t('admin:missingClientPublicIdConfig', 'Falta configuración de ID público de cliente.'));
         setIsLoading(false);
         return;
       }
-
       try {
         const claims = await fetchAllClaimsByClientId(clientPublicId);
-
         if (!claims || claims.length === 0) {
           setChartData({
             pieClaimTypes: [],
@@ -197,7 +192,6 @@ export default function AdminChartsPage() {
           setIsLoading(false);
           return;
         }
-
         setChartData({
           pieClaimTypes: processClaimTypes(claims),
           piePriorities: processPriorities(claims),
@@ -205,31 +199,38 @@ export default function AdminChartsPage() {
           barStatuses: processStatuses(claims),
           timeline: processTimelineData(claims),
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching or processing chart data:', err);
-        setError(
-          err.message ||
+        if (err instanceof Error) {
+          setError(
+            err.message ||
+              t(
+                'admin:errorFetchingClaims',
+                'Error al obtener los reclamos para los gráficos.'
+              )
+          );
+        } else {
+          setError(
             t(
               'admin:errorFetchingClaims',
               'Error al obtener los reclamos para los gráficos.'
             )
-        );
+          );
+        }
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (allClaimTypesFromContext.length > 0) {
+    if (claimTypesContext.length > 0) {
       loadChartData();
     }
-  }, [clientPublicId, allClaimTypesFromContext, i18n.language, t]); // Reload if the language or type changes.
+  }, [clientPublicId, claimTypesContext, i18n.language, t]);
 
-  // If it is loading, display LoadingScreen
   if (isLoading) {
     return <LoadingScreen />;
   }
 
-  // If there is an error but no data, displays ErrorPage
   if (error && !chartData?.totals.total) {
     return <ErrorPage message={error} />;
   }
@@ -277,7 +278,6 @@ export default function AdminChartsPage() {
                 title={t('admin:graphs.totalClaims', 'Total de reclamos')}
                 value={chartData.totals.total}
                 className="flex-1"
-                // icon={<FaListAlt />}
               />
               <KeyValueDisplay
                 title={t(
@@ -286,7 +286,6 @@ export default function AdminChartsPage() {
                 )}
                 value={chartData.totals.inProgress}
                 className="flex-1"
-                // icon={<FaTasks />}
               />
               <KeyValueDisplay
                 title={t(
@@ -295,7 +294,6 @@ export default function AdminChartsPage() {
                 )}
                 value={chartData.totals.critical}
                 className="flex-1"
-                // icon={<FaExclamationTriangle />}
               />
             </div>
           </div>

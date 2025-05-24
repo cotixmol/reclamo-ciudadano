@@ -14,11 +14,9 @@ import AdminClaimsTable from '@/app/models/admin/components/AdminClaimsTable';
 
 export default function AdminTablePage() {
   const { t, i18n } = useTranslation(['admin', 'claim']);
-  const allClaimTypesContext = useClaimTypes();
+  const claimTypesContext = useClaimTypes();
 
-  const [allFetchedClaims, setAllFetchedClaims] = useState<
-    ClaimWithMultimediaResponse[]
-  >([]);
+  const [claims, setClaims] = useState<ClaimWithMultimediaResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +31,8 @@ export default function AdminTablePage() {
 
   const clientPublicId = process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID;
 
-  const loadClaims = useCallback(async () => {
+  // Renamed for clarity
+  const fetchClaims = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     if (!clientPublicId) {
@@ -41,36 +40,48 @@ export default function AdminTablePage() {
         t('admin:missingClientPublicId', 'Falta el ID público del cliente.')
       );
       setIsLoading(false);
-      setAllFetchedClaims([]);
+      setClaims([]);
+      console.warn('Missing NEXT_PUBLIC_CLIENT_PUBLIC_ID');
       return;
     }
     try {
       const claimsData = await fetchAllClaimsByClientId(clientPublicId);
-      setAllFetchedClaims(claimsData.reverse());
-    } catch (err: any) {
-      setError(
-        err.message ||
+      setClaims(claimsData.reverse());
+    } catch (err: unknown) {
+      // Improved error handling
+      if (err instanceof Error) {
+        setError(
+          err.message ||
+            t('admin:errorFetchingClaims', 'Error al obtener los reclamos.')
+        );
+      } else {
+        setError(
           t('admin:errorFetchingClaims', 'Error al obtener los reclamos.')
-      );
-      setAllFetchedClaims([]);
+        );
+      }
+      setClaims([]);
+      // Optionally log for debugging
+      console.error('Error fetching claims:', err);
     } finally {
       setIsLoading(false);
     }
   }, [t, clientPublicId]);
 
   useEffect(() => {
-    loadClaims();
-  }, [loadClaims]);
+    fetchClaims();
+  }, [fetchClaims]);
 
-  const claimTypesForFilter = useMemo(() => {
-    return allClaimTypesContext.map((ct: RawClaimTypesResponse) => ({
+  // Renamed for clarity
+  const claimTypeOptions = useMemo(() => {
+    return claimTypesContext.map((ct: RawClaimTypesResponse) => ({
       value: ct.id,
       label: i18n.language === 'es' ? ct.categoryEs : ct.categoryEn,
     }));
-  }, [allClaimTypesContext, i18n.language]);
+  }, [claimTypesContext, i18n.language]);
 
-  const filteredClaimsForTable = useMemo(() => {
-    return allFetchedClaims.filter((claimData) => {
+  // Renamed for clarity
+  const filteredClaims = useMemo(() => {
+    return claims.filter((claimData) => {
       const claim = claimData.claim;
       const lowerSearchTerm = activeFilters.searchTerm.toLowerCase();
 
@@ -93,12 +104,13 @@ export default function AdminTablePage() {
         const claimDate = new Date(claim.createdAt).getTime();
         if (activeFilters.dateFrom) {
           const fromDate = new Date(activeFilters.dateFrom).getTime();
-          if (claimDate < fromDate) matchesDate = false;
+          if (isNaN(fromDate) || claimDate < fromDate) matchesDate = false;
         }
         if (matchesDate && activeFilters.dateTo) {
           const toDate = new Date(activeFilters.dateTo);
           toDate.setHours(23, 59, 59, 999);
-          if (claimDate > toDate.getTime()) matchesDate = false;
+          if (isNaN(toDate.getTime()) || claimDate > toDate.getTime())
+            matchesDate = false;
         }
       }
 
@@ -110,19 +122,18 @@ export default function AdminTablePage() {
         matchesDate
       );
     });
-  }, [allFetchedClaims, activeFilters]);
+  }, [claims, activeFilters]);
 
-  const handleApplyFiltersFromModal = (
-    newFiltersFromModal: IAdminTableFilters
-  ) => {
-    setActiveFilters(newFiltersFromModal);
+  // Renamed for clarity
+  const handleFiltersChange = (newFilters: IAdminTableFilters) => {
+    setActiveFilters(newFilters);
   };
 
-  if (isLoading && !allFetchedClaims.length) {
+  if (isLoading && !claims.length) {
     return <LoadingScreen />;
   }
 
-  if (error && !allFetchedClaims.length) {
+  if (error && !claims.length) {
     return <ErrorPage message={error} />;
   }
 
@@ -132,13 +143,13 @@ export default function AdminTablePage() {
         {t('admin:table.title', 'Gestión de reclamos')}
       </h1>
       <AdminClaimsTable
-        claimsData={filteredClaimsForTable}
-        totalUnfilteredClaims={allFetchedClaims.length}
-        allClaimTypes={claimTypesForFilter}
+        claimsData={filteredClaims}
+        totalUnfilteredClaims={claims.length}
+        allClaimTypes={claimTypeOptions}
         activeFilters={activeFilters}
-        onFiltersChange={handleApplyFiltersFromModal}
-        onClaimUpdated={loadClaims}
-        onClaimDeleted={loadClaims}
+        onFiltersChange={handleFiltersChange}
+        onClaimUpdated={fetchClaims}
+        onClaimDeleted={fetchClaims}
       />
     </div>
   );
