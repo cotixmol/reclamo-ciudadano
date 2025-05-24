@@ -32,7 +32,6 @@ export default function AdminTablePage() {
   });
 
   const clientPublicId = process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID;
-  console.log(clientPublicId);
 
   const loadClaims = useCallback(async () => {
     setIsLoading(true);
