@@ -5,7 +5,7 @@ import { FiMenu, FiX, FiChevronDown } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import '@/app/i18n';
 import { useRouter } from 'next/navigation';
-import { fetchCookieData } from '@/app/services/admin/login/fetchCookieData';
+import { fetchCookieData } from '@/app/services/login/fetchCookieData';
 
 interface AdminHeaderProps {
   onToggleSidebar: () => void;

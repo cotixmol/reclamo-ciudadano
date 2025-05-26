@@ -1,5 +1,3 @@
-// src/app/api/admin/login/get_cookie/route.ts
-
 import { NextResponse } from 'next/server';
 import { cookies }    from 'next/headers';
 import { jwtVerify }  from 'jose';

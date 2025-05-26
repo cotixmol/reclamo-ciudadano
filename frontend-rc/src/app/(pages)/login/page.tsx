@@ -4,7 +4,7 @@ import '../../i18n';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
-import { AdminLogin } from '@/app/services/admin/login/login';
+import { AdminLogin } from '@/app/services/login/login';
 
 export default function AdminLoginPage() {
   const { t } = useTranslation('admin');

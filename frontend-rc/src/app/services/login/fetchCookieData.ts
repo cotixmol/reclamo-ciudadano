@@ -13,7 +13,7 @@ export interface CookieData {
 export async function fetchCookieData(): Promise<CookieData> {
   try {
     const response = await axios.get<CookieData>(
-      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/admin/login/get_cookie`,
+      `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/login/get_cookie`,
       { withCredentials: true }
     );
     return response.data;
