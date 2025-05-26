@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
-import L, { LatLngExpression } from 'leaflet';
+import { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { customMapIcon } from '@/app/models/claims/components/ClaimForm/Map/customMapIcon';
 
@@ -26,7 +26,6 @@ const ChangeView: React.FC<{ center: LatLngExpression; zoom: number }> = ({
 const StaticMapDisplay: React.FC<StaticMapDisplayProps> = ({
   latitude,
   longitude,
-  address,
 }) => {
   const [mapKey, setMapKey] = useState(Date.now());
 

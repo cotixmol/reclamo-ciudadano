@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
       setEmail('');
       setPassword('');
       router.push(`/admin`);
-    } catch (err: any) {
+    } catch {
       setError(t('errors.invalidCredentials'));
     }
   };

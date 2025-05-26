@@ -12,12 +12,7 @@ import {
 import { useClaimTypes } from '@/app/context/ClaimTypesContext';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
-import {
-  FaChartLine,
-  FaExclamationTriangle,
-  FaListAlt,
-  FaTasks,
-} from 'react-icons/fa';
+import { FaChartLine } from 'react-icons/fa';
 import PieChartComponent from '@/app/components/charts/PieChartComponent';
 import BarChartComponent from '@/app/components/charts/BarChartComponent';
 import TimelineChartComponent from '@/app/components/charts/TimelineChartComponent';
@@ -38,7 +33,7 @@ interface ChartData {
 // Utility: get all dates in range as YYYY-MM-DD
 const getDatesInRange = (startDate: Date, endDate: Date): string[] => {
   const dates: string[] = [];
-  let currentDate = new Date(startDate.toISOString().split('T')[0]);
+  const currentDate = new Date(startDate.toISOString().split('T')[0]);
   const lastDate = new Date(endDate.toISOString().split('T')[0]);
   while (currentDate <= lastDate) {
     dates.push(currentDate.toISOString().split('T')[0]);
@@ -97,8 +92,10 @@ export default function AdminChartsPage() {
   // Key values
   const processTotals = (claims: ClaimWithMultimediaResponse[]) => ({
     total: claims.length,
-    inProgress: claims.filter((c) => c.claim.status === ClaimStatusEnum.Open).length,
-    critical: claims.filter((c) => c.claim.priority === PriorityEnum.HIGH).length,
+    inProgress: claims.filter((c) => c.claim.status === ClaimStatusEnum.Open)
+      .length,
+    critical: claims.filter((c) => c.claim.priority === PriorityEnum.HIGH)
+      .length,
   });
 
   // Bar: statuses
@@ -150,22 +147,24 @@ export default function AdminChartsPage() {
       typesMap[typeName][claimDate] = (typesMap[typeName][claimDate] || 0) + 1;
     });
 
-    const seriesData: echarts.LineSeriesOption[] = legendData.map((typeName) => {
-      let cumulativeCount = 0;
-      const dataPoints: number[] = dateRange.map((date) => {
-        cumulativeCount += typesMap[typeName][date] || 0;
-        return cumulativeCount;
-      });
-      return {
-        name: typeName,
-        type: 'line',
-        stack: 'Total',
-        areaStyle: {},
-        emphasis: { focus: 'series' },
-        data: dataPoints,
-        smooth: true,
-      };
-    });
+    const seriesData: echarts.LineSeriesOption[] = legendData.map(
+      (typeName) => {
+        let cumulativeCount = 0;
+        const dataPoints: number[] = dateRange.map((date) => {
+          cumulativeCount += typesMap[typeName][date] || 0;
+          return cumulativeCount;
+        });
+        return {
+          name: typeName,
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: { focus: 'series' },
+          data: dataPoints,
+          smooth: true,
+        };
+      }
+    );
 
     return { xAxis: dateRange, series: seriesData, legend: legendData };
   };
@@ -174,15 +173,19 @@ export default function AdminChartsPage() {
     setIsLoading(true);
     setError(null);
     if (!clientPublicId) {
-      setError(t('admin:missingClientPublicIdConfig', 'Falta configuración del ID del cliente.'));
+      setError(
+        t(
+          'admin:missingClientPublicIdConfig',
+          'Falta configuración del ID del cliente.'
+        )
+      );
       setIsLoading(false);
       return;
     }
     try {
       const claims = await fetchAllClaimsByClientId(clientPublicId);
-      const activeClaims = claims?.filter(
-        (claim) => !claim.claim.deleted
-      ) ?? [];
+      const activeClaims =
+        claims?.filter((claim) => !claim.claim.deleted) ?? [];
       if (!activeClaims || activeClaims.length === 0) {
         setChartData({
           pieClaimTypes: [],

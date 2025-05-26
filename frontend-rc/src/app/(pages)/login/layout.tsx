@@ -1,4 +1,5 @@
-// No 'use client' here – this can stay a server component
+import React from 'react';
+
 export default function AdminLoginLayout({
   children,
 }: {

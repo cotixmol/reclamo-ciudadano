@@ -1,15 +1,4 @@
 import L from 'leaflet';
-import {
-  FiMapPin,
-  FiZap,
-  FiTool,
-  FiTrash2,
-  FiShield,
-  FiActivity,
-  FiHome,
-  FiHelpCircle,
-  FiAlertOctagon,
-} from 'react-icons/fi';
 
 export const CATEGORY_DEFAULT_COLOR = '#64047D';
 
@@ -23,7 +12,7 @@ export const categoryColors: { [key: number]: string } = {
   7: '#4682B4', // Public Health (steel blue)
   8: '#9370DB', // Public Spaces (medium purple)
   9: '#708090', // Others (slate gray)
-};1
+};
 
 export const createColoredIcon = (color: string, iconClassName?: string) => {
   const cleanColor = color.startsWith('#') ? color.substring(1) : color;
