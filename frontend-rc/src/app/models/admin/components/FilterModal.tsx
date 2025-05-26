@@ -51,13 +51,13 @@ const FilterModal: React.FC<FilterModalProps> = ({
     setLocalFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleIncludeDeletedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleIncludeDeletedChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setLocalFilters((prev) => ({
       ...prev,
       includeDeleted: e.target.checked,
     }));
-
-    console.log(localFilters);
   };
 
   const handleSubmitFilters = () => {
