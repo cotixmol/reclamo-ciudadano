@@ -5,7 +5,7 @@ export async function AdminLogin(email: string, password: string) {
     if (!email || !password) {
       throw new Error('Credentials are required');
     }
-    const url = `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/admin/login`
+    const url = `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/login`
     return axios.post(url, { email, password }, {
       withCredentials: true,
     });

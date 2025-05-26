@@ -1,11 +1,11 @@
 'use client';
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import LanguageSwitcher from '@/app/components/LanguageSwitcher';
 import { FiMenu, FiX, FiChevronDown } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import '@/app/i18n';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { fetchCookieData } from '@/app/services/login/fetchCookieData';
 
 interface AdminHeaderProps {
   onToggleSidebar: () => void;
@@ -16,8 +16,24 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
   onToggleSidebar,
   isSidebarOpen,
 }) => {
+  const router = useRouter(); // Add this line
   const { t } = useTranslation('admin');
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = React.useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [adminEmail, setAdminEmail] = useState<string | null>(null);
+  const [adminRole, setAdminRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchCookieData()
+      .then((data) => {
+        if (data.authenticated && data.email && data.role) {
+          setAdminEmail(data.email);
+          setAdminRole(data.role);
+        }
+      })
+      .catch(() => {
+        console.error('Failed to fetch admin cookie data');
+      });
+  }, []);
 
   return (
     <header className="sticky top-0 z-20 flex w-full bg-RCColors-900 drop-shadow-sm border-b border-RCColors-800">
@@ -58,14 +74,14 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
             >
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-RCColors-100">
-                  Admin User
+                  {adminEmail || 'Admin User'}
                 </span>
                 <span className="block text-xs text-RCColors-400">
-                  Superadmin
+                  {adminRole || 'Admin'}
                 </span>
               </span>
               <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white lg:h-10 lg:w-10">
-                A {/* Placeholder for initials or an image */}
+                {adminEmail ? adminEmail.charAt(0).toUpperCase() : ''}
               </div>
               <FiChevronDown
                 className={`hidden fill-current sm:block text-RCColors-400 ${isUserDropdownOpen ? 'transform rotate-180' : ''}`}
@@ -78,20 +94,11 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({
                 className="absolute right-0 mt-2.5 flex w-60 flex-col rounded-md border border-RCColors-700 bg-RCColors-800 shadow-lg"
                 onMouseLeave={() => setIsUserDropdownOpen(false)} // Optional: close when the mouse leaves the view.
               >
-                <Link
-                  href="#"
-                  className="px-4 py-2 text-sm text-RCColors-200 hover:bg-RCColors-700 hover:text-primary"
+                <button
+                  className="px-4 py-2 text-left text-sm text-RCColors-200 hover:bg-RCColors-700 hover:text-primary"
+                  onClick={() => router.push('/')}
                 >
-                  Perfil
-                </Link>
-                <Link
-                  href="#"
-                  className="px-4 py-2 text-sm text-RCColors-200 hover:bg-RCColors-700 hover:text-primary"
-                >
-                  Configuración
-                </Link>
-                <button className="px-4 py-2 text-left text-sm text-RCColors-200 hover:bg-RCColors-700 hover:text-primary">
-                  Cerrar sesión
+                  {t('backToHome')}
                 </button>
               </div>
             )}

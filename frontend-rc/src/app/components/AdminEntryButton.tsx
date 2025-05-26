@@ -7,24 +7,24 @@ import React from 'react';
 
 export default function AdminEntryButton() {
   const router = useRouter();
-  const { t } = useTranslation('homepage'); // or whatever namespace holds your label
+  const { t } = useTranslation('homepage');
 
   const handleClick = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/admin/login/check`,
+        `${process.env.NEXT_PUBLIC_INTERNAL_API_URL}/login/check`,
         { method: 'GET' }
       );
       if (res.ok) {
         // logged in
-        router.push(`/admin/${process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID}`);
+        router.push(`/admin`);
       } else {
         // not logged in
-        router.push('/admin/login');
+        router.push('/login');
       }
     } catch {
       // network error or other
-      router.push('/admin/login');
+      router.push('/login');
     }
   };
 

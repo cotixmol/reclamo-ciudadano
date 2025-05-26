@@ -8,7 +8,7 @@ export default function AdminTablePage() {
 
   useEffect(() => {
     if (clientPublicId) {
-      router.push(`/admin/${clientPublicId}/table`);
+      router.push(`/admin/table`);
     }
   }, [clientPublicId, router]);
 

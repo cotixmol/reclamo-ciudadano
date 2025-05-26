@@ -15,6 +15,7 @@ class AdminAuthService:
         user = self.admin_user_repository.authenticate(client_id, email, password)
         payload = {
             "sub": str(user.public_id),
+            "email": user.email,
             "client": client_id,
             "role": "admin",
             "exp": datetime.now(timezone.utc) + timedelta(minutes=JWT_EXPIRY_MIN),
