@@ -98,5 +98,6 @@
   "graphs.noDataForStatus": "Sin datos para estados",
   "graphs.noDataForTimeline": "Sin datos para la línea de tiempo",
   "warning": "Advertencia:",
-  "errorLoadingData": "Ocurrió un error al cargar los datos."
+  "errorLoadingData": "Ocurrió un error al cargar los datos.",
+  "backToHome": "Volver a inicio"
 }

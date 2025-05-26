@@ -88,7 +88,6 @@ class ClaimSQLAlchemy(ClaimDAO):
         statement = (
             select(Claim)
             .where(Claim.public_id == public_id)
-            .where(Claim.deleted == False)
             .where(Claim.processing_state == ClaimProcessingStateEnum.FINISHED)
             .options(selectinload(Claim.multimedia))
         )

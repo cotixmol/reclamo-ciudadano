@@ -98,5 +98,6 @@
   "graphs.noDataForStatus": "No data for statuses",
   "graphs.noDataForTimeline": "No data for timeline",
   "warning": "Warning:",
-  "errorLoadingData": "An error occurred while loading data."
+  "errorLoadingData": "An error occurred while loading data.",
+  "backToHome": "Back to home"
 }
