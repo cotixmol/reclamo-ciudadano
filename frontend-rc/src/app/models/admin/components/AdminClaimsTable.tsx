@@ -140,7 +140,7 @@ const AdminClaimsTable: React.FC<AdminClaimsTableProps> = ({
         month: '2-digit',
         day: '2-digit',
       });
-    } catch (e) {
+    } catch {
       return 'Invalid Date';
     }
   };
@@ -347,9 +347,10 @@ const AdminClaimsTable: React.FC<AdminClaimsTableProps> = ({
                     key={claim.publicId}
                     className={`
                       border-b border-RCColors-700 transition-colors duration-150
-                      ${claim.deleted
-                        ? 'bg-red-900/30 opacity-70 hover:bg-red-900/40'
-                        : 'hover:bg-RCColors-700/70'
+                      ${
+                        claim.deleted
+                          ? 'bg-red-900/30 opacity-70 hover:bg-red-900/40'
+                          : 'hover:bg-RCColors-700/70'
                       }
                     `}
                   >
@@ -408,9 +409,10 @@ const AdminClaimsTable: React.FC<AdminClaimsTableProps> = ({
                           title={t('admin:editStatus', 'Editar Estado')}
                           className={`
                             p-1.5 rounded text-RCColors-300 
-                            ${claim.deleted
-                              ? 'opacity-50 cursor-not-allowed'
-                              : 'hover:bg-RCColors-600 focus:outline-none'
+                            ${
+                              claim.deleted
+                                ? 'opacity-50 cursor-not-allowed'
+                                : 'hover:bg-RCColors-600 focus:outline-none'
                             }
                           `}
                           disabled={claim.deleted}
@@ -422,9 +424,10 @@ const AdminClaimsTable: React.FC<AdminClaimsTableProps> = ({
                           title={t('admin:deleteClaim', 'Eliminar Reclamo')}
                           className={`
                             p-1.5 rounded text-RCColors-300 
-                            ${claim.deleted
-                              ? 'opacity-50 cursor-not-allowed'
-                              : 'hover:bg-RCColors-600 focus:outline-none'
+                            ${
+                              claim.deleted
+                                ? 'opacity-50 cursor-not-allowed'
+                                : 'hover:bg-RCColors-600 focus:outline-none'
                             }
                           `}
                           disabled={claim.deleted}

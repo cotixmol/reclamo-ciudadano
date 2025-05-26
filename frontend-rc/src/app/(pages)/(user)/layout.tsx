@@ -1,4 +1,5 @@
 import BottomNavBar from '../../components/BottomNavBar';
+import React from 'react';
 
 export default async function RootLayout({
   children,

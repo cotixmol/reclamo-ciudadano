@@ -8,7 +8,11 @@ import {
   ClaimWithMultimediaResponse,
   ClaimStatusEnum,
 } from '@/app/models/claims/types/claim';
-import { createColoredIcon, categoryColors, CATEGORY_DEFAULT_COLOR } from '@/app/utils/categoryMapStyles';
+import {
+  createColoredIcon,
+  categoryColors,
+  CATEGORY_DEFAULT_COLOR,
+} from '@/app/utils/categoryMapStyles';
 import { getStatusColor, getPriorityColor } from '@/app/utils/claimColors';
 import { useTranslation } from 'react-i18next';
 import {
@@ -59,15 +63,19 @@ const MapViewUpdater: React.FC<{
         } else {
           // Case C: There are multiple valid claims
           const bounds = L.latLngBounds(leafletLatLngs);
-          map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16, animate: false });
+          map.fitBounds(bounds, {
+            padding: [50, 50],
+            maxZoom: 16,
+            animate: false,
+          });
         }
       } catch (err: unknown) {
-        console.warn("Error updating the map: ", err);
+        console.warn('Error updating the map: ', err);
         // Fallback: If all else fails, try to center on the initial view.
         try {
-            map.setView(initialCenter, 13, { animate: false });
+          map.setView(initialCenter, 13, { animate: false });
         } catch (fallbackErr) {
-            console.error("Fallback setView also failed:", fallbackErr);
+          console.error('Fallback setView also failed:', fallbackErr);
         }
       }
     }, 0);
@@ -77,7 +85,7 @@ const MapViewUpdater: React.FC<{
         clearTimeout(timerId);
       }
     };
-  }, [claims.length, map, initialCenter]);
+  }, [claims, claims.length, map, initialCenter]);
   return null;
 };
 
@@ -94,20 +102,20 @@ const ClaimsDisplayMap: React.FC<ClaimsDisplayMapProps> = ({
   useEffect(() => {
     setMapKey(Date.now()); // Refresh the map when the claims change.
   }, [claims]);
-  
+
   const iconsByCategory = useMemo(() => {
     const icons: { [key: number]: L.DivIcon } = {};
     Object.entries(categoryColors).forEach(([id, color]) => {
       icons[parseInt(id, 10)] = createColoredIcon(color);
     });
-    icons[0] = createColoredIcon(CATEGORY_DEFAULT_COLOR); 
+    icons[0] = createColoredIcon(CATEGORY_DEFAULT_COLOR);
 
     return icons;
   }, []);
 
   const getMemoizedIcon = (categoryId: number | null): L.DivIcon => {
-      const id = categoryId ?? 0; // Usar 0 (default) si es null
-      return iconsByCategory[id] || iconsByCategory[0]; // Retorna el específico o el default
+    const id = categoryId ?? 0; // Usar 0 (default) si es null
+    return iconsByCategory[id] || iconsByCategory[0]; // Retorna el específico o el default
   };
 
   const getClaimTypeName = (typeId: number | undefined) => {
@@ -124,7 +132,7 @@ const ClaimsDisplayMap: React.FC<ClaimsDisplayMapProps> = ({
         month: '2-digit',
         year: 'numeric',
       });
-    } catch (e) {
+    } catch {
       return 'Invalid Date';
     }
   };
@@ -168,11 +176,7 @@ const ClaimsDisplayMap: React.FC<ClaimsDisplayMapProps> = ({
               ? FiAlertTriangle
               : FiCheckCircle;
           return (
-            <Marker
-              key={claim.publicId}
-              position={position}
-              icon={icon}
-            >
+            <Marker key={claim.publicId} position={position} icon={icon}>
               <Popup minWidth={200} maxWidth={260}>
                 <div className="space-y-1.5 p-0.5 text-xs">
                   <h4
