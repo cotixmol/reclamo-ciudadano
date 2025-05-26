@@ -345,7 +345,13 @@ const AdminClaimsTable: React.FC<AdminClaimsTableProps> = ({
                 return (
                   <tr
                     key={claim.publicId}
-                    className="border-b border-RCColors-700 hover:bg-RCColors-700/70 transition-colors duration-150"
+                    className={`
+                      border-b border-RCColors-700 transition-colors duration-150
+                      ${claim.deleted
+                        ? 'bg-red-900/30 opacity-70 hover:bg-red-900/40'
+                        : 'hover:bg-RCColors-700/70'
+                      }
+                    `}
                   >
                     <td className="py-3 px-3 xl:pl-8 border-r border-RCColors-600">
                       <p
@@ -393,21 +399,35 @@ const AdminClaimsTable: React.FC<AdminClaimsTableProps> = ({
                         <button
                           onClick={() => openDetailsModal(claimData)}
                           title={t('admin:viewDetails', 'Ver Detalles')}
-                          className="p-1.5 rounded text-RCColors-300 hover:bg-RCColors-600 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                          className="p-1.5 rounded text-RCColors-300 hover:bg-RCColors-600 focus:outline-none"
                         >
                           <FiEye className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => openEditStatusModal(claim)}
                           title={t('admin:editStatus', 'Editar Estado')}
-                          className="p-1.5 rounded text-RCColors-300 hover:bg-RCColors-600 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                          className={`
+                            p-1.5 rounded text-RCColors-300 
+                            ${claim.deleted
+                              ? 'opacity-50 cursor-not-allowed'
+                              : 'hover:bg-RCColors-600 focus:outline-none'
+                            }
+                          `}
+                          disabled={claim.deleted}
                         >
                           <FiEdit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => openDeleteConfirmation(claim.publicId)}
                           title={t('admin:deleteClaim', 'Eliminar Reclamo')}
-                          className="p-1.5 rounded text-RCColors-300 hover:bg-RCColors-600 hover:text-red-500 focus:outline-none focus:ring-1 focus:ring-red-500"
+                          className={`
+                            p-1.5 rounded text-RCColors-300 
+                            ${claim.deleted
+                              ? 'opacity-50 cursor-not-allowed'
+                              : 'hover:bg-RCColors-600 focus:outline-none'
+                            }
+                          `}
+                          disabled={claim.deleted}
                         >
                           <FiTrash2 className="w-4 h-4" />
                         </button>
