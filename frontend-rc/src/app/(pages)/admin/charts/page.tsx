@@ -170,60 +170,63 @@ export default function AdminChartsPage() {
     return { xAxis: dateRange, series: seriesData, legend: legendData };
   };
 
-  useEffect(() => {
-    const loadChartData = async () => {
-      setIsLoading(true);
-      setError(null);
-      if (!clientPublicId) {
-        setError(t('admin:missingClientPublicIdConfig', 'Falta configuración de ID público de cliente.'));
+  const fetchChartData = async () => {
+    setIsLoading(true);
+    setError(null);
+    if (!clientPublicId) {
+      setError(t('admin:missingClientPublicIdConfig', 'Falta configuración del ID del cliente.'));
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const claims = await fetchAllClaimsByClientId(clientPublicId);
+      const activeClaims = claims?.filter(
+        (claim) => !claim.claim.deleted
+      ) ?? [];
+      if (!activeClaims || activeClaims.length === 0) {
+        setChartData({
+          pieClaimTypes: [],
+          piePriorities: [],
+          totals: { total: 0, inProgress: 0, critical: 0 },
+          barStatuses: { xAxis: [], series: [] },
+          timeline: { xAxis: [], series: [], legend: [] },
+        });
         setIsLoading(false);
         return;
       }
-      try {
-        const claims = await fetchAllClaimsByClientId(clientPublicId);
-        if (!claims || claims.length === 0) {
-          setChartData({
-            pieClaimTypes: [],
-            piePriorities: [],
-            totals: { total: 0, inProgress: 0, critical: 0 },
-            barStatuses: { xAxis: [], series: [] },
-            timeline: { xAxis: [], series: [], legend: [] },
-          });
-          setIsLoading(false);
-          return;
-        }
-        setChartData({
-          pieClaimTypes: processClaimTypes(claims),
-          piePriorities: processPriorities(claims),
-          totals: processTotals(claims),
-          barStatuses: processStatuses(claims),
-          timeline: processTimelineData(claims),
-        });
-      } catch (err: unknown) {
-        console.error('Error fetching or processing chart data:', err);
-        if (err instanceof Error) {
-          setError(
-            err.message ||
-              t(
-                'admin:errorFetchingClaims',
-                'Error al obtener los reclamos para los gráficos.'
-              )
-          );
-        } else {
-          setError(
+      setChartData({
+        pieClaimTypes: processClaimTypes(activeClaims),
+        piePriorities: processPriorities(activeClaims),
+        totals: processTotals(activeClaims),
+        barStatuses: processStatuses(activeClaims),
+        timeline: processTimelineData(activeClaims),
+      });
+    } catch (err: unknown) {
+      console.error('Error fetching or processing chart data:', err);
+      if (err instanceof Error) {
+        setError(
+          err.message ||
             t(
               'admin:errorFetchingClaims',
               'Error al obtener los reclamos para los gráficos.'
             )
-          );
-        }
-      } finally {
-        setIsLoading(false);
+        );
+      } else {
+        setError(
+          t(
+            'admin:errorFetchingClaims',
+            'Error al obtener los reclamos para los gráficos.'
+          )
+        );
       }
-    };
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (claimTypesContext.length > 0) {
-      loadChartData();
+      fetchChartData();
     }
   }, [clientPublicId, claimTypesContext, i18n.language, t]);
 

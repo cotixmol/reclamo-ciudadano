@@ -40,7 +40,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ closeSidebar }) => {
     <aside className="flex flex-col h-full bg-RCColors-700 text-RCColors-100 shadow-lg">
       <div className="p-4 py-5.5 lg:py-6.5 flex justify-between items-center border-b border-RCColors-600">
         <Link
-          href="/admin/panel"
+          href="/admin"
           onClick={closeSidebar}
           className="focus:outline-none"
         >

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -8,7 +8,7 @@ import {
   ClaimWithMultimediaResponse,
   ClaimStatusEnum,
 } from '@/app/models/claims/types/claim';
-import { getIconForCategory } from '@/app/utils/categoryMapStyles';
+import { createColoredIcon, categoryColors, CATEGORY_DEFAULT_COLOR } from '@/app/utils/categoryMapStyles';
 import { getStatusColor, getPriorityColor } from '@/app/utils/claimColors';
 import { useTranslation } from 'react-i18next';
 import {
@@ -19,6 +19,7 @@ import {
   FiCalendar,
   FiTag,
 } from 'react-icons/fi';
+import MapLegend from './MapLegend';
 
 interface ClaimsDisplayMapProps {
   claims: ClaimWithMultimediaResponse[];
@@ -34,38 +35,49 @@ const MapViewUpdater: React.FC<{
   const map = useMap();
 
   useEffect(() => {
-    if (claims && claims.length > 0) {
-      const validCoords = claims
-        .map((c) => c.claim.claimLocation?.coordinates)
-        .filter(
-          (coords) =>
-            coords &&
-            typeof coords[0] === 'number' &&
-            typeof coords[1] === 'number'
-        ) as [number, number][];
+    const timerId = setTimeout(() => {
+      if (!map) return;
 
-      if (validCoords.length > 0) {
-        const leafletLatLngs = validCoords.map(
-          (coordPair) => L.latLng(coordPair[1], coordPair[0]) // Latitude, Longitude
-        );
+      try {
+        const leafletLatLngs = claims
+          ?.map((c) => c.claim.claimLocation?.coordinates)
+          .filter(
+            (coords): coords is [number, number] =>
+              coords &&
+              typeof coords[0] === 'number' &&
+              typeof coords[1] === 'number'
+          )
+          .map((coordPair) => L.latLng(coordPair[1], coordPair[0])); // Convert to L.latLng
 
-        if (leafletLatLngs.length > 0) {
-          const bounds = L.latLngBounds(leafletLatLngs);
-          if (bounds.isValid()) {
-            map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16 });
-          } else if (leafletLatLngs.length === 1) {
-            map.setView(leafletLatLngs[0], 15);
-          }
+        // Decide what to do according to the number of coordinates.
+        if (!leafletLatLngs || leafletLatLngs.length === 0) {
+          // Case A: No claims or none with valid coordinates
+          map.setView(initialCenter, 13, { animate: false });
+        } else if (leafletLatLngs.length === 1) {
+          // Case B: There is exactly one valid claim
+          map.setView(leafletLatLngs[0], 15, { animate: false });
         } else {
-          map.setView(initialCenter, 13);
+          // Case C: There are multiple valid claims
+          const bounds = L.latLngBounds(leafletLatLngs);
+          map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16, animate: false });
         }
-      } else {
-        map.setView(initialCenter, 13);
+      } catch (err: unknown) {
+        console.warn("Error updating the map: ", err);
+        // Fallback: If all else fails, try to center on the initial view.
+        try {
+            map.setView(initialCenter, 13, { animate: false });
+        } catch (fallbackErr) {
+            console.error("Fallback setView also failed:", fallbackErr);
+        }
       }
-    } else {
-      map.setView(initialCenter, 13);
-    }
-  }, [claims, map, initialCenter]);
+    }, 0);
+
+    return () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+    };
+  }, [claims.length, map, initialCenter]);
   return null;
 };
 
@@ -82,6 +94,21 @@ const ClaimsDisplayMap: React.FC<ClaimsDisplayMapProps> = ({
   useEffect(() => {
     setMapKey(Date.now()); // Refresh the map when the claims change.
   }, [claims]);
+  
+  const iconsByCategory = useMemo(() => {
+    const icons: { [key: number]: L.DivIcon } = {};
+    Object.entries(categoryColors).forEach(([id, color]) => {
+      icons[parseInt(id, 10)] = createColoredIcon(color);
+    });
+    icons[0] = createColoredIcon(CATEGORY_DEFAULT_COLOR); 
+
+    return icons;
+  }, []);
+
+  const getMemoizedIcon = (categoryId: number | null): L.DivIcon => {
+      const id = categoryId ?? 0; // Usar 0 (default) si es null
+      return iconsByCategory[id] || iconsByCategory[0]; // Retorna el específico o el default
+  };
 
   const getClaimTypeName = (typeId: number | undefined) => {
     if (typeId === undefined) return t('admin:unknown', 'Desconocido');
@@ -103,7 +130,7 @@ const ClaimsDisplayMap: React.FC<ClaimsDisplayMapProps> = ({
   };
 
   return (
-    <div className="w-full h-full rounded-lg overflow-hidden border border-RCColors-700 shadow-lg">
+    <div className="w-full h-full rounded-lg overflow-hidden border border-RCColors-700 shadow-lg relative">
       <MapContainer
         key={mapKey}
         className="w-full h-full z-0"
@@ -121,6 +148,7 @@ const ClaimsDisplayMap: React.FC<ClaimsDisplayMapProps> = ({
           if (!claim.claimLocation || !claim.claimLocation.coordinates) {
             return null;
           }
+          const icon = getMemoizedIcon(claim.typeCategoryId);
           const [longitude, latitude] = claim.claimLocation.coordinates;
           if (
             typeof latitude !== 'number' ||
@@ -143,7 +171,7 @@ const ClaimsDisplayMap: React.FC<ClaimsDisplayMapProps> = ({
             <Marker
               key={claim.publicId}
               position={position}
-              icon={getIconForCategory(claim.typeCategoryId)}
+              icon={icon}
             >
               <Popup minWidth={200} maxWidth={260}>
                 <div className="space-y-1.5 p-0.5 text-xs">
@@ -215,6 +243,7 @@ const ClaimsDisplayMap: React.FC<ClaimsDisplayMapProps> = ({
           initialCenter={mapCenter as LatLngExpression}
         />
       </MapContainer>
+      <MapLegend />
     </div>
   );
 };

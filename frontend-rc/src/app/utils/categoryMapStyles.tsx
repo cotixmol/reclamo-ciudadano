@@ -11,7 +11,21 @@ import {
   FiAlertOctagon,
 } from 'react-icons/fi';
 
-const createColoredIcon = (color: string, iconClassName?: string) => {
+export const CATEGORY_DEFAULT_COLOR = '#64047D';
+
+export const categoryColors: { [key: number]: string } = {
+  1: '#FFD700', // Lighting (golden yellow)
+  2: '#A9A9A9', // Signage (dark gray)
+  3: '#8B4513', // Sewage (brown)
+  4: '#FF8C00', // Streets (dark orange)
+  5: '#228B22', // Sanitation (forest green)
+  6: '#DC143C', // Public Safety (crimson red)
+  7: '#4682B4', // Public Health (steel blue)
+  8: '#9370DB', // Public Spaces (medium purple)
+  9: '#708090', // Others (slate gray)
+};1
+
+export const createColoredIcon = (color: string, iconClassName?: string) => {
   const cleanColor = color.startsWith('#') ? color.substring(1) : color;
   return L.divIcon({
     html: `
@@ -27,25 +41,12 @@ const createColoredIcon = (color: string, iconClassName?: string) => {
   });
 };
 
-export const categoryColors: { [key: number]: string } = {
-  1: '#FFD700', // Lighting (golden yellow)
-  2: '#A9A9A9', // Signage (dark gray)
-  3: '#8B4513', // Sewage (brown)
-  4: '#FF8C00', // Streets (dark orange)
-  5: '#228B22', // Sanitation (forest green)
-  6: '#DC143C', // Public Safety (crimson red)
-  7: '#4682B4', // Public Health (steel blue)
-  8: '#9370DB', // Public Spaces (medium purple)
-  9: '#708090', // Others (slate gray)
-};
-
 export const getIconForCategory = (
   categoryId: number | undefined
 ): L.DivIcon => {
-  const defaultColor = '#64047D';
   const color =
     categoryId && categoryColors[categoryId]
       ? categoryColors[categoryId]
-      : defaultColor;
+      : CATEGORY_DEFAULT_COLOR;
   return createColoredIcon(color);
 };

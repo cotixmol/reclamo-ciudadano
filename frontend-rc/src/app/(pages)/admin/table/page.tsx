@@ -27,6 +27,7 @@ export default function AdminTablePage() {
     typeCategoryId: 'all',
     dateFrom: '',
     dateTo: '',
+    includeDeleted: false, 
   });
 
   const clientPublicId = process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID;
@@ -83,6 +84,11 @@ export default function AdminTablePage() {
   const filteredClaims = useMemo(() => {
     return claims.filter((claimData) => {
       const claim = claimData.claim;
+
+      if (!activeFilters.includeDeleted && claim.deleted) {
+        return false;
+      }
+
       const lowerSearchTerm = activeFilters.searchTerm.toLowerCase();
 
       const matchesSearchTerm =

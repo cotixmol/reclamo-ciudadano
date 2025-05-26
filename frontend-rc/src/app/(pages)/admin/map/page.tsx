@@ -65,7 +65,10 @@ export default function AdminMapTabPage() {
     setError(null);
     try {
       const claimsData = await fetchAllClaimsByClientId(clientPublicId);
-      setClaims(claimsData);
+      const activeClaimsData = claimsData?.filter(
+        (claimsData) => !claimsData.claim.deleted
+      ) ?? [];
+      setClaims(activeClaimsData);
     } catch (err: unknown) {
       console.error('Error fetching claims for map');
       if (err instanceof Error) {
@@ -134,7 +137,7 @@ export default function AdminMapTabPage() {
       <h1 className="text-2xl font-semibold text-RCColors-50 shrink-0">
         {t('admin:map.title', 'Mapa de reclamos')}
       </h1>
-      <div className="flex-grow relative rounded-lg shadow-md min-h-[450px]">
+      <div className="flex-grow rounded-lg shadow-md min-h-[450px]">
         {!isLoading && error && claims.length === 0 && (
           <div className="h-full flex flex-col items-center justify-center bg-RCColors-800 rounded-lg p-8 text-center">
             <FiAlertTriangle className="w-16 h-16 text-red-500 mb-4" />
@@ -159,11 +162,6 @@ export default function AdminMapTabPage() {
                 'No hay reclamos para mostrar en el mapa.'
               )}
             </p>
-            <p className="text-xs text-RCColors-400 mt-1">
-              {clientPublicId === '5474008e-22ce-4f18-a60e-cec2bda3e354'
-                ? t('admin:map.usingMockId', '(Usando ID de cliente de prueba)')
-                : ''}
-            </p>
           </div>
         )}
         {(claims.length > 0 || isLoading) && !error && (
@@ -176,16 +174,18 @@ export default function AdminMapTabPage() {
         )}
       </div>
 
-      {isDetailsModalOpen && selectedClaim && (
-        <ClaimDetailsModal
-          isOpen={isDetailsModalOpen}
-          onClose={() => setIsDetailsModalOpen(false)}
-          initialClaimData={{
-            publicId: selectedClaim.claim.publicId,
-            title: selectedClaim.claim.title,
-          }}
-        />
-      )}
+      <div>
+        {isDetailsModalOpen && selectedClaim && (
+          <ClaimDetailsModal
+            isOpen={isDetailsModalOpen}
+            onClose={() => setIsDetailsModalOpen(false)}
+            initialClaimData={{
+              publicId: selectedClaim.claim.publicId,
+              title: selectedClaim.claim.title,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
