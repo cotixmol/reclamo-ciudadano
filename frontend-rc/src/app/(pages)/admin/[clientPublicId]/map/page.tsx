@@ -65,7 +65,10 @@ export default function AdminMapTabPage() {
     setError(null);
     try {
       const claimsData = await fetchAllClaimsByClientId(clientPublicId);
-      setClaims(claimsData);
+      const activeClaimsData = claimsData?.filter(
+        (claimsData) => !claimsData.claim.deleted
+      ) ?? [];
+      setClaims(activeClaimsData);
     } catch (err: unknown) {
       console.error('Error fetching claims for map');
       if (err instanceof Error) {
