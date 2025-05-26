@@ -1,6 +1,6 @@
 'use client';
 import { FaArrowLeft } from 'react-icons/fa';
-import '../../../i18n';
+import '../../i18n';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import React, { useState } from 'react';
@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
       await AdminLogin(email, password);
       setEmail('');
       setPassword('');
-      router.push(`/admin/${process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID}`);
+      router.push(`/admin`);
     } catch (err: any) {
       setError(t('errors.invalidCredentials'));
     }

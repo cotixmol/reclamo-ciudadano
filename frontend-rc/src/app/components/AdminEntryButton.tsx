@@ -17,14 +17,14 @@ export default function AdminEntryButton() {
       );
       if (res.ok) {
         // logged in
-        router.push(`/admin/${process.env.NEXT_PUBLIC_CLIENT_PUBLIC_ID}`);
+        router.push(`/admin`);
       } else {
         // not logged in
-        router.push('/admin/login');
+        router.push('/login');
       }
     } catch {
       // network error or other
-      router.push('/admin/login');
+      router.push('/login');
     }
   };
 

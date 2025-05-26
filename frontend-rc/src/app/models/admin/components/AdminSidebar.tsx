@@ -25,13 +25,13 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ closeSidebar }) => {
   const navItems: NavItem[] = [
     {
       name: t('table', 'Reclamos'),
-      href: '/admin/panel/table',
+      href: '/admin/table',
       icon: FiGrid,
     },
-    { name: t('map', 'Mapa'), href: '/admin/panel/map', icon: FiMap },
+    { name: t('map', 'Mapa'), href: '/admin/map', icon: FiMap },
     {
       name: t('charts', 'Gráficos'),
-      href: '/admin/panel/charts',
+      href: '/admin/charts',
       icon: FiBarChart2,
     },
   ];
