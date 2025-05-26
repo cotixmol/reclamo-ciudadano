@@ -180,6 +180,8 @@ main_build_front:
     - sed -i "s/backend:8000/reclamos.reputacion.digital:8007/" .env
     - sed -i "s/SECRET_PROD_FRONTEND_API_KEY/$SECRET_PROD_FRONTEND_API_KEY/" .env
     - sed -i "s/SECRET_PROD_FRONTEND_API_CLIENT/$SECRET_PROD_FRONTEND_API_CLIENT/" .env
+    - sed -i "s/SECRET_PROD_CLIENT_PUBLIC_ID/$SECRET_PROD_CLIENT_PUBLIC_ID/" .env
+    - sed -i "s/SECRET_PROD_JWT_SECRET/$SECRET_PROD_JWT_SECRET/" .env
     - docker build --build-arg NODE_ENV=production -f Dockerfile --pull -t "$CI_REGISTRY/reclamo_ciudadano_front:$tag" .
     - docker push "$CI_REGISTRY/reclamo_ciudadano_front:$tag"
   rules:
