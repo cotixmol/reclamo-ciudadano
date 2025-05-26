@@ -12,6 +12,7 @@ export interface IAdminTableFilters {
   typeCategoryId: number | 'all';
   dateFrom: string;
   dateTo: string;
+  includeDeleted: boolean;
 }
 
 interface FilterModalProps {
@@ -50,6 +51,15 @@ const FilterModal: React.FC<FilterModalProps> = ({
     setLocalFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleIncludeDeletedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalFilters((prev) => ({
+      ...prev,
+      includeDeleted: e.target.checked,
+    }));
+
+    console.log(localFilters);
+  };
+
   const handleSubmitFilters = () => {
     onApplyFilters(localFilters);
     onClose();
@@ -63,6 +73,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
       typeCategoryId: 'all',
       dateFrom: '',
       dateTo: '',
+      includeDeleted: false,
     });
   };
 
@@ -231,6 +242,22 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 className="w-full p-2.5 bg-RCColors-700 border border-RCColors-600 text-RCColors-100 rounded-md focus:outline-none focus:border-primary [color-scheme:dark] transition-colors duration-150"
               />
             </div>
+          </div>
+          <div className="flex items-center pt-2">
+            <input
+              type="checkbox"
+              name="includeDeleted"
+              id="includeDeletedModal"
+              checked={localFilters.includeDeleted}
+              onChange={handleIncludeDeletedChange}
+              className="h-4 w-4 text-primary accent-primary bg-RCColors-700 border-RCColors-600 rounded focus:ring-primary focus:ring-offset-RCColors-800"
+            />
+            <label
+              htmlFor="includeDeletedModal"
+              className="ml-2 block text-sm text-RCColors-200"
+            >
+              {t('admin:filter.includeDeleted', 'Incluir reclamos eliminados')}
+            </label>
           </div>
         </div>
 

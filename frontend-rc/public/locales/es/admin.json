@@ -22,6 +22,7 @@
   "userNameExample": "Usuario Admin",
   "userRoleExample": "Superadmin",
   "logoAltText": "Reputación Digital",
+  "filter.includeDeleted": "Incluir reclamos eliminados",
   "filter": "Filtrar",
   "filtersApplied": "Filtros Aplicados",
   "clearFilters": "Limpiar Filtros",

@@ -22,6 +22,7 @@
   "userNameExample": "Admin User",
   "userRoleExample": "Superadmin",
   "logoAltText": "Reputación Digital",
+  "filter.includeDeleted": "Include deleted claims",
   "filter": "Filter",
   "filtersApplied": "Filters Applied",
   "clearFilters": "Clear Filters",
