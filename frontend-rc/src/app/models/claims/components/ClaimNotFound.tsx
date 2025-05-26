@@ -17,7 +17,7 @@ const ClaimNotFoundPage: React.FC = () => {
       <p className="text-RCColors-400 mb-6 text-center">
         {t('noClaimsDescription')}
       </p>
-      <Link href="/models/claims/pages/create" passHref>
+      <Link href="/claims/create" passHref>
         <button
           type="button"
           className="px-6 py-3 bg-primary text-lg font-semibold rounded-lg shadow-lg hover:bg- RCPink-hover transition-all duration-300"

@@ -21,9 +21,9 @@ dev_migrate:
     - chmod +x .infra/.ansible/inject_secrets.sh
     - .infra/.ansible/inject_secrets.sh
     - mv .env backend/.env && cd backend
-    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
+    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic "pydantic[email]" geoalchemy2 "bcrypt<4.0.0" "passlib[bcrypt]==1.7.4"
     - alembic upgrade head
-    - python -m config.create_master_user
+    - python -m config.superadmin_scripts.seed_initial_data
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
 
@@ -41,9 +41,9 @@ main_migrate:
     - .infra/.ansible/inject_secrets.sh
     - mv .env backend/.env && cd backend
     - sed -i  -e 's/postgres_gis/reclamos.reputacion.digital/g' .env
-    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
+    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic "pydantic[email]" geoalchemy2 "bcrypt<4.0.0" "passlib[bcrypt]==1.7.4"
     - alembic upgrade head
-    - python -m config.create_master_user
+    - python -m config.superadmin_scripts.seed_initial_data
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
 

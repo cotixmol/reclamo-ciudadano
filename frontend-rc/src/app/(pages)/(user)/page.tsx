@@ -1,9 +1,10 @@
 'use client';
 import React from 'react';
-import './i18n';
+import '../../i18n';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from './components/LanguageSwitcher';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
+import AdminEntryButton from '@/app/components/AdminEntryButton';
 
 export default function HomePage() {
   const { t } = useTranslation('homepage'); // Use 'homepage' namespace
@@ -19,6 +20,7 @@ export default function HomePage() {
         {/* Language Switcher Container */}
         <div className="flex justify-end items-center">
           <LanguageSwitcher />
+          <AdminEntryButton />
         </div>
       </div>
 
@@ -30,7 +32,7 @@ export default function HomePage() {
         <p className="text-lg md:text-xl text-RCColors-300 mb-8">
           {t('hero.subtitle')}
         </p>
-        <Link href="/models/claims/pages" passHref>
+        <Link href="/claims" passHref>
           <button
             type="button"
             className="px-6 py-3 bg-primary text-lg font-semibold rounded-lg shadow-lg hover:bg- RCPink-hover transition-all duration-300"

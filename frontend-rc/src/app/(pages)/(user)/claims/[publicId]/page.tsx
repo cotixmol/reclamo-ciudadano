@@ -7,11 +7,11 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
-import ClaimNotFoundPage from '../../components/ClaimNotFound';
+import ClaimNotFoundPage from '../../../../models/claims/components/ClaimNotFound';
 import Carousel, { MediaFile } from '@/app/components/Carousel';
 import { fetchClaimByPublicId } from '@/app/services/claims/fetch';
 import { updateClaimByPublicId } from '@/app/services/claims/update';
-import { ClaimWithMultimediaResponse } from '../../types/claim';
+import { ClaimWithMultimediaResponse } from '../../../../models/claims/types/claim';
 import { getStatusColor, getPriorityColor } from '@/app/utils/claimColors';
 
 const ClaimUpdatePage: React.FC = () => {
@@ -76,7 +76,7 @@ const ClaimUpdatePage: React.FC = () => {
         title: formValues.title,
         description: formValues.description,
       });
-      router.push('/models/claims/pages');
+      router.push('/claims');
     } catch (err) {
       setError(err as Error);
     } finally {

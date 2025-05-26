@@ -1,4 +1,4 @@
-from models import Claim, ClaimCreateRequestSchema, ClaimUpdateRequestSchema
+from models import Claim, ClaimCreateRequestSchema, ClaimUpdateRequestSchema, Client
 from sqlmodel import Session
 from typing import List
 from dao import ClaimDAO
@@ -39,10 +39,9 @@ class ClaimRepository:
         except Exception as e:
             raise e
 
-    def create_claim(self, claim: ClaimCreateRequestSchema):
+    def create_claim(self, claim: ClaimCreateRequestSchema, client_id: int):
         try:
-            # It has to comply with the db model -> Claim
-            claim_data = Claim(**claim.model_dump())
+            claim_data = Claim(**claim.model_dump(), client_id=client_id)
             claim_data.file_sizes = claim.file_sizes
 
             for db in self.db_reporte_ciudadano.get_session_generator():

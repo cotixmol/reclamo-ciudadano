@@ -10,3 +10,4 @@ from .claim import (
 from .api_key import ApiKey
 from .clients import Client
 from .claim_types import ClaimTypes
+from .admin import AdminUser

@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ClaimWithMultimediaResponse } from '../types/claim';
-import ClaimCard from '../components/ClaimCard';
 import LoadingScreen from '@/app/components/LoadingScreen';
 import ErrorPage from '@/app/components/ErrorPage';
-import ClaimNotFoundPage from '../components/ClaimNotFound';
 import { fetchAllClaimsByPublicIds } from '@/app/services/claims/fetch';
+import { ClaimWithMultimediaResponse } from '@/app/models/claims/types/claim';
+import ClaimNotFoundPage from '@/app/models/claims/components/ClaimNotFound';
+import ClaimCard from '@/app/models/claims/components/ClaimCard';
 
 export default function ClaimsPage() {
   const [claims, setClaims] = useState<ClaimWithMultimediaResponse[]>([]);
@@ -14,11 +14,17 @@ export default function ClaimsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  const getStoredPublicIds = (): string[] => {
+    const existing = localStorage.getItem('publicIds');
+    return existing ? JSON.parse(existing) : [];
+  };
+
   useEffect(() => {
     const loadClaims = async () => {
       setIsLoading(true);
       try {
-        const claimsData = await fetchAllClaimsByPublicIds();
+        const publicIds = getStoredPublicIds();
+        const claimsData = await fetchAllClaimsByPublicIds(publicIds);
         setClaims(claimsData.reverse());
       } catch (err) {
         setError(err as Error);

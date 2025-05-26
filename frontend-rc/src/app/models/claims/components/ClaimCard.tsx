@@ -144,7 +144,7 @@ const ClaimCard: React.FC<ClaimCardProps> = ({ claimData, setIsDeleting }) => {
           {description}
         </p>
         <div className="mt-auto">
-          <Link href={`/models/claims/pages/${publicId}`}>
+          <Link href={`/claims/${publicId}`}>
             <button className="text-sm pt-4 font-semibold text-primary hover:underline hover:text- RCPink-hover transition duration-200">
               {t('seeMore')}
             </button>

@@ -32,9 +32,9 @@ class ClaimService:
         except ClaimNotFoundToDeleteError:
             raise
 
-    def create_claim(self, claim):
+    def create_claim(self, claim, client_id):
         try:
-            new_claim = self.repository.create_claim(claim)
+            new_claim = self.repository.create_claim(claim, client_id)
             return new_claim
         except ClaimNotCreatedError:
             raise
