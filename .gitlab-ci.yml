@@ -21,7 +21,7 @@ dev_migrate:
     - chmod +x .infra/.ansible/inject_secrets.sh
     - .infra/.ansible/inject_secrets.sh
     - mv .env backend/.env && cd backend
-    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2
+    - pip install alembic sqlmodel python-dotenv psycopg2-binary pydantic geoalchemy2 bcrypt<4 passlib[bcrypt]==1.7.4
     - alembic upgrade head
     - python -m config.superadmin_scripts.create_master_user
   rules:
