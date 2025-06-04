@@ -46,7 +46,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ closeSidebar }) => {
         >
           <Image
             src="/logo_RD_new_blanco.png"
-            alt="Reputación Digital Logo"
+            alt="Logo"
             width={176}
             height={32}
             className="object-contain"

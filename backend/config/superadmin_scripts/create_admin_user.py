@@ -7,7 +7,7 @@
 • Purpose
   Create ONE admin user (email + bcrypt-hashed password) that belongs to
   the client that owns a given API-key.  
-  Only the software provider (“Reputación Digital") should run this.
+  Only the software provider should run this.
 
 • Why this lives in a script
   In the long-term we’ll expose the same action as
@@ -20,7 +20,7 @@
 • Run examples  (project root)
     python -m config.superadmin_scripts.create_admin_user \
         --api-key  "fe1f8ae9c0…" \
-        --email    "admin@reputacion.digital" \
+        --email    "admin@reclamo.com" \
         --password "password"
 
   The script exits non-zero on duplicate e-mail or unknown / inactive key.

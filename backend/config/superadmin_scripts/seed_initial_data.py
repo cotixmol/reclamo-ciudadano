@@ -7,7 +7,7 @@
 • Purpose
   Idempotently ensure that two baseline tenants exist:
 
-    1. "Reputación Digital Master"  – the software provider (super-admin).
+    1. "Digital Master"  – the software provider (super-admin).
     2. "Legacy Client"              – demo / migration sandbox.
 
   It also guarantees **exactly one** ACTIVE API-key with role=superadmin
@@ -43,7 +43,7 @@ from custom_types import ApiKeyRole
 
 
 def seed_data(session: Session) -> None:
-    master_name = "Reputación Digital Master"
+    master_name = "Digital Master"
     legacy_name = "Legacy Client"
 
     # ────────────────── Clients ──────────────────

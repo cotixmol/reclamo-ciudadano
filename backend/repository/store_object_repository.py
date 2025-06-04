@@ -218,7 +218,7 @@ class StoreObjectRepository:
         Extracts the S3 object key from the full S3 URL.
 
         Assumes the URL is formatted as:
-        "http://minio.reputacion.digital:9000/{bucket_name}/claims/..."
+        "http://minio.**.**:9000/{bucket_name}/claims/..."
         and removes the bucket name from the path.
         If the key appears double-encoded (evidenced by '%25'), it decodes it once
         to maintain the original, single-encoded value.

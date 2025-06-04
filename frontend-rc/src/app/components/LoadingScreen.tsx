@@ -7,7 +7,7 @@ const LoadingScreen: React.FC = () => {
       <div className="animate-bounceSmooth w-auto h-auto max-w-[200px] max-h-[200px]">
         <Image
           src="/logo_RD_new_blanco.png"
-          alt="Reputation Digital Logo"
+          alt="Logo"
           width={200}
           height={200}
           className="object-contain"

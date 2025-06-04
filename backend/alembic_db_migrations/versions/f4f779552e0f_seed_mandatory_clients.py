@@ -30,7 +30,7 @@ def upgrade() -> None:
 
     # 1) insert / upsert the two rows  ────────────────────────────────────
     conn = op.get_bind()
-    for name in ("Reputación Digital Master", "Legacy Client"):
+    for name in ("Digital Master", "Legacy Client"):
         conn.execute(
             sa.text(
                 """
@@ -49,7 +49,7 @@ def downgrade() -> None:
         sa.text(
             """
             DELETE FROM clients
-            WHERE name IN ('Reputación Digital Master', 'Legacy Client')
+            WHERE name IN ('Digital Master', 'Legacy Client')
         """
         )
     )
